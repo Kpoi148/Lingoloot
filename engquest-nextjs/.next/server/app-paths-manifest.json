@@ -1,0 +1,10 @@
+{
+  "/api/admin/vocabularies/route": "app/api/admin/vocabularies/route.js",
+  "/api/categories/route": "app/api/categories/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/learning/[slug]/page": "app/learning/[slug]/page.js",
+  "/page": "app/page.js",
+  "/topics/page": "app/topics/page.js",
+  "/learning/[slug]/flashcards/page": "app/learning/[slug]/flashcards/page.js",
+  "/admin/vocabularies/page": "app/admin/vocabularies/page.js"
+}
