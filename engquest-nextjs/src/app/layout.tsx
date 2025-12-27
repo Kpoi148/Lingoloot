@@ -1,5 +1,6 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import AppShell from "@/components/AppShell";
+import Providers from "@/components/Providers";
 
 export const metadata = {
   title: "LingoLoot",
@@ -14,8 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
-        <Navbar />
-        {children}
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );

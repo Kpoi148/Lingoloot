@@ -79,7 +79,7 @@ export default function TopicsPage() {
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-10 flex flex-col gap-4">
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 shadow-sm">
-            EngQuest
+            LingoLoot
           </span>
           <div className="space-y-3">
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">

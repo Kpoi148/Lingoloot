@@ -54,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user._id.toString(),
           email: user.email,
+          name: user.name,
           role: user.role ?? "user",
         };
       },
@@ -64,14 +65,22 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: string }).role ?? "user";
+        token.name = (user as { name?: string }).name ?? token.name;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        const sessionUser = session.user as { id?: string; role?: string };
+        const sessionUser = session.user as {
+          id?: string;
+          role?: string;
+          name?: string;
+        };
         sessionUser.id = token.id as string;
         sessionUser.role = token.role as string;
+        if (token.name) {
+          sessionUser.name = token.name as string;
+        }
       }
       return session;
     },
