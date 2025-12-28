@@ -5,12 +5,12 @@ import { connectToDatabase } from "../../../../../lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
-type RouteParams = {
-  params: { id: string };
-};
-
-export async function PUT(req: Request, { params }: RouteParams) {
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await req.json();
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const slug = typeof body?.slug === "string" ? body.slug.trim() : "";
@@ -31,7 +31,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
     await connectToDatabase();
 
     const updated = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       {
         name,
         slug: slug.toLowerCase(),
@@ -59,10 +59,14 @@ export async function PUT(req: Request, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_: Request, { params }: RouteParams) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     await connectToDatabase();
-    const category = await Category.findById(params.id).lean();
+    const { id } = await params;
+    const category = await Category.findById(id).lean();
 
     if (!category) {
       return NextResponse.json({ message: "Category not found." }, { status: 404 });
@@ -72,14 +76,14 @@ export async function DELETE(_: Request, { params }: RouteParams) {
       category_id: { $in: [category._id, category._id.toString()] },
     });
 
-    const deleted = await Category.findByIdAndDelete(params.id).lean();
+    const deleted = await Category.findByIdAndDelete(id).lean();
 
     if (!deleted) {
       return NextResponse.json({ message: "Category not found." }, { status: 404 });
     }
 
     return NextResponse.json({
-      data: { _id: params.id, removedVocabularies: vocabDeleteResult.deletedCount },
+      data: { _id: id, removedVocabularies: vocabDeleteResult.deletedCount },
     });
   } catch (error) {
     const message =

@@ -4,12 +4,12 @@ import { connectToDatabase } from "../../../../../lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
-type RouteParams = {
-  params: { id: string };
-};
-
-export async function PUT(req: Request, { params }: RouteParams) {
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await req.json();
     const word = typeof body?.word === "string" ? body.word.trim() : "";
     const ipa = typeof body?.ipa === "string" ? body.ipa.trim() : "";
@@ -35,7 +35,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
     await connectToDatabase();
 
     const updated = await Vocabulary.findByIdAndUpdate(
-      params.id,
+      id,
       {
         word,
         ipa: ipa || undefined,
@@ -68,16 +68,20 @@ export async function PUT(req: Request, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_: Request, { params }: RouteParams) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     await connectToDatabase();
-    const deleted = await Vocabulary.findByIdAndDelete(params.id).lean();
+    const { id } = await params;
+    const deleted = await Vocabulary.findByIdAndDelete(id).lean();
 
     if (!deleted) {
       return NextResponse.json({ message: "Vocabulary not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ data: { _id: params.id } });
+    return NextResponse.json({ data: { _id: id } });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unable to delete vocabulary.";

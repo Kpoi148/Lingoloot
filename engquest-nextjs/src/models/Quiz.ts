@@ -12,6 +12,8 @@ export interface QuizDocument {
   level?: string;
   timeLimit?: number;
   questions: QuizQuestion[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const QuizQuestionSchema = new mongoose.Schema<QuizQuestion>(

@@ -131,6 +131,8 @@ export default function AdminAIVocabularyPage() {
     }
     return null;
   }, [resultData]);
+  const hasWordItems = Boolean(wordItems?.length);
+  const hasQuizData = Boolean(quizData);
 
   const handleGenerate = async () => {
     const trimmedPrompt = prompt.trim();
@@ -351,9 +353,9 @@ export default function AdminAIVocabularyPage() {
             </div>
           )}
 
-          {resultData && wordItems && (
+          {hasWordItems && (
             <div className="grid gap-4 md:grid-cols-2">
-              {wordItems.map((item, index) => (
+              {wordItems?.map((item, index) => (
                 <div
                   key={`${item.word}-${index}`}
                   className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
@@ -396,14 +398,14 @@ export default function AdminAIVocabularyPage() {
             </div>
           )}
 
-          {resultData && !wordItems && quizData && (
+          {!hasWordItems && hasQuizData && (
             <div className="space-y-4">
               {quizData?.title && (
                 <h3 className="text-lg font-semibold text-slate-900">
                   {quizData.title}
                 </h3>
               )}
-              {(quizData.questions ?? []).map((question, index) => {
+              {(quizData?.questions ?? []).map((question, index) => {
                 const promptText =
                   question.question ?? question.prompt ?? `Câu ${index + 1}`;
                 const options = question.options ?? question.choices ?? [];
@@ -436,7 +438,7 @@ export default function AdminAIVocabularyPage() {
             </div>
           )}
 
-          {resultData && !wordItems && !quizData && (
+          {!hasWordItems && !hasQuizData && resultData != null && (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
               Không thể hiển thị dữ liệu hiện tại. Vui lòng thử lại với nội dung
               khác.

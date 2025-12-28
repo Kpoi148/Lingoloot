@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Quiz from "../../../../models/Quiz";
+import Quiz, { type QuizQuestion } from "../../../../models/Quiz";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
 const QUIZ_LEVELS = ["Cơ bản", "Trung bình", "Khó"] as const;
@@ -62,7 +62,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const normalizedQuestions = questions.map((item: any) => {
+    const normalizedQuestions: QuizQuestion[] = questions.map(
+      (item: { question_text?: unknown; options?: unknown; correct_answer?: unknown }) => {
       const question_text =
         typeof item?.question_text === "string" ? item.question_text.trim() : "";
       const options = Array.isArray(item?.options)
@@ -76,9 +77,10 @@ export async function POST(req: Request) {
           : "";
 
       return { question_text, options, correct_answer };
-    });
+      }
+    );
 
-    const isValid = normalizedQuestions.every((item) => {
+    const isValid = normalizedQuestions.every((item: QuizQuestion) => {
       if (!item.question_text || item.options.length !== 4) return false;
       if (item.options.some((option) => !option)) return false;
       return item.options.includes(item.correct_answer);

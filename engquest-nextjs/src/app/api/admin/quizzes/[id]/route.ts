@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import Quiz from "../../../../../models/Quiz";
 import { connectToDatabase } from "../../../../../lib/mongodb";
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     await connectToDatabase();
-    const quiz = await Quiz.findById(params.id).lean();
+    const quiz = await Quiz.findById(id).lean();
 
     if (!quiz) {
       return NextResponse.json({ message: "Quiz not found." }, { status: 404 });
@@ -28,16 +32,20 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     await connectToDatabase();
-    const deleted = await Quiz.findByIdAndDelete(params.id).lean();
+    const deleted = await Quiz.findByIdAndDelete(id).lean();
 
     if (!deleted) {
       return NextResponse.json({ message: "Quiz not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ data: { _id: params.id } });
+    return NextResponse.json({ data: { _id: id } });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Không thể xóa quiz.";
@@ -45,8 +53,12 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await req.json();
     const title = typeof body?.title === "string" ? body.title.trim() : "";
     const rawTimeLimit =
@@ -82,7 +94,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       updatePayload.timeLimit = timeLimit;
     }
 
-    const updated = await Quiz.findByIdAndUpdate(params.id, updatePayload, {
+    const updated = await Quiz.findByIdAndUpdate(id, updatePayload, {
       new: true,
     }).lean();
 

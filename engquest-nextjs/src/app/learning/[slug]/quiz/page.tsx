@@ -63,7 +63,11 @@ const getLevelBadgeStyle = (level?: string) => {
   return "border-amber-200 bg-amber-50 text-amber-700";
 };
 
-export default function QuizPage({ params }: { params: { slug: string } }) {
+export default function QuizPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedQuizId = searchParams.get("quizId");
@@ -71,6 +75,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   const [quizItems, setQuizItems] = useState<QuizListItem[]>([]);
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [quizTitle, setQuizTitle] = useState("");
   const [quizLevel, setQuizLevel] = useState("");
@@ -91,13 +96,28 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     let active = true;
+    const resolveParams = async () => {
+      const { slug: resolvedSlug } = await params;
+      if (active) {
+        setSlug(resolvedSlug);
+      }
+    };
+    resolveParams();
+    return () => {
+      active = false;
+    };
+  }, [params]);
+
+  useEffect(() => {
+    if (!slug) return;
+    let active = true;
 
     const loadQuizList = async () => {
       setListLoading(true);
       setListError(null);
       try {
         const response = await fetch(
-          `/api/quizzes?slug=${params.slug}&list=1`,
+          `/api/quizzes?slug=${slug}&list=1`,
           { cache: "no-store" }
         );
         const payload = (await response.json()) as {
@@ -133,9 +153,10 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     return () => {
       active = false;
     };
-  }, [params.slug]);
+  }, [slug]);
 
   useEffect(() => {
+    if (!slug) return;
     let active = true;
 
     if (!selectedQuizId) {
@@ -156,7 +177,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
       setError(null);
       try {
         const query = new URLSearchParams({
-          slug: params.slug,
+          slug,
           quizId: selectedQuizId,
         });
         const response = await fetch(`/api/quizzes?${query.toString()}`, {
@@ -197,7 +218,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     return () => {
       active = false;
     };
-  }, [params.slug, selectedQuizId]);
+  }, [slug, selectedQuizId]);
 
   useEffect(() => {
     setCurrentIndex(0);
@@ -225,9 +246,11 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   const playFeedbackSound = (correct: boolean) => {
     if (typeof window === "undefined") return;
     try {
-      const AudioContext =
-        window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      const ctx = audioCtxRef.current ?? new AudioContext();
+      const AudioContextCtor =
+        window.AudioContext ||
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextCtor) return;
+      const ctx = audioCtxRef.current ?? new AudioContextCtor();
       audioCtxRef.current = ctx;
 
       const oscillator = ctx.createOscillator();
@@ -245,11 +268,13 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   };
 
   const handleStartQuiz = (quizId: string) => {
-    router.push(`/learning/${params.slug}/quiz?quizId=${quizId}`);
+    if (!slug) return;
+    router.push(`/learning/${slug}/quiz?quizId=${quizId}`);
   };
 
   const handleBackToList = () => {
-    router.push(`/learning/${params.slug}/quiz`);
+    if (!slug) return;
+    router.push(`/learning/${slug}/quiz`);
   };
 
   const handleSelect = (option: string) => {
@@ -298,7 +323,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   const currentQuestion = questions[currentIndex];
   const incorrectCount = Math.max(0, answeredCount - score);
   const displayTitle =
-    quizTitle || `Luyện tập chủ đề: ${params.slug.replace(/-/g, " ")}`;
+    quizTitle || (slug ? `Luyện tập chủ đề: ${slug.replace(/-/g, " ")}` : "");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 px-4 py-12 text-slate-900">
@@ -335,7 +360,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
                 </button>
               )}
               <Link
-                href={`/learning/${params.slug}`}
+                href={`/learning/${slug ?? ""}`}
                 className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 Trở về
@@ -453,7 +478,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
               Điểm đạt được: {score * 10}
             </p>
             <Link
-              href={`/learning/${params.slug}`}
+              href={`/learning/${slug ?? ""}`}
               className="mt-4 inline-flex rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               Quay lại chủ đề

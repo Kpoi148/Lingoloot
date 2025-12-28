@@ -123,12 +123,13 @@ function Flashcard({
 export default function FlashcardsPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const [category, setCategory] = useState<CategoryInfo | null>(null);
   const [items, setItems] = useState<VocabularyItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -140,7 +141,10 @@ export default function FlashcardsPage({
 
     const loadData = async () => {
       try {
-        const response = await fetch(`/api/vocabularies?slug=${params.slug}`, {
+        const { slug: resolvedSlug } = await params;
+        if (!active) return;
+        setSlug(resolvedSlug);
+        const response = await fetch(`/api/vocabularies?slug=${resolvedSlug}`, {
           cache: "no-store",
         });
         const data = (await response.json()) as ApiResponse;
@@ -173,7 +177,7 @@ export default function FlashcardsPage({
     return () => {
       active = false;
     };
-  }, [params.slug]);
+  }, [params]);
 
   const currentItem = items[currentIndex];
   const total = items.length;
@@ -280,7 +284,7 @@ export default function FlashcardsPage({
               </p>
             </div>
             <Link
-              href={`/learning/${params.slug}`}
+              href={`/learning/${slug ?? ""}`}
               className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               Trở về
