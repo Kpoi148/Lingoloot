@@ -91,7 +91,7 @@ function Flashcard({
         </div>
 
         <div
-          className="absolute inset-0 flex h-full w-full flex-col justify-between rounded-3xl bg-slate-900 px-6 py-6 text-white"
+          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-y-auto overscroll-contain rounded-3xl bg-slate-900 px-6 py-6 pr-5 text-white"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="space-y-3">

@@ -70,6 +70,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+
         </section>
 
         <section className="flex w-full flex-1 flex-col gap-6">
