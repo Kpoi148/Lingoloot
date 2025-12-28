@@ -12,6 +12,8 @@ type VocabularyItem = {
   word: string;
   ipa?: string;
   meaning: string;
+  example?: string;
+  example_meaning?: string;
   category_id: string;
   category?: { name?: string };
   media?: {
@@ -30,6 +32,8 @@ const emptyForm = {
   word: "",
   ipa: "",
   meaning: "",
+  example: "",
+  example_meaning: "",
   category_id: "",
   image: "",
   audio: "",
@@ -41,16 +45,78 @@ export default function AdminVocabulariesPage() {
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({
+    word: "",
+    meaning: "",
+    example: "",
+    categoryId: "",
+  });
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formState, setFormState] = useState({ ...emptyForm });
   const [editingItem, setEditingItem] = useState<VocabularyItem | null>(null);
 
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return items;
-    const needle = search.trim().toLowerCase();
-    return items.filter((item) => item.word.toLowerCase().includes(needle));
-  }, [items, search]);
+    const searchValue = search.trim().toLowerCase();
+    const wordFilter = filters.word.trim().toLowerCase();
+    const meaningFilter = filters.meaning.trim().toLowerCase();
+    const exampleFilter = filters.example.trim().toLowerCase();
+    const categoryFilter = filters.categoryId;
+
+    return items.filter((item) => {
+      if (searchValue && !item.word.toLowerCase().includes(searchValue)) {
+        return false;
+      }
+      if (wordFilter && !item.word.toLowerCase().includes(wordFilter)) {
+        return false;
+      }
+      if (
+        meaningFilter &&
+        !item.meaning.toLowerCase().includes(meaningFilter)
+      ) {
+        return false;
+      }
+      if (exampleFilter) {
+        const exampleText = `${item.example ?? ""} ${item.example_meaning ?? ""}`
+          .toLowerCase()
+          .trim();
+        if (!exampleText.includes(exampleFilter)) {
+          return false;
+        }
+      }
+      if (categoryFilter && item.category_id !== categoryFilter) {
+        return false;
+      }
+      return true;
+    });
+  }, [items, search, filters]);
+
+  const totalItems = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const pagedItems = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredItems.slice(start, start + pageSize);
+  }, [filteredItems, currentPage, pageSize]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [
+    search,
+    filters.word,
+    filters.meaning,
+    filters.example,
+    filters.categoryId,
+    pageSize,
+  ]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   useEffect(() => {
     let active = true;
@@ -118,6 +184,8 @@ export default function AdminVocabulariesPage() {
       word: item.word,
       ipa: item.ipa ?? "",
       meaning: item.meaning,
+      example: item.example ?? "",
+      example_meaning: item.example_meaning ?? "",
       category_id: item.category_id,
       image: item.media?.image ?? "",
       audio: item.media?.audio ?? "",
@@ -148,6 +216,8 @@ export default function AdminVocabulariesPage() {
       word: formState.word.trim(),
       ipa: formState.ipa.trim(),
       meaning: formState.meaning.trim(),
+      example: formState.example.trim(),
+      example_meaning: formState.example_meaning.trim(),
       category_id: formState.category_id,
       media: {
         image: formState.image.trim(),
@@ -232,20 +302,144 @@ export default function AdminVocabulariesPage() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-        <div className="overflow-x-auto">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+          <span>
+            Hiển thị{" "}
+            {totalItems ? (currentPage - 1) * pageSize + 1 : 0} -{" "}
+            {Math.min(currentPage * pageSize, totalItems)} trên {totalItems}
+          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span>Số dòng</span>
+              <select
+                value={pageSize}
+                onChange={(event) => setPageSize(Number(event.target.value))}
+                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 shadow-sm"
+              >
+                {[10, 20, 30, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage <= 1}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Trước
+              </button>
+              <span>
+                Trang {currentPage} / {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setPage((prev) => Math.min(totalPages, prev + 1))
+                }
+                disabled={currentPage >= totalPages}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Sau
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-h-[65vh] overflow-auto rounded-2xl border border-slate-100">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400">
+            <thead className="sticky top-0 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm">
+              <tr className="bg-slate-50/80 text-[10px] normal-case text-slate-500">
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.word}
+                    onChange={(event) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        word: event.target.value,
+                      }))
+                    }
+                    placeholder="Lọc từ"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.meaning}
+                    onChange={(event) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        meaning: event.target.value,
+                      }))
+                    }
+                    placeholder="Lọc nghĩa"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.example}
+                    onChange={(event) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        example: event.target.value,
+                      }))
+                    }
+                    placeholder="Lọc ví dụ"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <select
+                    value={filters.categoryId}
+                    onChange={(event) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        categoryId: event.target.value,
+                      }))
+                    }
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                  >
+                    <option value="">Tất cả chủ đề</option>
+                    {categories.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </th>
+                <th className="px-3 py-3 text-right">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFilters({
+                        word: "",
+                        meaning: "",
+                        example: "",
+                        categoryId: "",
+                      })
+                    }
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    Xóa lọc
+                  </button>
+                </th>
+              </tr>
               <tr>
-                <th className="py-3">Từ</th>
-                <th className="py-3">Nghĩa</th>
-                <th className="py-3">Chủ đề</th>
-                <th className="py-3 text-right">Tác vụ</th>
+                <th className="px-3 py-3">Từ</th>
+                <th className="px-3 py-3">Nghĩa</th>
+                <th className="px-3 py-3">Ví dụ</th>
+                <th className="px-3 py-3">Chủ đề</th>
+                <th className="px-3 py-3 text-right">Tác vụ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading && (
                 <tr>
-                  <td colSpan={4} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400">
                     Đang tải...
                   </td>
                 </tr>
@@ -253,23 +447,49 @@ export default function AdminVocabulariesPage() {
 
               {!loading && filteredItems.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400">
                     Chưa có từ vựng nào.
                   </td>
                 </tr>
               )}
 
               {!loading &&
-                filteredItems.map((item) => (
+                pagedItems.map((item) => (
                   <tr key={item._id}>
-                    <td className="py-4 font-medium text-slate-900">
+                    <td className="px-3 py-4 font-medium text-slate-900">
                       {item.word}
                     </td>
-                    <td className="py-4 text-slate-600">{item.meaning}</td>
-                    <td className="py-4 text-slate-600">
+                    <td className="px-3 py-4 text-slate-600">
+                      <span className="block max-w-[200px] truncate" title={item.meaning}>
+                        {item.meaning}
+                      </span>
+                    </td>
+                    <td className="px-3 py-4 text-slate-600">
+                      {item.example ? (
+                        <div className="space-y-1">
+                          <p
+                            className="max-w-[240px] truncate text-sm text-slate-700"
+                            title={item.example}
+                          >
+                            {item.example}
+                          </p>
+                          {item.example_meaning && (
+                            <p
+                              className="max-w-[240px] truncate text-xs text-slate-500"
+                              title={item.example_meaning}
+                            >
+                              {item.example_meaning}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-slate-400">--</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-4 text-slate-600">
                       {item.category?.name ?? "Chưa xác định"}
                     </td>
-                    <td className="py-4 text-right">
+                    <td className="px-3 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           type="button"
@@ -361,6 +581,41 @@ export default function AdminVocabulariesPage() {
                   className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
                   placeholder="Xe đạp"
                 />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    Example
+                  </label>
+                  <input
+                    value={formState.example}
+                    onChange={(event) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        example: event.target.value,
+                      }))
+                    }
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    placeholder="I ride a bicycle to work."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    Example Meaning
+                  </label>
+                  <input
+                    value={formState.example_meaning}
+                    onChange={(event) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        example_meaning: event.target.value,
+                      }))
+                    }
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    placeholder="Tôi đi làm bằng xe đạp."
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

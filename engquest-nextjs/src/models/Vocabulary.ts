@@ -10,6 +10,8 @@ export interface VocabularyDocument {
   word: string;
   ipa?: string;
   meaning: string;
+  example?: string;
+  example_meaning?: string;
   category_id: mongoose.Types.ObjectId;
   media?: VocabularyMedia;
   created_at?: Date;
@@ -29,6 +31,8 @@ const VocabularySchema = new mongoose.Schema<VocabularyDocument>(
     word: { type: String, required: true, trim: true },
     ipa: { type: String, trim: true },
     meaning: { type: String, required: true, trim: true },
+    example: { type: String, trim: true },
+    example_meaning: { type: String, trim: true },
     category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

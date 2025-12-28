@@ -14,6 +14,8 @@ type VocabularyItem = {
   word: string;
   ipa?: string;
   meaning: string;
+  example?: string;
+  example_meaning?: string;
   media?: VocabularyMedia;
 };
 
@@ -34,6 +36,8 @@ function Flashcard({
   word,
   meaning,
   ipa,
+  example,
+  exampleMeaning,
   flipped,
   onToggle,
   imageUrl,
@@ -41,6 +45,8 @@ function Flashcard({
   word: string;
   meaning: string;
   ipa?: string;
+  example?: string;
+  exampleMeaning?: string;
   flipped: boolean;
   onToggle: () => void;
   imageUrl?: string;
@@ -93,6 +99,17 @@ function Flashcard({
               Meaning
             </span>
             <h2 className="text-2xl font-semibold">{meaning}</h2>
+            {example && (
+              <div className="space-y-1 text-sm text-white/80">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+                  Example
+                </p>
+                <p>{example}</p>
+                {exampleMeaning && (
+                  <p className="text-xs text-white/60">{exampleMeaning}</p>
+                )}
+              </div>
+            )}
           </div>
           <p className="text-sm text-white/70">
             Nhấn vào thẻ để quay lại từ vựng.
@@ -308,6 +325,8 @@ export default function FlashcardsPage({
               word={currentItem.word}
               meaning={currentItem.meaning}
               ipa={currentItem.ipa}
+              example={currentItem.example}
+              exampleMeaning={currentItem.example_meaning}
               flipped={flipped}
               onToggle={() => setFlipped((prev) => !prev)}
               imageUrl={currentItem.media?.image}

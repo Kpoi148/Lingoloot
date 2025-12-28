@@ -32,9 +32,17 @@ export default async function LearningPage({ params }: LearningPageProps) {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 px-4 py-12 text-slate-900">
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-10 space-y-3">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 shadow-sm">
-            EngQuest
-          </span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 shadow-sm">
+              EngQuest
+            </span>
+            <Link
+              href="/topics"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              Trở về
+            </Link>
+          </div>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             {category.name}
           </h1>

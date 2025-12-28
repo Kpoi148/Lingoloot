@@ -34,7 +34,16 @@ export async function GET(req: Request) {
       .find({
         category_id: { $in: [category._id, category._id.toString()] },
       })
-      .project({ word: 1, ipa: 1, meaning: 1, media: 1, created_at: 1, category_id: 1 })
+      .project({
+        word: 1,
+        ipa: 1,
+        meaning: 1,
+        example: 1,
+        example_meaning: 1,
+        media: 1,
+        created_at: 1,
+        category_id: 1,
+      })
       .sort({ created_at: 1 })
       .toArray();
 

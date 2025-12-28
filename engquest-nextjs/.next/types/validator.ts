@@ -47,6 +47,33 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 }
 
 
+// Validate ../../src/app/admin/ai-hub/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/ai-hub">> = Specific
+  const handler = {} as typeof import("../../src/app/admin/ai-hub/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/admin/ai-hub/quizzes/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/ai-hub/quizzes">> = Specific
+  const handler = {} as typeof import("../../src/app/admin/ai-hub/quizzes/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/admin/ai-hub/vocabulary/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/ai-hub/vocabulary">> = Specific
+  const handler = {} as typeof import("../../src/app/admin/ai-hub/vocabulary/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/admin/categories/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/admin/categories">> = Specific
@@ -204,6 +231,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/vocabularies">> = Specific
   const handler = {} as typeof import("../../src/app/api/admin/vocabularies/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/ai/generate/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/ai/generate">> = Specific
+  const handler = {} as typeof import("../../src/app/api/ai/generate/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

@@ -15,6 +15,12 @@ export async function PUT(req: Request, { params }: RouteParams) {
     const ipa = typeof body?.ipa === "string" ? body.ipa.trim() : "";
     const meaning =
       typeof body?.meaning === "string" ? body.meaning.trim() : "";
+    const example =
+      typeof body?.example === "string" ? body.example.trim() : "";
+    const example_meaning =
+      typeof body?.example_meaning === "string"
+        ? body.example_meaning.trim()
+        : "";
     const category_id =
       typeof body?.category_id === "string" ? body.category_id.trim() : "";
     const media = body?.media ?? {};
@@ -34,6 +40,8 @@ export async function PUT(req: Request, { params }: RouteParams) {
         word,
         ipa: ipa || undefined,
         meaning,
+        example: example || undefined,
+        example_meaning: example_meaning || undefined,
         category_id,
         media: {
           image: typeof media.image === "string" ? media.image.trim() : undefined,

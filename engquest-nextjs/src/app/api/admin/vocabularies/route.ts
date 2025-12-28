@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Category from "../../../../models/Category";
+import TopicProgress from "../../../../models/TopicProgress";
 import Vocabulary from "../../../../models/Vocabulary";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
@@ -16,7 +17,9 @@ export async function GET(req: Request) {
     await connectToDatabase();
 
     const vocabularies = await Vocabulary.find(filter)
-      .select("word ipa meaning media category_id created_at")
+      .select(
+        "word ipa meaning example example_meaning media category_id created_at"
+      )
       .sort({ created_at: -1 })
       .lean();
 
@@ -54,6 +57,12 @@ export async function POST(req: Request) {
     const ipa = typeof body?.ipa === "string" ? body.ipa.trim() : "";
     const meaning =
       typeof body?.meaning === "string" ? body.meaning.trim() : "";
+    const example =
+      typeof body?.example === "string" ? body.example.trim() : "";
+    const example_meaning =
+      typeof body?.example_meaning === "string"
+        ? body.example_meaning.trim()
+        : "";
     const category_id =
       typeof body?.category_id === "string" ? body.category_id.trim() : "";
     const media = body?.media ?? {};
@@ -71,6 +80,8 @@ export async function POST(req: Request) {
       word,
       ipa: ipa || undefined,
       meaning,
+      example: example || undefined,
+      example_meaning: example_meaning || undefined,
       category_id,
       media: {
         image: typeof media.image === "string" ? media.image.trim() : undefined,
@@ -78,6 +89,11 @@ export async function POST(req: Request) {
         video: typeof media.video === "string" ? media.video.trim() : undefined,
       },
     });
+
+    await TopicProgress.updateMany(
+      { category_id },
+      { $set: { vocab_completed: false, updated_at: new Date() } }
+    );
 
     return NextResponse.json({
       data: {
