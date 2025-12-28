@@ -7,6 +7,7 @@ import {
   Users,
 } from "lucide-react";
 import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
+import BrandLogo from "@/components/BrandLogo";
 
 const navItems = [
   { label: "Tổng quan", href: "/admin", icon: LayoutDashboard },
@@ -26,9 +27,7 @@ export default function AdminLayout({
       <div className="mx-auto flex min-h-screen w-full max-w-[1440px]">
         <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white/80 px-4 py-6 md:flex">
           <Link href="/" className="mb-8 flex items-center gap-3 px-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20">
-              LL
-            </span>
+            <BrandLogo className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20" />
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
                 LingoLoot
