@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Quiz from "../../../../models/Quiz";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
+const QUIZ_LEVELS = ["Cơ bản", "Trung bình", "Khó"] as const;
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -18,7 +20,7 @@ export async function GET(req: Request) {
     await connectToDatabase();
 
     const quizzes = await Quiz.find(filter)
-      .select("title category questions createdAt")
+      .select("title category level timeLimit questions createdAt")
       .sort({ createdAt: -1 })
       .lean();
 
@@ -26,6 +28,8 @@ export async function GET(req: Request) {
       _id: quiz._id.toString(),
       title: quiz.title,
       category: quiz.category,
+      level: quiz.level,
+      timeLimit: quiz.timeLimit,
       questionCount: quiz.questions?.length ?? 0,
       createdAt: quiz.createdAt,
     }));
@@ -44,6 +48,11 @@ export async function POST(req: Request) {
     const title = typeof body?.title === "string" ? body.title.trim() : "";
     const category =
       typeof body?.category === "string" ? body.category.trim() : "";
+    const rawLevel =
+      typeof body?.level === "string" ? body.level.trim() : "";
+    const level = QUIZ_LEVELS.includes(rawLevel as (typeof QUIZ_LEVELS)[number])
+      ? rawLevel
+      : "Trung bình";
     const questions = Array.isArray(body?.questions) ? body.questions : [];
 
     if (!title || !category || questions.length === 0) {
@@ -87,6 +96,7 @@ export async function POST(req: Request) {
     const created = await Quiz.create({
       title,
       category,
+      level,
       questions: normalizedQuestions,
     });
 

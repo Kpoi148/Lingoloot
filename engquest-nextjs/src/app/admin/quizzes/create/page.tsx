@@ -20,6 +20,8 @@ type ToastState = {
   type: "success" | "error";
 };
 
+const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
+
 const createQuestion = (): QuestionForm => ({
   id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
   question_text: "",
@@ -30,6 +32,8 @@ const createQuestion = (): QuestionForm => ({
 export default function AdminQuizCreatePage() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [level, setLevel] =
+    useState<(typeof levels)[number]>("Trung bình");
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [questions, setQuestions] = useState<QuestionForm[]>([createQuestion()]);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -122,6 +126,7 @@ export default function AdminQuizCreatePage() {
     const payload = {
       title: title.trim(),
       category,
+      level,
       questions: questions.map((question) => ({
         question_text: question.question_text.trim(),
         options: question.options.map((option) => option.trim()),
@@ -158,6 +163,7 @@ export default function AdminQuizCreatePage() {
       setToast({ message: "Đã lưu bài quiz.", type: "success" });
       setTitle("");
       setCategory("");
+      setLevel("Trung bình");
       setQuestions([createQuestion()]);
     } catch (error) {
       setToast({
@@ -182,7 +188,7 @@ export default function AdminQuizCreatePage() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Tên bài Quiz
@@ -207,6 +213,24 @@ export default function AdminQuizCreatePage() {
               {categories.map((item) => (
                 <option key={item._id} value={item.slug}>
                   {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+              Mức độ
+            </label>
+            <select
+              value={level}
+              onChange={(event) =>
+                setLevel(event.target.value as (typeof levels)[number])
+              }
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+            >
+              {levels.map((item) => (
+                <option key={item} value={item}>
+                  {item}
                 </option>
               ))}
             </select>

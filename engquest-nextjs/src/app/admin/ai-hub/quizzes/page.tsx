@@ -5,7 +5,7 @@ import { Loader2, Save, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 
 const defaultPrompt =
-  "Generate a 5-question multiple-choice quiz. Level: Intermediate. Explanation language: Vietnamese.";
+  "Generate a multiple-choice quiz. Explanation language: Vietnamese.";
 
 const presets = [
   {
@@ -15,6 +15,8 @@ const presets = [
   { label: "Fun Mode", value: "Use funny and humorous examples." },
   { label: "Kid Mode", value: "Use simple words for children." },
 ];
+
+const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
 
 type CategoryOption = {
   _id: string;
@@ -50,6 +52,8 @@ type EditableQuiz = {
 
 export default function AdminQuizBuilderPage() {
   const [customPrompt, setCustomPrompt] = useState(defaultPrompt);
+  const [level, setLevel] =
+    useState<(typeof levels)[number]>("Trung bình");
   const [topic, setTopic] = useState("");
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [vocabularies, setVocabularies] = useState<VocabularyItem[]>([]);
@@ -233,7 +237,13 @@ export default function AdminQuizBuilderPage() {
         example_meaning: item.example_meaning,
       }));
       const normalizedCount = Math.min(50, Math.max(1, questionCount || 10));
-      const instructionWithCount = `Topic: ${topicName}.\n${customPrompt.trim()}\nQuestion count: ${normalizedCount}. Return exactly ${normalizedCount} questions.`;
+      const instructionWithCount = [
+        `Topic: ${topicName}.`,
+        customPrompt.trim(),
+        `Question count: ${normalizedCount}. Return exactly ${normalizedCount} questions.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
 
       const response = await fetch("/api/ai/generate", {
         method: "POST",
@@ -367,6 +377,7 @@ export default function AdminQuizBuilderPage() {
         body: JSON.stringify({
           title: editableQuiz.title.trim() || "Generated Quiz",
           category: categorySlug,
+          level,
           questions,
         }),
       });
@@ -546,6 +557,25 @@ export default function AdminQuizBuilderPage() {
           <p className="text-xs text-slate-500">
             Tối đa 50 câu để đảm bảo chất lượng.
           </p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+            Mức độ
+          </label>
+          <select
+            value={level}
+            onChange={(event) =>
+              setLevel(event.target.value as (typeof levels)[number])
+            }
+            className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none"
+          >
+            {levels.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         </div>
 
         <button

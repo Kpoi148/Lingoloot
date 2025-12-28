@@ -7,6 +7,7 @@ type QuizItem = {
   _id: string;
   title: string;
   category: string;
+  level?: string;
   questionCount: number;
   createdAt?: string;
 };
@@ -28,7 +29,8 @@ export default function AdminQuizzesPage() {
     return items.filter(
       (item) =>
         item.title.toLowerCase().includes(needle) ||
-        item.category.toLowerCase().includes(needle)
+        item.category.toLowerCase().includes(needle) ||
+        (item.level ?? "").toLowerCase().includes(needle)
     );
   }, [items, search]);
 
@@ -118,6 +120,7 @@ export default function AdminQuizzesPage() {
               <tr>
                 <th className="py-3">Tên quiz</th>
                 <th className="py-3">Chủ đề</th>
+                <th className="py-3">Mức độ</th>
                 <th className="py-3">Số câu</th>
                 <th className="py-3 text-right">Tác vụ</th>
               </tr>
@@ -125,7 +128,7 @@ export default function AdminQuizzesPage() {
             <tbody className="divide-y divide-slate-100">
               {loading && (
                 <tr>
-                  <td colSpan={4} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400">
                     Đang tải...
                   </td>
                 </tr>
@@ -133,7 +136,7 @@ export default function AdminQuizzesPage() {
 
               {!loading && filteredItems.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400">
                     Chưa có quiz nào.
                   </td>
                 </tr>
@@ -146,6 +149,9 @@ export default function AdminQuizzesPage() {
                       {item.title}
                     </td>
                     <td className="py-4 text-slate-600">{item.category}</td>
+                    <td className="py-4 text-slate-600">
+                      {item.level ?? "Trung bình"}
+                    </td>
                     <td className="py-4 text-slate-600">{item.questionCount}</td>
                     <td className="py-4 text-right">
                       <div className="flex items-center justify-end gap-2">

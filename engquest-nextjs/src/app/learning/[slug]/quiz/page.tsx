@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type QuizQuestion = {
@@ -9,16 +10,27 @@ type QuizQuestion = {
   correct_answer: string;
 };
 
-type QuizApiResponse = {
+type QuizListItem = {
+  _id: string;
+  title: string;
+  level?: string;
+  questionCount: number;
+  createdAt?: string;
+};
+
+type QuizDetailResponse = {
   data?: {
+    _id?: string;
     title?: string;
     category?: string;
+    level?: string;
+    timeLimit?: number;
     questions?: QuizQuestion[];
   };
   message?: string;
 };
 
-const TOTAL_TIME = 120;
+const DEFAULT_TIME_LIMIT = 120;
 
 const formatTime = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -28,17 +40,49 @@ const formatTime = (seconds: number) => {
     .padStart(2, "0")}`;
 };
 
+const formatDate = (value?: string) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("vi-VN");
+};
+
+const getLevelLabel = (level?: string) => {
+  if (level === "Cơ bản") return "Dễ";
+  if (level === "Khó") return "Khó";
+  return "Trung bình";
+};
+
+const getLevelBadgeStyle = (level?: string) => {
+  if (level === "Cơ bản") {
+    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  }
+  if (level === "Khó") {
+    return "border-red-200 bg-red-50 text-red-700";
+  }
+  return "border-amber-200 bg-amber-50 text-amber-700";
+};
+
 export default function QuizPage({ params }: { params: { slug: string } }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedQuizId = searchParams.get("quizId");
+  const hasSelection = Boolean(selectedQuizId);
+  const [quizItems, setQuizItems] = useState<QuizListItem[]>([]);
+  const [listLoading, setListLoading] = useState(true);
+  const [listError, setListError] = useState<string | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [quizTitle, setQuizTitle] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [quizLevel, setQuizLevel] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [score, setScore] = useState(0);
-  const [remaining, setRemaining] = useState(TOTAL_TIME);
+  const [timeLimit, setTimeLimit] = useState(DEFAULT_TIME_LIMIT);
+  const [remaining, setRemaining] = useState(DEFAULT_TIME_LIMIT);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const [wrongIndexes, setWrongIndexes] = useState<number[]>([]);
 
@@ -48,14 +92,77 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   useEffect(() => {
     let active = true;
 
+    const loadQuizList = async () => {
+      setListLoading(true);
+      setListError(null);
+      try {
+        const response = await fetch(
+          `/api/quizzes?slug=${params.slug}&list=1`,
+          { cache: "no-store" }
+        );
+        const payload = (await response.json()) as {
+          data?: QuizListItem[];
+          message?: string;
+        };
+
+        if (!response.ok) {
+          throw new Error(payload.message ?? "Không thể tải danh sách quiz.");
+        }
+
+        if (active) {
+          setQuizItems(payload.data ?? []);
+        }
+      } catch (fetchError) {
+        if (active) {
+          setListError(
+            fetchError instanceof Error
+              ? fetchError.message
+              : "Không thể tải danh sách quiz."
+          );
+          setQuizItems([]);
+        }
+      } finally {
+        if (active) {
+          setListLoading(false);
+        }
+      }
+    };
+
+    loadQuizList();
+
+    return () => {
+      active = false;
+    };
+  }, [params.slug]);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!selectedQuizId) {
+      setQuestions([]);
+      setQuizTitle("");
+      setQuizLevel("");
+      setTimeLimit(DEFAULT_TIME_LIMIT);
+      setRemaining(DEFAULT_TIME_LIMIT);
+      setError(null);
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
     const loadQuiz = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/quizzes?slug=${params.slug}`, {
+        const query = new URLSearchParams({
+          slug: params.slug,
+          quizId: selectedQuizId,
+        });
+        const response = await fetch(`/api/quizzes?${query.toString()}`, {
           cache: "no-store",
         });
-        const payload = (await response.json()) as QuizApiResponse;
+        const payload = (await response.json()) as QuizDetailResponse;
 
         if (!response.ok) {
           throw new Error(payload.message ?? "Không thể tải quiz.");
@@ -63,6 +170,8 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
 
         if (active) {
           setQuizTitle(payload.data?.title ?? "");
+          setQuizLevel(payload.data?.level ?? "");
+          setTimeLimit(payload.data?.timeLimit ?? DEFAULT_TIME_LIMIT);
           setQuestions(payload.data?.questions ?? []);
         }
       } catch (fetchError) {
@@ -73,6 +182,8 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
               : "Không thể tải quiz."
           );
           setQuestions([]);
+          setQuizLevel("");
+          setTimeLimit(DEFAULT_TIME_LIMIT);
         }
       } finally {
         if (active) {
@@ -86,7 +197,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     return () => {
       active = false;
     };
-  }, [params.slug]);
+  }, [params.slug, selectedQuizId]);
 
   useEffect(() => {
     setCurrentIndex(0);
@@ -94,17 +205,17 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     setIsCorrect(null);
     setAnsweredCount(0);
     setScore(0);
-    setRemaining(TOTAL_TIME);
+    setRemaining(timeLimit);
     setWrongIndexes([]);
-  }, [questions]);
+  }, [questions, timeLimit]);
 
   useEffect(() => {
-    if (finished) return;
+    if (!hasSelection || finished) return;
     const timer = setInterval(() => {
       setRemaining((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => clearInterval(timer);
-  }, [finished]);
+  }, [finished, hasSelection]);
 
   const progressPercent = useMemo(() => {
     if (!total) return 0;
@@ -131,6 +242,14 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     } catch {
       // Ignore audio errors (autoplay policy, unsupported browser, etc.)
     }
+  };
+
+  const handleStartQuiz = (quizId: string) => {
+    router.push(`/learning/${params.slug}/quiz?quizId=${quizId}`);
+  };
+
+  const handleBackToList = () => {
+    router.push(`/learning/${params.slug}/quiz`);
   };
 
   const handleSelect = (option: string) => {
@@ -171,7 +290,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
     setCurrentIndex(0);
     setAnsweredCount(0);
     setScore(0);
-    setRemaining(TOTAL_TIME);
+    setRemaining(timeLimit);
     setWrongIndexes([]);
     setQuestions(wrongQuestions);
   };
@@ -191,50 +310,135 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
                 Quiz
               </p>
               <h1 className="text-2xl font-semibold text-slate-900">
-                {displayTitle}
+                {hasSelection ? displayTitle : "Danh sách bộ quiz"}
               </h1>
+              {hasSelection ? (
+                quizLevel && (
+                  <p className="mt-2 text-sm text-slate-600">
+                    Mức độ: {quizLevel}
+                  </p>
+                )
+              ) : (
+                <p className="mt-2 text-sm text-slate-600">
+                  Chọn một bộ quiz để bắt đầu luyện tập.
+                </p>
+              )}
             </div>
-            <Link
-              href={`/learning/${params.slug}`}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              Trở về
-            </Link>
+            <div className="flex flex-wrap items-center gap-3">
+              {hasSelection && (
+                <button
+                  type="button"
+                  onClick={handleBackToList}
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  Danh sách quiz
+                </button>
+              )}
+              <Link
+                href={`/learning/${params.slug}`}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                Trở về
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-6 space-y-3">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
-              <span>
-                Đã làm {answeredCount} / {total}
-              </span>
-              <span>{formatTime(remaining)}</span>
+          {hasSelection && (
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+                <span>
+                  Đã làm {answeredCount} / {total}
+                </span>
+                <span>{formatTime(remaining)}</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-100">
+                <div
+                  className="h-2 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-100">
-              <div
-                className="h-2 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 transition-all duration-500"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-          </div>
+          )}
         </div>
 
-        {loading && (
+        {!hasSelection && (
+          <>
+            {listLoading && (
+              <div className="h-48 animate-pulse rounded-3xl border border-slate-200 bg-white/70" />
+            )}
+
+            {listError && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {listError}
+              </div>
+            )}
+
+            {!listLoading && !listError && quizItems.length === 0 && (
+              <div className="rounded-2xl border border-slate-200 bg-white/80 px-6 py-8 text-center text-sm text-slate-500">
+                Chủ đề này chưa có bộ quiz nào.
+              </div>
+            )}
+
+            {!listLoading && !listError && quizItems.length > 0 && (
+              <div className="grid gap-4">
+                {quizItems.map((item) => {
+                  const createdAt = formatDate(item.createdAt);
+                  const levelLabel = getLevelLabel(item.level);
+                  const levelStyle = getLevelBadgeStyle(item.level);
+                  return (
+                    <button
+                      key={item._id}
+                      type="button"
+                      onClick={() => handleStartQuiz(item._id)}
+                      className="group relative flex w-full flex-col items-start justify-between rounded-3xl border border-slate-200/70 bg-white/90 p-6 text-left shadow-lg shadow-slate-200/60 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    >
+                      <span
+                        className={`absolute right-4 top-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${levelStyle}`}
+                      >
+                        {levelLabel}
+                      </span>
+                      <div className="flex w-full items-start justify-between gap-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                            Bộ quiz
+                          </p>
+                          <h3 className="mt-3 text-lg font-semibold text-slate-900">
+                            {item.title}
+                          </h3>
+                          <p className="mt-2 text-sm text-slate-600">
+                            Độ khó: {levelLabel}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <span>{item.questionCount} câu hỏi</span>
+                        {createdAt && <span>{createdAt}</span>}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {hasSelection && loading && (
           <div className="h-64 animate-pulse rounded-3xl border border-slate-200 bg-white/70" />
         )}
 
-        {error && (
+        {hasSelection && error && (
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
             {error}
           </div>
         )}
 
-        {!loading && !error && total === 0 && (
+        {hasSelection && !loading && !error && total === 0 && (
           <div className="rounded-2xl border border-slate-200 bg-white/80 px-6 py-8 text-center text-sm text-slate-500">
-            Chủ đề này chưa có quiz.
+            Bộ quiz này chưa có câu hỏi.
           </div>
         )}
 
-        {finished && (
+        {hasSelection && finished && (
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 text-center shadow-lg shadow-slate-200/60">
             <h2 className="text-2xl font-semibold text-slate-900">
               Hoàn thành bài quiz!
@@ -266,7 +470,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        {!loading && !error && !finished && currentQuestion && (
+        {hasSelection && !loading && !error && !finished && currentQuestion && (
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-200/60">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Câu {currentIndex + 1}

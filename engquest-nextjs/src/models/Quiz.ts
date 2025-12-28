@@ -9,6 +9,8 @@ export interface QuizQuestion {
 export interface QuizDocument {
   title: string;
   category?: string;
+  level?: string;
+  timeLimit?: number;
   questions: QuizQuestion[];
 }
 
@@ -25,6 +27,13 @@ const QuizSchema = new mongoose.Schema<QuizDocument>(
   {
     title: { type: String, required: true, trim: true },
     category: { type: String, trim: true },
+    level: {
+      type: String,
+      trim: true,
+      enum: ["Cơ bản", "Trung bình", "Khó"],
+      default: "Trung bình",
+    },
+    timeLimit: { type: Number, min: 30, max: 3600, default: 120 },
     questions: { type: [QuizQuestionSchema], required: true },
   },
   { timestamps: true }

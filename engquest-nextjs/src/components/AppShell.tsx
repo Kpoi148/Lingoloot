@@ -9,13 +9,17 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
 
   const isAdminRoute = pathname?.startsWith("/admin");
+  const hideNavbarRoutes = ["/", "/login", "/register"];
+  const isAuthPage = pathname ? hideNavbarRoutes.includes(pathname) : false;
   const isAuthenticated = status === "authenticated";
   const userName =
     session?.user?.name || session?.user?.email || "Người dùng";
 
   return (
     <>
-      {!isAdminRoute && isAuthenticated && <Navbar userName={userName} />}
+      {!isAdminRoute && !isAuthPage && isAuthenticated && (
+        <Navbar userName={userName} />
+      )}
       {children}
     </>
   );

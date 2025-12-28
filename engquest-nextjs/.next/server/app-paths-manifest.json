@@ -1,9 +1,7 @@
 {
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/categories/route": "app/api/categories/route.js",
   "/api/quizzes/route": "app/api/quizzes/route.js",
-  "/page": "app/page.js",
-  "/topics/page": "app/topics/page.js",
-  "/learning/[slug]/page": "app/learning/[slug]/page.js",
-  "/learning/[slug]/quiz/page": "app/learning/[slug]/quiz/page.js"
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/admin/quizzes/[id]/route": "app/api/admin/quizzes/[id]/route.js",
+  "/learning/[slug]/quiz/page": "app/learning/[slug]/quiz/page.js",
+  "/admin/quizzes/[id]/page": "app/admin/quizzes/[id]/page.js"
 }

@@ -30,7 +30,7 @@ type QuizResult = {
   questions?: QuizQuestion[];
 };
 
-const levels = ["Basic", "Intermediate", "Advanced"] as const;
+const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
 
 const getRequestedCount = (input: string) => {
   const match = input.match(/(\d+)/);
@@ -60,7 +60,7 @@ const isQuizResult = (value: unknown): value is QuizResult => {
 export default function AdminAIVocabularyPage() {
   const [prompt, setPrompt] = useState("");
   const [level, setLevel] =
-    useState<(typeof levels)[number]>("Basic");
+    useState<(typeof levels)[number]>("Cơ bản");
   const [resultData, setResultData] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
