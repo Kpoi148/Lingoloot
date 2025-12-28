@@ -9,28 +9,14 @@ type QuizQuestion = {
   correct_answer: string;
 };
 
-const sampleQuestions: QuizQuestion[] = [
-  {
-    question_text: "Từ \"Bicycle\" có nghĩa là gì?",
-    options: ["Xe buýt", "Xe đạp", "Xe máy", "Tàu hỏa"],
-    correct_answer: "Xe đạp",
-  },
-  {
-    question_text: "IPA của từ \"Traffic\" là đáp án nào?",
-    options: ["/ˈtræf.ɪk/", "/ˈtrɑː.fɪk/", "/ˈtreɪ.fɪk/", "/ˈtrɒ.fɪk/"],
-    correct_answer: "/ˈtræf.ɪk/",
-  },
-  {
-    question_text: "Chọn cụm từ đúng: \"Băng qua đường\"",
-    options: ["Cross the road", "Drive the road", "Ride the road", "Run the road"],
-    correct_answer: "Cross the road",
-  },
-  {
-    question_text: "Từ nào thuộc nhóm phương tiện công cộng?",
-    options: ["Bus", "Bicycle", "Scooter", "Motorbike"],
-    correct_answer: "Bus",
-  },
-];
+type QuizApiResponse = {
+  data?: {
+    title?: string;
+    category?: string;
+    questions?: QuizQuestion[];
+  };
+  message?: string;
+};
 
 const TOTAL_TIME = 120;
 
@@ -43,7 +29,10 @@ const formatTime = (seconds: number) => {
 };
 
 export default function QuizPage({ params }: { params: { slug: string } }) {
-  const [questions, setQuestions] = useState<QuizQuestion[]>(() => sampleQuestions);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [quizTitle, setQuizTitle] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -54,7 +43,60 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   const [wrongIndexes, setWrongIndexes] = useState<number[]>([]);
 
   const total = questions.length;
-  const finished = answeredCount >= total || remaining <= 0;
+  const finished = total > 0 && (answeredCount >= total || remaining <= 0);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadQuiz = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/quizzes?slug=${params.slug}`, {
+          cache: "no-store",
+        });
+        const payload = (await response.json()) as QuizApiResponse;
+
+        if (!response.ok) {
+          throw new Error(payload.message ?? "Không thể tải quiz.");
+        }
+
+        if (active) {
+          setQuizTitle(payload.data?.title ?? "");
+          setQuestions(payload.data?.questions ?? []);
+        }
+      } catch (fetchError) {
+        if (active) {
+          setError(
+            fetchError instanceof Error
+              ? fetchError.message
+              : "Không thể tải quiz."
+          );
+          setQuestions([]);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadQuiz();
+
+    return () => {
+      active = false;
+    };
+  }, [params.slug]);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    setSelected(null);
+    setIsCorrect(null);
+    setAnsweredCount(0);
+    setScore(0);
+    setRemaining(TOTAL_TIME);
+    setWrongIndexes([]);
+  }, [questions]);
 
   useEffect(() => {
     if (finished) return;
@@ -94,6 +136,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
   const handleSelect = (option: string) => {
     if (selected || finished) return;
     const current = questions[currentIndex];
+    if (!current) return;
     const correct = option === current.correct_answer;
     setSelected(option);
     setIsCorrect(correct);
@@ -135,6 +178,8 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
 
   const currentQuestion = questions[currentIndex];
   const incorrectCount = Math.max(0, answeredCount - score);
+  const displayTitle =
+    quizTitle || `Luyện tập chủ đề: ${params.slug.replace(/-/g, " ")}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 px-4 py-12 text-slate-900">
@@ -146,7 +191,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
                 Quiz
               </p>
               <h1 className="text-2xl font-semibold text-slate-900">
-                Luyện tập chủ đề: {params.slug.replace(/-/g, " ")}
+                {displayTitle}
               </h1>
             </div>
             <Link
@@ -172,6 +217,22 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
             </div>
           </div>
         </div>
+
+        {loading && (
+          <div className="h-64 animate-pulse rounded-3xl border border-slate-200 bg-white/70" />
+        )}
+
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && total === 0 && (
+          <div className="rounded-2xl border border-slate-200 bg-white/80 px-6 py-8 text-center text-sm text-slate-500">
+            Chủ đề này chưa có quiz.
+          </div>
+        )}
 
         {finished && (
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 text-center shadow-lg shadow-slate-200/60">
@@ -205,7 +266,7 @@ export default function QuizPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        {!finished && currentQuestion && (
+        {!loading && !error && !finished && currentQuestion && (
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-200/60">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Câu {currentIndex + 1}

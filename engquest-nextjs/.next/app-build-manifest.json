@@ -1,10 +1,5 @@
 {
   "pages": {
-    "/api/auth/[...nextauth]/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/auth/[...nextauth]/route.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -17,60 +12,20 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-    "/admin/layout": [
+    "/api/auth/[...nextauth]/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/layout.js"
-    ],
-    "/admin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
-    ],
-    "/api/admin/overview/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/overview/route.js"
-    ],
-    "/admin/ai-hub/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/ai-hub/page.js"
-    ],
-    "/admin/ai-hub/vocabulary/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/ai-hub/vocabulary/page.js"
-    ],
-    "/api/admin/categories/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/categories/route.js"
-    ],
-    "/api/ai/generate/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/ai/generate/route.js"
-    ],
-    "/api/admin/vocabularies/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/vocabularies/route.js"
-    ],
-    "/admin/vocabularies/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/vocabularies/page.js"
-    ],
-    "/api/categories/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/categories/route.js"
+      "static/chunks/app/api/auth/[...nextauth]/route.js"
     ],
     "/topics/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/topics/page.js"
+    ],
+    "/api/categories/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/categories/route.js"
     ],
     "/learning/[slug]/page": [
       "static/chunks/webpack.js",
@@ -82,25 +37,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/learning/[slug]/quiz/page.js"
     ],
-    "/admin/quizzes/page": [
+    "/api/quizzes/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/quizzes/page.js"
-    ],
-    "/api/admin/quizzes/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/quizzes/route.js"
-    ],
-    "/admin/quizzes/create/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/quizzes/create/page.js"
-    ],
-    "/admin/ai-hub/quizzes/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/ai-hub/quizzes/page.js"
+      "static/chunks/app/api/quizzes/route.js"
     ]
   }
 }
