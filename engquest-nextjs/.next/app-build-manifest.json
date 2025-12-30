@@ -26,21 +26,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/categories/route.js"
-    ],
-    "/learning/[slug]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/learning/[slug]/page.js"
-    ],
-    "/learning/[slug]/flashcards/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/learning/[slug]/flashcards/page.js"
-    ],
-    "/api/vocabularies/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/vocabularies/route.js"
     ]
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import MediaUploader from "@/components/MediaUploader";
 
 type CategoryOption = {
   _id: string;
@@ -516,7 +517,7 @@ export default function AdminVocabulariesPage() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6">
-          <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
                 {editingItem ? "Sửa từ vựng" : "Thêm từ mới"}
@@ -570,7 +571,7 @@ export default function AdminVocabulariesPage() {
                 <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                   Meaning
                 </label>
-                <input
+                <textarea
                   value={formState.meaning}
                   onChange={(event) =>
                     setFormState((prev) => ({
@@ -578,7 +579,8 @@ export default function AdminVocabulariesPage() {
                       meaning: event.target.value,
                     }))
                   }
-                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                  rows={3}
+                  className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
                   placeholder="Xe đạp"
                 />
               </div>
@@ -588,7 +590,7 @@ export default function AdminVocabulariesPage() {
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     Example
                   </label>
-                  <input
+                  <textarea
                     value={formState.example}
                     onChange={(event) =>
                       setFormState((prev) => ({
@@ -596,7 +598,8 @@ export default function AdminVocabulariesPage() {
                         example: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    rows={3}
+                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
                     placeholder="I ride a bicycle to work."
                   />
                 </div>
@@ -604,7 +607,7 @@ export default function AdminVocabulariesPage() {
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     Example Meaning
                   </label>
-                  <input
+                  <textarea
                     value={formState.example_meaning}
                     onChange={(event) =>
                       setFormState((prev) => ({
@@ -612,7 +615,8 @@ export default function AdminVocabulariesPage() {
                         example_meaning: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    rows={3}
+                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
                     placeholder="Tôi đi làm bằng xe đạp."
                   />
                 </div>
@@ -641,55 +645,48 @@ export default function AdminVocabulariesPage() {
                 </select>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Image URL
+                    Image
                   </label>
-                  <input
-                    value={formState.image}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        image: event.target.value,
-                      }))
+                  <MediaUploader
+                    mediaType="image"
+                    initialValue={formState.image}
+                    onUploadComplete={(url) =>
+                      setFormState((prev) => ({ ...prev, image: url }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
-                    placeholder="https://..."
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Audio URL
+                    Video
                   </label>
-                  <input
-                    value={formState.audio}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        audio: event.target.value,
-                      }))
+                  <MediaUploader
+                    mediaType="video"
+                    initialValue={formState.video}
+                    onUploadComplete={(url) =>
+                      setFormState((prev) => ({ ...prev, video: url }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
-                    placeholder="https://..."
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Video URL
-                  </label>
-                  <input
-                    value={formState.video}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        video: event.target.value,
-                      }))
-                    }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
-                    placeholder="https://..."
-                  />
-                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  Audio URL
+                </label>
+                <input
+                  value={formState.audio}
+                  onChange={(event) =>
+                    setFormState((prev) => ({
+                      ...prev,
+                      audio: event.target.value,
+                    }))
+                  }
+                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                  placeholder="https://..."
+                />
               </div>
 
               <div className="flex items-center justify-end gap-3">

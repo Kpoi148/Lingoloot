@@ -272,6 +272,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/api/cloudinary/signature/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/cloudinary/signature">> = Specific
+  const handler = {} as typeof import("../../src/app/api/cloudinary/signature/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/api/progress/quiz/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/progress/quiz">> = Specific
