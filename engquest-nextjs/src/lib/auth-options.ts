@@ -56,6 +56,9 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role ?? "user",
+          image: user.avatarUrl ?? user.image ?? "/logo.png",
+          avatarUrl: user.avatarUrl ?? user.image ?? "/logo.png",
+          displayName: user.displayName ?? user.name,
         };
       },
     }),
@@ -66,6 +69,11 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = (user as { role?: string }).role ?? "user";
         token.name = (user as { name?: string }).name ?? token.name;
+        token.image = (user as { image?: string }).image ?? token.image;
+        token.avatarUrl =
+          (user as { avatarUrl?: string }).avatarUrl ?? token.avatarUrl;
+        token.displayName =
+          (user as { displayName?: string }).displayName ?? token.displayName;
       }
       return token;
     },
@@ -75,11 +83,23 @@ export const authOptions: NextAuthOptions = {
           id?: string;
           role?: string;
           name?: string;
+          image?: string;
+          avatarUrl?: string;
+          displayName?: string;
         };
         sessionUser.id = token.id as string;
         sessionUser.role = token.role as string;
         if (token.name) {
           sessionUser.name = token.name as string;
+        }
+        if (token.image) {
+          sessionUser.image = token.image as string;
+        }
+        if (token.avatarUrl) {
+          sessionUser.avatarUrl = token.avatarUrl as string;
+        }
+        if (token.displayName) {
+          sessionUser.displayName = token.displayName as string;
         }
       }
       return session;

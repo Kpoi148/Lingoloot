@@ -36,12 +36,19 @@ const userMenuItems: UserMenuItem[] = [
   { label: "Đăng xuất", action: "signout", icon: LogOut },
 ];
 
-export default function Navbar({ userName }: { userName?: string }) {
+export default function Navbar({
+  userName,
+  userAvatarUrl,
+}: {
+  userName?: string;
+  userAvatarUrl?: string;
+}) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const displayName = userName?.trim() || "Người dùng";
   const avatarLetter = displayName.slice(0, 1).toUpperCase();
+  const avatarUrl = userAvatarUrl?.trim();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/80 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80">
@@ -81,9 +88,17 @@ export default function Navbar({ userName }: { userName?: string }) {
               aria-expanded={userMenuOpen}
               aria-haspopup="menu"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-200">
-                {avatarLetter}
-              </span>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={displayName}
+                  className="h-9 w-9 rounded-full border border-slate-200 object-cover dark:border-slate-800"
+                />
+              ) : (
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-200">
+                  {avatarLetter}
+                </span>
+              )}
               <span className="hidden sm:inline">{displayName}</span>
               <ChevronDown className="h-4 w-4" />
             </button>
