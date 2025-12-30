@@ -1,6 +1,12 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/admin/vocabularies/route": "app/api/admin/vocabularies/route.js",
   "/api/categories/route": "app/api/categories/route.js",
+  "/api/admin/overview/route": "app/api/admin/overview/route.js",
+  "/topics/page": "app/topics/page.js",
+  "/learning/[slug]/page": "app/learning/[slug]/page.js",
   "/page": "app/page.js",
-  "/topics/page": "app/topics/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/admin/ai-hub/page": "app/admin/ai-hub/page.js",
+  "/admin/vocabularies/page": "app/admin/vocabularies/page.js"
 }
