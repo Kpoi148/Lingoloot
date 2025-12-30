@@ -17,7 +17,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     session?.user?.name ||
     session?.user?.email ||
     "Người dùng";
-  const userAvatarUrl = session?.user?.avatarUrl || session?.user?.image;
+  const userAvatarUrl =
+    session?.user?.avatarUrl ?? session?.user?.image ?? undefined;
 
   return (
     <>
