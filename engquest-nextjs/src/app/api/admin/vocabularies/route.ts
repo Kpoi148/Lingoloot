@@ -90,6 +90,10 @@ export async function POST(req: Request) {
       },
     });
 
+    await Category.findByIdAndUpdate(category_id, {
+      $set: { lastContentUpdatedAt: new Date() },
+    });
+
     await TopicProgress.updateMany(
       { category_id },
       { $set: { vocab_completed: false, updated_at: new Date() } }

@@ -2,5 +2,5 @@
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/page": "app/page.js",
   "/(app)/topics/page": "app/(app)/topics/page.js",
-  "/(app)/learning/[slug]/page": "app/(app)/learning/[slug]/page.js"
+  "/(app)/admin/vocabularies/page": "app/(app)/admin/vocabularies/page.js"
 }

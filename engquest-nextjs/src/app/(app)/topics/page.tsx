@@ -11,6 +11,7 @@ import {
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth-options";
 import { connectToDatabase } from "@/lib/mongodb";
+import { isRecent } from "@/lib/utils";
 import CategoryModel from "@/models/Category";
 import TopicProgress from "@/models/TopicProgress";
 import Vocabulary from "@/models/Vocabulary";
@@ -24,6 +25,7 @@ type Category = {
   order: number;
   count?: number;
   progress?: number;
+  lastContentUpdatedAt?: Date;
 };
 
 export const dynamic = "force-dynamic";
@@ -43,7 +45,7 @@ const loadCategories = async () => {
 
   const categories = await CategoryModel.find()
     .sort({ order: 1 })
-    .select("name slug description image_url order count")
+    .select("name slug description image_url order count lastContentUpdatedAt")
     .lean();
 
   const vocabCounts = await Vocabulary.aggregate([
@@ -134,6 +136,9 @@ export default async function TopicsPage() {
               100,
               Math.max(0, category.progress ?? 0)
             );
+            const isNew = category.lastContentUpdatedAt
+              ? isRecent(category.lastContentUpdatedAt)
+              : false;
 
             return (
               <Link
@@ -141,7 +146,12 @@ export default async function TopicsPage() {
                 href={`/learning/${category.slug}`}
                 className="group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-lg shadow-slate-200/60 backdrop-blur transition duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-xl"
               >
-                <div className="absolute right-4 top-4 h-14 w-14 rounded-2xl bg-amber-100/70 blur-2xl transition group-hover:scale-110" />
+                {isNew && (
+                  <span className="absolute right-2 top-2 z-10 rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white animate-pulse">
+                    NEW
+                  </span>
+                )}
+                <div className="absolute right-4 top-4 z-0 h-14 w-14 rounded-2xl bg-amber-100/70 blur-2xl transition group-hover:scale-110" />
                 <div className="mb-5 flex items-center justify-between">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-md shadow-slate-900/20 transition group-hover:scale-105">
                     <Icon className="h-5 w-5" aria-hidden="true" />

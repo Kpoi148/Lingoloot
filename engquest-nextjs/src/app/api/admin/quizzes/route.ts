@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import Category from "../../../../models/Category";
 import Quiz, { type QuizQuestion } from "../../../../models/Quiz";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
@@ -101,6 +102,11 @@ export async function POST(req: Request) {
       level,
       questions: normalizedQuestions,
     });
+
+    await Category.findOneAndUpdate(
+      { slug: category },
+      { $set: { lastContentUpdatedAt: new Date() } }
+    );
 
     return NextResponse.json({ data: { _id: created._id.toString() } });
   } catch (error) {

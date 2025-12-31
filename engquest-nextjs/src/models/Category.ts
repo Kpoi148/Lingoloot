@@ -7,6 +7,7 @@ export interface CategoryDocument {
   image_url?: string;
   order: number;
   count?: number;
+  lastContentUpdatedAt?: Date;
 }
 
 const CategorySchema = new mongoose.Schema<CategoryDocument>(
@@ -17,6 +18,7 @@ const CategorySchema = new mongoose.Schema<CategoryDocument>(
     image_url: { type: String, trim: true },
     order: { type: Number, required: true, default: 0 },
     count: { type: Number, min: 0 },
+    lastContentUpdatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

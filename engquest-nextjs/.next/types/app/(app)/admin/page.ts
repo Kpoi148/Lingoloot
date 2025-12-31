@@ -1,8 +1,8 @@
-// File: E:\JS\LingoLoot\engquest-nextjs\src\app\(app)\learning\[slug]\page.tsx
-import * as entry from '../../../../../../src/app/(app)/learning/[slug]/page.js'
+// File: E:\JS\LingoLoot\engquest-nextjs\src\app\(app)\admin\page.tsx
+import * as entry from '../../../../../src/app/(app)/admin/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../../src/app/(app)/learning/[slug]/page.js')
+type TEntry = typeof import('../../../../../src/app/(app)/admin/page.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }
