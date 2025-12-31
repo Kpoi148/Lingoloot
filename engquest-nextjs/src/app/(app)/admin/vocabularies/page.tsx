@@ -29,15 +29,18 @@ const loadData = async (): Promise<{
     .lean();
 
   const categoryMap = new Map(
-    categories.map((category) => [String(category._id), category])
+    categories.map((category) => [String(category._id), category.name])
   );
 
-  const items = vocabularies.map((item) => ({
-    ...item,
-    _id: item._id.toString(),
-    category_id: String(item.category_id),
-    category: categoryMap.get(String(item.category_id)) ?? null,
-  }));
+  const items = vocabularies.map((item) => {
+    const categoryName = categoryMap.get(String(item.category_id));
+    return {
+      ...item,
+      _id: item._id.toString(),
+      category_id: String(item.category_id),
+      category: categoryName ? { name: categoryName } : undefined,
+    };
+  });
 
   return {
     items,
