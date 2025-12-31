@@ -37,11 +37,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/admin/overview/route.js"
     ],
-    "/(app)/admin/vocabularies/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/admin/vocabularies/page.js"
-    ],
     "/api/admin/vocabularies/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -61,6 +56,36 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(app)/topics/page.js"
+    ],
+    "/(app)/learning/[slug]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(app)/learning/[slug]/page.js"
+    ],
+    "/api/admin/vocabularies/[id]/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/admin/vocabularies/[id]/route.js"
+    ],
+    "/(app)/profile/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(app)/profile/loading.js"
+    ],
+    "/(app)/profile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(app)/profile/page.js"
+    ],
+    "/(app)/admin/vocabularies/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(app)/admin/vocabularies/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

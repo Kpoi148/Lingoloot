@@ -405,6 +405,9 @@
   .ml-3 {
     margin-left: calc(var(--spacing) * 3);
   }
+  .ml-auto {
+    margin-left: auto;
+  }
   .block {
     display: block;
   }
@@ -512,6 +515,9 @@
   }
   .min-h-\[320px\] {
     min-height: 320px;
+  }
+  .min-h-\[520px\] {
+    min-height: 520px;
   }
   .min-h-\[calc\(100vh-220px\)\] {
     min-height: calc(100vh - 220px);
