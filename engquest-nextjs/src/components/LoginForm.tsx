@@ -1,7 +1,5 @@
 "use client";
 
-import { getSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type LoginFormProps = {
@@ -9,9 +7,6 @@ type LoginFormProps = {
 };
 
 export default function LoginForm({ callbackUrl }: LoginFormProps) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const redirectUrl = callbackUrl ?? "/topics";
@@ -21,28 +16,45 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
     setError(null);
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      email: email.trim().toLowerCase(),
-      password,
-      redirect: false,
-      callbackUrl: redirectUrl,
-    });
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
+    const password = String(formData.get("password") ?? "");
 
-    setLoading(false);
-
-    if (!result || result.error) {
+    if (!email || !password) {
       setError("Email hoặc mật khẩu không đúng.");
+      setLoading(false);
       return;
     }
 
-    const session = await getSession();
-    const role = (session?.user as { role?: string } | undefined)?.role;
-    if (role === "admin") {
-      router.push("/admin");
-    } else {
-      router.push(result.url ?? redirectUrl);
+    try {
+      const { getSession, signIn } = await import("next-auth/react");
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: redirectUrl,
+      });
+
+      if (!result || result.error) {
+        setError("Email hoặc mật khẩu không đúng.");
+        setLoading(false);
+        return;
+      }
+
+      const session = await getSession();
+      const role = (session?.user as { role?: string } | undefined)?.role;
+      const targetUrl = role === "admin" ? "/admin" : result.url ?? redirectUrl;
+      window.location.assign(targetUrl);
+    } catch (signInError) {
+      setError(
+        signInError instanceof Error
+          ? signInError.message
+          : "Không thể đăng nhập."
+      );
+      setLoading(false);
     }
-    router.refresh();
   };
 
   return (
@@ -74,8 +86,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
             type="email"
             autoComplete="email"
             required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            name="email"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-slate-900/70 focus:ring-4 focus:ring-slate-900/10"
             placeholder="you@example.com"
           />
@@ -90,8 +101,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
             type="password"
             autoComplete="current-password"
             required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            name="password"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-slate-900/70 focus:ring-4 focus:ring-slate-900/10"
             placeholder="••••••••"
           />
@@ -110,7 +120,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
         className="group mt-6 h-11 w-full rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
       >
         <span className="flex items-center justify-center gap-2">
-      {loading ? "Đang xử lý..." : "Đăng nhập"}
+          {loading ? "Đang xử lý..." : "Đăng nhập"}
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 transition group-hover:scale-110" />
         </span>
       </button>

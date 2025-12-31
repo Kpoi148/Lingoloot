@@ -27,7 +27,7 @@ export default function BrandLogo({
           alt={alt}
           width={size}
           height={size}
-          className="h-full w-full object-contain"
+          className="h-full w-full rounded-xl object-contain"
         />
       ) : (
         fallback

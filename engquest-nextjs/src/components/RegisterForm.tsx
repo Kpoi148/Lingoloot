@@ -7,10 +7,6 @@ type RegisterFormProps = {
 };
 
 export default function RegisterForm({ onSuccess }: RegisterFormProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +16,14 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     setError(null);
     setSuccess(null);
 
-    if (!name.trim() || !email.trim() || !password) {
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "");
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+    if (!name || !email || !password) {
       setError("Vui lòng nhập đầy đủ thông tin.");
       return;
     }
@@ -52,10 +55,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       }
 
       setSuccess(data.message ?? "User created successfully");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      form.reset();
       setLoading(false);
       onSuccess?.();
     } catch (fetchError) {
@@ -95,8 +95,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
             type="text"
             autoComplete="name"
             required
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            name="name"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-emerald-400/80 focus:ring-4 focus:ring-emerald-200/70"
             placeholder="Nguyễn Văn A"
           />
@@ -111,8 +110,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
             type="email"
             autoComplete="email"
             required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            name="email"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-emerald-400/80 focus:ring-4 focus:ring-emerald-200/70"
             placeholder="you@example.com"
           />
@@ -127,8 +125,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
             type="password"
             autoComplete="new-password"
             required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            name="password"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-emerald-400/80 focus:ring-4 focus:ring-emerald-200/70"
             placeholder="••••••••"
           />
@@ -146,8 +143,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
             type="password"
             autoComplete="new-password"
             required
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
+            name="confirmPassword"
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-emerald-400/80 focus:ring-4 focus:ring-emerald-200/70"
             placeholder="••••••••"
           />

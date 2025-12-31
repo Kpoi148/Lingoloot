@@ -17,50 +17,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/auth/[...nextauth]/route.js"
     ],
-    "/topics/loading": [
+    "/(app)/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/topics/loading.js"
+      "static/chunks/app/(app)/layout.js"
     ],
-    "/topics/page": [
+    "/(app)/topics/loading": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/topics/page.js"
+      "static/chunks/app/(app)/topics/loading.js"
     ],
-    "/admin/layout": [
+    "/(app)/topics/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/layout.js"
+      "static/chunks/app/(app)/topics/page.js"
     ],
-    "/admin/page": [
+    "/(app)/learning/[slug]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
-    ],
-    "/api/admin/overview/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/overview/route.js"
-    ],
-    "/admin/vocabularies/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/vocabularies/page.js"
-    ],
-    "/api/admin/vocabularies/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/vocabularies/route.js"
-    ],
-    "/api/categories/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/categories/route.js"
-    ],
-    "/profile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/profile/page.js"
+      "static/chunks/app/(app)/learning/[slug]/page.js"
     ]
   }
 }

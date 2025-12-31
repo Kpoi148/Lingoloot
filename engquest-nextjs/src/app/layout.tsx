@@ -1,6 +1,4 @@
 import "./globals.css";
-import AppShell from "@/components/AppShell";
-import Providers from "@/components/Providers";
 
 export const metadata = {
   title: "LingoLoot",
@@ -15,9 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
-        <Providers>
-          <AppShell>{children}</AppShell>
-        </Providers>
+        {children}
       </body>
     </html>
   );
