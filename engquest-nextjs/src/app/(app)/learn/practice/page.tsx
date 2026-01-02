@@ -11,12 +11,18 @@ type GameListItem = {
 };
 
 const getActiveGames = unstable_cache(
-  async () => {
+  async (): Promise<GameListItem[]> => {
     await connectToDatabase();
-    return Game.find({ status: "active" })
+    const games = await Game.find({ status: "active" })
       .select("title topicName createdAt")
       .sort({ createdAt: -1 })
       .lean();
+    return games.map((game) => ({
+      _id: game._id.toString(),
+      title: game.title,
+      topicName: game.topicName,
+      createdAt: game.createdAt,
+    }));
   },
   ["games:list"],
   { revalidate: 60 }
@@ -30,7 +36,7 @@ const formatDate = (value?: Date) => {
 };
 
 export default async function PracticeListPage() {
-  const games = (await getActiveGames()) as GameListItem[];
+  const games = await getActiveGames();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 px-4 py-12 text-slate-900">

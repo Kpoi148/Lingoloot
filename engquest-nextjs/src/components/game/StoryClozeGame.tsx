@@ -4,6 +4,7 @@ import {
   DndContext,
   MouseSensor,
   TouchSensor,
+  type DragEndEvent,
   closestCenter,
   useDraggable,
   useDroppable,
@@ -43,6 +44,28 @@ const shuffle = <T,>(items: T[]) => {
     [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
   }
   return cloned;
+};
+
+const splitIntoTokens = (text: string) => {
+  const tokens: Array<{ value: string; isWord: boolean }> = [];
+  const pattern = /[A-Za-z]+(?:['-][A-Za-z]+)*/g;
+  let lastIndex = 0;
+  let match = pattern.exec(text);
+  while (match) {
+    if (match.index > lastIndex) {
+      tokens.push({
+        value: text.slice(lastIndex, match.index),
+        isWord: false,
+      });
+    }
+    tokens.push({ value: match[0], isWord: true });
+    lastIndex = match.index + match[0].length;
+    match = pattern.exec(text);
+  }
+  if (lastIndex < text.length) {
+    tokens.push({ value: text.slice(lastIndex), isWord: false });
+  }
+  return tokens;
 };
 
 const ProgressBar = ({ progress }: { progress: number }) => (
@@ -127,6 +150,11 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [wrongGaps, setWrongGaps] = useState<string[]>([]);
+  const [meaningCache, setMeaningCache] = useState<Record<string, string>>({});
+  const [selectedMeaning, setSelectedMeaning] = useState<{
+    word: string;
+    meaning: string;
+  } | null>(null);
   const [bankSeed] = useState(() => Math.random());
 
   const sensors = useSensors(
@@ -143,6 +171,16 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
       )
       .filter(Boolean) as Array<{ id: string; answer: string }>;
   }, [initialGame.content]);
+
+  const answerSet = useMemo(() => {
+    const set = new Set<string>();
+    gaps.forEach((gap) => {
+      if (gap.answer) {
+        set.add(gap.answer.toLowerCase());
+      }
+    });
+    return set;
+  }, [gaps]);
 
   const bankItems = useMemo(() => {
     const answers = gaps.map((gap, index) => ({
@@ -177,13 +215,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     ? Math.round((answeredCount / gaps.length) * 100)
     : 0;
 
-  const handleDragEnd = ({
-    active,
-    over,
-  }: {
-    active: { id: string };
-    over: { id: string } | null;
-  }) => {
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over) return;
     if (!over.id.toString().startsWith("gap-")) return;
 
@@ -195,7 +227,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     setUserAnswers((prev) => {
       const next = { ...prev };
       const existingGap = Object.entries(next).find(
-        ([, value]) => value === active.id
+        ([, value]) => value === active.id.toString()
       );
       if (existingGap) {
         delete next[existingGap[0]];
@@ -232,7 +264,53 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     setScore(gaps.length - wrong.length);
     setWrongGaps(wrong);
     setFeedback("wrong");
-    setTimeout(() => setWrongGaps([]), 600);
+  };
+
+  const handleRetryWrong = () => {
+    if (wrongGaps.length === 0) return;
+    setUserAnswers((prev) => {
+      const next = { ...prev };
+      wrongGaps.forEach((gapId) => {
+        delete next[gapId];
+      });
+      return next;
+    });
+    setStatus("playing");
+    setFeedback(null);
+    setWrongGaps([]);
+  };
+
+  const loadMeaning = async (word: string) => {
+    const normalized = word.toLowerCase();
+    if (meaningCache[normalized]) {
+      setSelectedMeaning({ word, meaning: meaningCache[normalized] });
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/dictionary/meaning?word=${encodeURIComponent(word)}`,
+        { cache: "no-store" }
+      );
+      const payload = (await response.json()) as {
+        data?: { word?: string; meaning?: string };
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(payload.message ?? "Không thể dịch từ.");
+      }
+
+      const meaning = payload.data?.meaning?.trim() ?? "";
+      if (!meaning) {
+        throw new Error("Không tìm thấy nghĩa.");
+      }
+
+      setMeaningCache((prev) => ({ ...prev, [normalized]: meaning }));
+      setSelectedMeaning({ word, meaning });
+    } catch {
+      // Bỏ qua lỗi tra nghĩa để không gián đoạn trải nghiệm.
+    }
   };
 
   const resetGame = () => {
@@ -241,6 +319,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     setScore(0);
     setFeedback(null);
     setWrongGaps([]);
+    setSelectedMeaning(null);
   };
 
   return (
@@ -256,7 +335,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
                 {initialGame.title}
               </h1>
               <p className="mt-2 text-sm text-slate-600">
-                Keo tha tu vao o trong. Nhan Check de kiem tra.
+                Kéo thả từ vào ô trống. Nhấn “Kiểm tra” để chấm điểm.
               </p>
             </div>
             <Link
@@ -291,9 +370,34 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
               <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-6 text-lg leading-relaxed text-slate-700">
                 {initialGame.content.map((item, index) => {
                   if (item.type === "text") {
-                    return (
-                      <span key={`${item.text}-${index}`}>{item.text}</span>
-                    );
+                    return splitIntoTokens(item.text).map((token, tokenIndex) => {
+                      if (!token.isWord) {
+                        return (
+                          <span key={`${item.text}-${index}-${tokenIndex}`}>
+                            {token.value}
+                          </span>
+                        );
+                      }
+                      const isAnswer = answerSet.has(token.value.toLowerCase());
+                      return (
+                        <button
+                          key={`${item.text}-${index}-${tokenIndex}`}
+                          type="button"
+                          onClick={() => {
+                            if (!isAnswer) {
+                              void loadMeaning(token.value);
+                            }
+                          }}
+                          className={`mx-0.5 inline-flex items-center rounded-md px-1 text-sm font-semibold ${
+                            isAnswer
+                              ? "cursor-default text-slate-400"
+                              : "text-slate-700 underline decoration-dotted hover:text-slate-900"
+                          }`}
+                        >
+                          {token.value}
+                        </button>
+                      );
+                    });
                   }
                   const gapId = `gap-${index}`;
                   const filledId = userAnswers[gapId];
@@ -329,17 +433,31 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
                   disabled={status === "checking" || status === "completed"}
                   className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {status === "completed" ? "Completed" : "Check"}
+                  {status === "completed" ? "Đã hoàn thành" : "Kiểm tra"}
                 </button>
               </div>
 
               {feedback === "wrong" && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                  Sai roi. Hay thu lai nhe!
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  <span>Sai rồi. Hãy thử lại nhé!</span>
+                  <button
+                    type="button"
+                    onClick={handleRetryWrong}
+                    className="rounded-full border border-red-200 bg-white px-4 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    Thử lại
+                  </button>
                 </div>
               )}
             </div>
           </section>
+
+          {selectedMeaning && (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              <span className="font-semibold">{selectedMeaning.word}:</span>{" "}
+              {selectedMeaning.meaning}
+            </div>
+          )}
 
           <section className="sticky bottom-4 rounded-2xl border border-slate-100 bg-white/95 p-5 shadow-xl md:static">
             <div className="flex items-center justify-between gap-3">
@@ -347,7 +465,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
                 Word Bank
               </p>
               <span className="text-xs text-slate-400">
-                {availableItems.length} words left
+                Còn {availableItems.length} từ
               </span>
             </div>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -356,7 +474,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
               ))}
               {availableItems.length === 0 && (
                 <span className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-600">
-                  All used!
+                  Đã dùng hết!
                 </span>
               )}
             </div>
@@ -382,10 +500,10 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
                 Victory
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-                Hoan thanh!
+                Hoàn thành!
               </h2>
               <p className="mt-2 text-sm text-slate-600">
-                Ban dat {score}/{gaps.length} diem.
+                Bạn đạt {score}/{gaps.length} điểm.
               </p>
               <div className="mt-4 flex flex-col gap-2">
                 <button
@@ -393,13 +511,13 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
                   onClick={resetGame}
                   className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20"
                 >
-                  Choi lai
+                  Chơi lại
                 </button>
                 <Link
                   href="/topics"
                   className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600"
                 >
-                  Thoat
+                  Thoát
                 </Link>
               </div>
             </motion.div>
