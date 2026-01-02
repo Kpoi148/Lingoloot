@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2, RefreshCcw, Save } from "lucide-react";
 import toast from "react-hot-toast";
 
+export const dynamic = "force-static";
+
 type CategoryOption = {
   _id: string;
   name: string;

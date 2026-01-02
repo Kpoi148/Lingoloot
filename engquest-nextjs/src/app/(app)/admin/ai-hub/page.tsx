@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { BookA, BrainCircuit, Layers } from "lucide-react";
+import { BookA, BrainCircuit, Gamepad2 } from "lucide-react";
+
+export const dynamic = "force-static";
 
 const features = [
   {
@@ -10,11 +12,11 @@ const features = [
     accent: "from-indigo-500 to-sky-400",
   },
   {
-    title: "Topic Builder",
-    description: "Tạo danh sách 20 từ vựng theo chủ đề chỉ trong 1 click.",
-    href: "/admin/ai-hub/topics",
-    icon: Layers,
-    accent: "from-indigo-500 to-violet-400",
+    title: "Game Builder",
+    description: "Tạo Story Cloze game từ chủ đề và từ vựng đã có.",
+    href: "/admin/games/create",
+    icon: Gamepad2,
+    accent: "from-emerald-500 to-teal-400",
   },
   {
     title: "Quiz Master",

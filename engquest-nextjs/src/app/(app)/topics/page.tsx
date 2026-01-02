@@ -10,11 +10,12 @@ import {
 } from "lucide-react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth-options";
-import { connectToDatabase } from "@/lib/mongodb";
+import {
+  getCachedCategories,
+  getCachedTopicProgress,
+  getCachedVocabCounts,
+} from "@/lib/cached-queries";
 import { isRecent } from "@/lib/utils";
-import CategoryModel from "@/models/Category";
-import TopicProgress from "@/models/TopicProgress";
-import Vocabulary from "@/models/Vocabulary";
 
 type Category = {
   _id: string;
@@ -40,16 +41,11 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 const loadCategories = async () => {
-  await connectToDatabase();
   const session = await getServerSession(authOptions);
 
-  const categories = await CategoryModel.find()
-    .sort({ order: 1 })
-    .select("name slug description image_url order count lastContentUpdatedAt")
-    .lean();
-
-  const vocabCounts = await Vocabulary.aggregate([
-    { $group: { _id: "$category_id", count: { $sum: 1 } } },
+  const [categories, vocabCounts] = await Promise.all([
+    getCachedCategories(),
+    getCachedVocabCounts(),
   ]);
 
   const countMap = new Map<string, number>(
@@ -62,12 +58,7 @@ const loadCategories = async () => {
   >();
 
   if (session?.user?.id) {
-    const progressDocs = await TopicProgress.find({
-      user_id: session.user.id,
-    })
-      .select("category_id vocab_completed quiz_completed")
-      .lean();
-
+    const progressDocs = await getCachedTopicProgress(session.user.id);
     progressDocs.forEach((doc) => {
       progressMap.set(String(doc.category_id), {
         vocab_completed: doc.vocab_completed,

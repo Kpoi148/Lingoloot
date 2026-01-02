@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+export const dynamic = "force-static";
+
 type CategoryOption = {
   _id: string;
   name: string;

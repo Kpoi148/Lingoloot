@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { Activity, BookOpen, Pencil, Save, Target } from "lucide-react";
 import toast from "react-hot-toast";
 import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
@@ -158,9 +159,12 @@ export default function ProfileClient({
             {profile && !isEditing && (
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     src={profile.avatarUrl || "/logo.png"}
                     alt={profile.displayName || profile.name}
+                    width={80}
+                    height={80}
+                    sizes="80px"
                     className="h-20 w-20 rounded-full border border-slate-200 object-cover"
                   />
                   <div>

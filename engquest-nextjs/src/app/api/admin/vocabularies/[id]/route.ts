@@ -50,7 +50,9 @@ export async function PUT(
         },
       },
       { new: true }
-    ).lean();
+    )
+      .select("_id")
+      .lean();
 
     if (!updated) {
       return NextResponse.json({ message: "Vocabulary not found." }, { status: 404 });
@@ -75,7 +77,9 @@ export async function DELETE(
   try {
     await connectToDatabase();
     const { id } = await params;
-    const deleted = await Vocabulary.findByIdAndDelete(id).lean();
+    const deleted = await Vocabulary.findByIdAndDelete(id)
+      .select("_id")
+      .lean();
 
     if (!deleted) {
       return NextResponse.json({ message: "Vocabulary not found." }, { status: 404 });

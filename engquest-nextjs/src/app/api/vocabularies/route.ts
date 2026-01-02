@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Category from "../../../models/Category";
+import { getCachedCategoryBySlug } from "../../../lib/cached-queries";
 import Vocabulary from "../../../models/Vocabulary";
 import { connectToDatabase } from "../../../lib/mongodb";
 
@@ -19,9 +19,7 @@ export async function GET(req: Request) {
 
     await connectToDatabase();
 
-    const category = await Category.findOne({ slug })
-      .select("name slug description")
-      .lean();
+    const category = await getCachedCategoryBySlug(slug);
 
     if (!category) {
       return NextResponse.json(

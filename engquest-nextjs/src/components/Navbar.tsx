@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
@@ -26,7 +27,7 @@ type UserMenuItem =
 
 const navItems: NavItem[] = [
   { label: "Học tập", href: "/topics" },
-  { label: "Bài tập", href: "/exercises" },
+  { label: "Trò chơi", href: "/learn/practice" },
   { label: "Xếp hạng", href: "/leaderboard" },
 ];
 
@@ -89,9 +90,12 @@ export default function Navbar({
               aria-haspopup="menu"
             >
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt={displayName}
+                  width={36}
+                  height={36}
+                  sizes="36px"
                   className="h-9 w-9 rounded-full border border-slate-200 object-cover dark:border-slate-800"
                 />
               ) : (

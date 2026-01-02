@@ -8,6 +8,7 @@ import {
   type ChangeEvent,
   type DragEvent,
 } from "react";
+import Image from "next/image";
 
 type MediaType = "image" | "video";
 
@@ -212,11 +213,15 @@ export default function MediaUploader({
         ) : previewUrl ? (
           <div className="relative w-full">
             {mediaType === "image" ? (
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="max-h-64 w-full rounded-xl object-contain"
-              />
+              <div className="relative h-64 w-full overflow-hidden rounded-xl">
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 512px"
+                  className="object-contain"
+                />
+              </div>
             ) : (
               <video
                 src={previewUrl}

@@ -29,7 +29,9 @@ export async function POST(req: Request) {
       { user_id: session.user.id, category_id },
       { $set: { vocab_completed: true, updated_at: new Date() } },
       { new: true, upsert: true }
-    ).lean();
+    )
+      .select("vocab_completed quiz_completed")
+      .lean();
 
     const completed =
       (progress?.vocab_completed ? 50 : 0) +

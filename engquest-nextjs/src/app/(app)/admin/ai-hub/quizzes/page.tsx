@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2, Save, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 
+export const dynamic = "force-static";
+
 const defaultPrompt =
   "Generate a multiple-choice quiz. Explanation language: Vietnamese.";
 

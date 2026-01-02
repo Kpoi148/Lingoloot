@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type VocabularyMedia = {
@@ -75,11 +76,13 @@ function Flashcard({
             {ipa && <p className="text-sm text-slate-500">{ipa}</p>}
           </div>
           {imageUrl && (
-            <div className="mt-6 h-24 w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
-              <img
+            <div className="relative mt-6 h-24 w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+              <Image
                 src={imageUrl}
                 alt={word}
-                className="h-full w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 320px"
+                className="object-cover"
               />
             </div>
           )}

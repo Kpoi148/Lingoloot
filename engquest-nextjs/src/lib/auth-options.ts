@@ -41,7 +41,9 @@ export const authOptions: NextAuthOptions = {
 
         await connectToDatabase();
 
-        const user = await User.findOne({ email: credentials.email }).lean();
+        const user = await User.findOne({ email: credentials.email })
+          .select("email password name role avatarUrl image displayName")
+          .lean();
         if (!user || !user.password) {
           return null;
         }

@@ -1,9 +1,17 @@
 import "./globals.css";
+import { Manrope } from "next/font/google";
 
 export const metadata = {
   title: "LingoLoot",
   description: "Authentication for LingoLoot",
 };
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -12,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">
+      <body className={`${manrope.variable} min-h-screen antialiased font-[var(--font-body)]`}>
         {children}
       </body>
     </html>

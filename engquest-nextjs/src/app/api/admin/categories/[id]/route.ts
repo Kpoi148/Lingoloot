@@ -41,7 +41,9 @@ export async function PUT(
         count: Number.isFinite(count) ? count : undefined,
       },
       { new: true }
-    ).lean();
+    )
+      .select("_id")
+      .lean();
 
     if (!updated) {
       return NextResponse.json({ message: "Category not found." }, { status: 404 });
@@ -66,7 +68,7 @@ export async function DELETE(
   try {
     await connectToDatabase();
     const { id } = await params;
-    const category = await Category.findById(id).lean();
+    const category = await Category.findById(id).select("_id").lean();
 
     if (!category) {
       return NextResponse.json({ message: "Category not found." }, { status: 404 });
@@ -76,7 +78,9 @@ export async function DELETE(
       category_id: { $in: [category._id, category._id.toString()] },
     });
 
-    const deleted = await Category.findByIdAndDelete(id).lean();
+    const deleted = await Category.findByIdAndDelete(id)
+      .select("_id")
+      .lean();
 
     if (!deleted) {
       return NextResponse.json({ message: "Category not found." }, { status: 404 });

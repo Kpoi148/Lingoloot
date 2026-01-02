@@ -1,25 +1,21 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../lib/auth-options";
-import Category from "../../../models/Category";
-import Vocabulary from "../../../models/Vocabulary";
-import TopicProgress from "../../../models/TopicProgress";
-import { connectToDatabase } from "../../../lib/mongodb";
+import {
+  getCachedCategorySummaries,
+  getCachedTopicProgress,
+  getCachedVocabCounts,
+} from "../../../lib/cached-queries";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    await connectToDatabase();
     const session = await getServerSession(authOptions);
 
-    const categories = await Category.find()
-      .sort({ order: 1 })
-      .select("name slug description image_url order count")
-      .lean();
-
-    const vocabCounts = await Vocabulary.aggregate([
-      { $group: { _id: "$category_id", count: { $sum: 1 } } },
+    const [categories, vocabCounts] = await Promise.all([
+      getCachedCategorySummaries(),
+      getCachedVocabCounts(),
     ]);
 
     const countMap = new Map<string, number>(
@@ -29,12 +25,7 @@ export async function GET() {
     const progressMap = new Map<string, { vocab_completed?: boolean; quiz_completed?: boolean }>();
 
     if (session?.user?.id) {
-      const progressDocs = await TopicProgress.find({
-        user_id: session.user.id,
-      })
-        .select("category_id vocab_completed quiz_completed")
-        .lean();
-
+      const progressDocs = await getCachedTopicProgress(session.user.id);
       progressDocs.forEach((doc) => {
         progressMap.set(String(doc.category_id), {
           vocab_completed: doc.vocab_completed,

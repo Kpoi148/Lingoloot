@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Category from "@/models/Category";
-import Vocabulary from "@/models/Vocabulary";
-import { connectToDatabase } from "@/lib/mongodb";
+import {
+  getCachedCategoryBySlug,
+  getCachedVocabCountByCategory,
+} from "@/lib/cached-queries";
 
 export const dynamic = "force-dynamic";
 
@@ -14,19 +15,16 @@ type LearningPageProps = {
 
 export default async function LearningPage({ params }: LearningPageProps) {
   const { slug } = await params;
-  await connectToDatabase();
 
-  const category = await Category.findOne({ slug })
-    .select("name description slug")
-    .lean();
+  const category = await getCachedCategoryBySlug(slug);
 
   if (!category) {
     notFound();
   }
 
-  const vocabCount = await Vocabulary.collection.countDocuments({
-    category_id: { $in: [category._id, category._id.toString()] },
-  });
+  const vocabCount = await getCachedVocabCountByCategory(
+    String(category._id)
+  );
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 px-4 py-12 text-slate-900">
