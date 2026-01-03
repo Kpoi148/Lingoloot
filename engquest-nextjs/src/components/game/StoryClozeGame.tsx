@@ -2,9 +2,11 @@
 
 import {
   DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   type DragEndEvent,
+  type DragStartEvent,
   closestCenter,
   useDraggable,
   useDroppable,
@@ -82,7 +84,11 @@ const DraggableChip = ({ item }: { item: BankItem }) => {
     useDraggable({ id: item.id });
 
   const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
+    ? {
+        transform: CSS.Translate.toString(transform),
+        transition: isDragging ? "none" : undefined,
+        willChange: "transform",
+      }
     : undefined;
 
   return (
@@ -93,8 +99,10 @@ const DraggableChip = ({ item }: { item: BankItem }) => {
       style={style}
       {...listeners}
       {...attributes}
-      className={`rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition ${
-        isDragging ? "scale-105 opacity-80" : "hover:-translate-y-0.5 hover:shadow-md"
+      className={`touch-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ${
+        isDragging
+          ? "opacity-0"
+          : "transition hover:-translate-y-0.5 hover:shadow-md"
       }`}
     >
       {item.word}
@@ -156,6 +164,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     meaning: string;
   } | null>(null);
   const [bankSeed] = useState(() => Math.random());
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -210,12 +219,22 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
     return map;
   }, [bankItems]);
 
+  const activeItem = useMemo(
+    () => (activeId ? filledItems.get(activeId) : null),
+    [activeId, filledItems]
+  );
+
   const answeredCount = Object.keys(userAnswers).length;
   const progress = gaps.length
     ? Math.round((answeredCount / gaps.length) * 100)
     : 0;
 
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveId(active.id.toString());
+  };
+
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    setActiveId(null);
     if (!over) return;
     if (!over.id.toString().startsWith("gap-")) return;
 
@@ -363,7 +382,9 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragCancel={() => setActiveId(null)}
         >
           <section className="rounded-2xl border-2 border-slate-100 bg-white p-6 shadow-xl">
             <div className="space-y-6">
@@ -479,6 +500,14 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
               )}
             </div>
           </section>
+
+          <DragOverlay>
+            {activeItem ? (
+              <div className="cursor-grabbing rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
+                {activeItem.word}
+              </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </div>
 
