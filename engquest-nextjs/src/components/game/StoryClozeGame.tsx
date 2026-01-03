@@ -94,7 +94,6 @@ const DraggableChip = ({ item }: { item: BankItem }) => {
   return (
     <motion.button
       ref={setNodeRef}
-      layoutId={`chip-${item.id}`}
       type="button"
       style={style}
       {...listeners}
@@ -139,10 +138,7 @@ const DroppableGap = ({
       onClick={filled ? onClear : undefined}
     >
       {filled ? (
-        <motion.span
-          layoutId={`chip-${filledItem?.id}`}
-          className="cursor-pointer"
-        >
+        <motion.span className="cursor-pointer">
           {filledItem?.word}
         </motion.span>
       ) : (
@@ -501,7 +497,7 @@ export default function StoryClozeGame({ initialGame }: { initialGame: GameData 
             </div>
           </section>
 
-          <DragOverlay>
+          <DragOverlay dropAnimation={null}>
             {activeItem ? (
               <div className="cursor-grabbing rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg">
                 {activeItem.word}
