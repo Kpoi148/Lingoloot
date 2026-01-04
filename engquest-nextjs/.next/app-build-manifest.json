@@ -35,6 +35,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(app)/learn/practice/page.js"
+    ],
+    "/api/dictionary/meaning/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/dictionary/meaning/route.js"
     ]
   }
 }

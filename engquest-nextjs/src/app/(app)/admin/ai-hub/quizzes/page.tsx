@@ -407,7 +407,7 @@ export default function AdminQuizBuilderPage() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-12">
+    <div className="grid items-start gap-6 lg:grid-cols-12">
       <section className="flex flex-col gap-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:col-span-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
