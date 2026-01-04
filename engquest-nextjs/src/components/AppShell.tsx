@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <Navbar userName={userName} userAvatarUrl={userAvatarUrl} />
       )}
       {children}
+      <ScrollToTopButton />
     </>
   );
 }

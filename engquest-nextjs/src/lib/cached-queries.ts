@@ -62,7 +62,7 @@ export const getCachedCategoryBySlug = unstable_cache(
   async (slug: string) => {
     await connectToDatabase();
     return Category.findOne({ slug })
-      .select("name description slug")
+      .select("_id name description slug")
       .lean();
   },
   ["category:by-slug"],

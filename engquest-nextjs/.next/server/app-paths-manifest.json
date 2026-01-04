@@ -1,6 +1,12 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/dictionary/meaning/route": "app/api/dictionary/meaning/route.js",
-  "/(app)/learn/practice/[id]/page": "app/(app)/learn/practice/[id]/page.js",
-  "/(app)/topics/page": "app/(app)/topics/page.js"
+  "/api/vocabularies/route": "app/api/vocabularies/route.js",
+  "/api/progress/vocab/route": "app/api/progress/vocab/route.js",
+  "/page": "app/page.js",
+  "/(app)/profile/page": "app/(app)/profile/page.js",
+  "/(app)/topics/page": "app/(app)/topics/page.js",
+  "/(app)/learning/[slug]/flashcards/page": "app/(app)/learning/[slug]/flashcards/page.js",
+  "/(app)/learning/[slug]/page": "app/(app)/learning/[slug]/page.js",
+  "/(app)/admin/quizzes/page": "app/(app)/admin/quizzes/page.js",
+  "/(app)/admin/quizzes/[id]/page": "app/(app)/admin/quizzes/[id]/page.js"
 }

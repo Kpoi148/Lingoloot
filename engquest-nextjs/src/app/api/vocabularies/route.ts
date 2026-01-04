@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { getCachedCategoryBySlug } from "../../../lib/cached-queries";
 import Vocabulary from "../../../models/Vocabulary";
@@ -28,9 +29,15 @@ export async function GET(req: Request) {
       );
     }
 
+    const categoryId = String(category._id);
+    const objectId = mongoose.Types.ObjectId.isValid(categoryId)
+      ? new mongoose.Types.ObjectId(categoryId)
+      : null;
+    const ids = objectId ? [objectId, categoryId] : [categoryId];
+
     const vocabularies = await Vocabulary.collection
       .find({
-        category_id: { $in: [category._id, category._id.toString()] },
+        category_id: { $in: ids },
       })
       .project({
         word: 1,
