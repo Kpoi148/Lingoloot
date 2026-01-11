@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import BrandLogo from "@/components/BrandLogo";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   ChevronDown,
   LogOut,
@@ -81,6 +82,7 @@ export default function Navbar({
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
           <div className="relative">
             <button
               type="button"
@@ -164,6 +166,12 @@ export default function Navbar({
           className="border-t border-slate-200/70 bg-white/90 px-4 py-4 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90 md:hidden"
         >
           <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                Giao diện
+              </span>
+              <ThemeToggle />
+            </div>
             <div className="flex flex-col gap-3">
               {navItems.map((item) => (
                 <Link

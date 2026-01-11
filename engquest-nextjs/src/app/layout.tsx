@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Manrope } from "next/font/google";
+import ThemeProvider from "@/components/providers/theme-provider";
 
 export const metadata = {
   title: "LingoLoot",
@@ -19,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${manrope.variable} min-h-screen antialiased font-[var(--font-body)]`}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${manrope.variable} min-h-screen antialiased font-[var(--font-body)]`}
+      >
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
