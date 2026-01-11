@@ -26,6 +26,12 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/auth/[...nextauth]/route.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
+    ],
     "/(app)/topics/loading": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -35,67 +41,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(app)/topics/page.js"
-    ],
-    "/(app)/learning/[slug]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/learning/[slug]/page.js"
-    ],
-    "/(app)/learning/[slug]/flashcards/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/learning/[slug]/flashcards/page.js"
-    ],
-    "/api/vocabularies/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/vocabularies/route.js"
-    ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/page.css",
-      "static/chunks/app/page.js"
-    ],
-    "/(app)/admin/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/admin/layout.js"
-    ],
-    "/(app)/admin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/admin/page.js"
-    ],
-    "/api/admin/overview/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/overview/route.js"
-    ],
-    "/(app)/admin/quizzes/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/admin/quizzes/page.js"
-    ],
-    "/api/admin/quizzes/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/quizzes/route.js"
-    ],
-    "/(app)/admin/quizzes/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app)/admin/quizzes/[id]/page.js"
-    ],
-    "/api/admin/quizzes/[id]/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/quizzes/[id]/route.js"
-    ],
-    "/api/progress/vocab/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/progress/vocab/route.js"
     ]
   }
 }
