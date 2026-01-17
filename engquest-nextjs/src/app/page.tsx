@@ -136,12 +136,11 @@ export default function HomePage() {
           className="absolute bottom-0 -left-28 h-80 w-80 rounded-full bg-sky-200/50 blur-3xl animate-pulse dark:bg-sky-500/10"
           style={{ animationDelay: "1.5s" }}
         />
-        <div className="absolute left-1/2 top-16 h-20 w-20 -translate-x-1/2 rounded-3xl border border-slate-200/60 bg-white/70 backdrop-blur-sm rotate-12 dark:border-slate-800/80 dark:bg-slate-900/70" />
       </div>
 
       <Navbar onNavigate={handleNavigate} />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-14 pt-24 lg:flex-row lg:items-start">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-14 pt-24 lg:flex-row lg:items-start lg:pt-16">
         <section id="hero" className="flex-1 space-y-6 scroll-mt-28">
           <span className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white shadow-sm dark:bg-white dark:text-slate-900">
             LingoLoot
@@ -417,7 +416,7 @@ export default function HomePage() {
                 <span>100%</span>
               </div>
               <div className="mt-2 h-2 w-full rounded-full bg-emerald-100 dark:bg-emerald-900/60">
-                <div className="h-2 w-2/3 rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 dark:from-emerald-400 dark:to-amber-300" />
+                <div className="h-2 w-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 dark:from-emerald-400 dark:to-amber-300" />
               </div>
             </div>
           </motion.div>
