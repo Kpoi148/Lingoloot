@@ -7,10 +7,10 @@ import AdminUsersClient from "./AdminUsersClient";
 export const dynamic = "force-dynamic";
 
 type AdminUsersPageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     q?: string | string[];
     page?: string | string[];
-  };
+  }>;
 };
 
 const parseQueryValue = (value?: string | string[]) =>
@@ -28,8 +28,9 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
     redirect("/");
   }
 
-  const query = parseQueryValue(searchParams?.q);
-  const page = parsePageValue(searchParams?.page);
+  const resolvedSearchParams = await searchParams;
+  const query = parseQueryValue(resolvedSearchParams?.q);
+  const page = parsePageValue(resolvedSearchParams?.page);
 
   let initialData = null;
   let initialError: string | null = null;
