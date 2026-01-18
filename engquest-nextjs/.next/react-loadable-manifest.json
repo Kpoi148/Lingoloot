@@ -5,6 +5,12 @@
       "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
     ]
   },
+  "app\\(app)\\profile\\ProfileClient.tsx -> @/components/MediaUploader": {
+    "id": "app\\(app)\\profile\\ProfileClient.tsx -> @/components/MediaUploader",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_MediaUploader_tsx.js"
+    ]
+  },
   "components\\LoginForm.tsx -> next-auth/react": {
     "id": "components\\LoginForm.tsx -> next-auth/react",
     "files": [

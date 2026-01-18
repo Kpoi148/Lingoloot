@@ -7,6 +7,10 @@ export type UserDocument = {
   email: string;
   password: string;
   role: UserRole;
+  isBanned?: boolean;
+  lastLoginAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   image?: string;
   avatarUrl?: string;
   displayName?: string;
@@ -24,6 +28,8 @@ const UserSchema = new mongoose.Schema<UserDocument>(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
+    isBanned: { type: Boolean, default: false },
+    lastLoginAt: { type: Date },
     image: { type: String, trim: true },
     avatarUrl: { type: String, trim: true, default: "/logo.png" },
     displayName: { type: String, trim: true },

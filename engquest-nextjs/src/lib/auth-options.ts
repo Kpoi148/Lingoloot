@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
         await connectToDatabase();
 
         const user = await User.findOne({ email: credentials.email })
-          .select("email password name role avatarUrl image displayName")
+          .select("email password name role avatarUrl image displayName isBanned")
           .lean();
         if (!user || !user.password) {
           return null;
@@ -52,6 +52,15 @@ export const authOptions: NextAuthOptions = {
         if (!passwordMatches) {
           return null;
         }
+
+        if (user.isBanned) {
+          return null;
+        }
+
+        await User.updateOne(
+          { _id: user._id },
+          { $set: { lastLoginAt: new Date() } }
+        );
 
         return {
           id: user._id.toString(),
