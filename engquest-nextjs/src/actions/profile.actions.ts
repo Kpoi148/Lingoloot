@@ -11,6 +11,15 @@ type UserStats = {
   quizAccuracy: number;
 };
 
+type UserGamification = {
+  xp: number;
+  level: number;
+  streak: number;
+  currency: number;
+  inventory: string[];
+  lastLoginDate?: string | null;
+};
+
 export type UserProfile = {
   id: string;
   name: string;
@@ -19,6 +28,7 @@ export type UserProfile = {
   displayName: string;
   bio: string;
   stats: UserStats;
+  gamification: UserGamification;
 };
 
 const toUserProfile = (user: {
@@ -30,6 +40,14 @@ const toUserProfile = (user: {
   displayName?: string;
   bio?: string;
   stats?: Partial<UserStats>;
+  gamification?: {
+    xp?: number;
+    level?: number;
+    streak?: number;
+    currency?: number;
+    inventory?: string[];
+    lastLoginDate?: Date | null;
+  };
 }): UserProfile => ({
   id: String(user._id),
   name: user.name,
@@ -42,6 +60,16 @@ const toUserProfile = (user: {
     quizzesTaken: user.stats?.quizzesTaken ?? 0,
     quizAccuracy: user.stats?.quizAccuracy ?? 0,
   },
+  gamification: {
+    xp: user.gamification?.xp ?? 0,
+    level: user.gamification?.level ?? 1,
+    streak: user.gamification?.streak ?? 0,
+    currency: user.gamification?.currency ?? 0,
+    inventory: user.gamification?.inventory ?? [],
+    lastLoginDate: user.gamification?.lastLoginDate
+      ? user.gamification.lastLoginDate.toISOString()
+      : null,
+  },
 });
 
 export async function getUserProfile() {
@@ -52,7 +80,7 @@ export async function getUserProfile() {
 
   await connectToDatabase();
   const user = await User.findById(session.user.id)
-    .select("name email avatarUrl displayName bio stats image")
+    .select("name email avatarUrl displayName bio stats image gamification")
     .lean();
 
   if (!user) {
@@ -106,7 +134,7 @@ export async function updateUserProfile(formData: FormData) {
     { $set: updates },
     { new: true }
   )
-    .select("name email avatarUrl displayName bio stats image")
+    .select("name email avatarUrl displayName bio stats image gamification")
     .lean();
 
   if (!updated) {

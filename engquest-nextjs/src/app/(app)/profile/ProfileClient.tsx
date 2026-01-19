@@ -4,8 +4,10 @@ import { useMemo, useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Activity, BookOpen, Pencil, Save, Target } from "lucide-react";
+import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
+import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 
 const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
   ssr: false,
@@ -49,6 +51,12 @@ export default function ProfileClient({
   );
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const levelProgress = useMemo(() => {
+    const xp = profile?.gamification?.xp ?? 0;
+    return getLevelProgress(xp);
+  }, [profile?.gamification?.xp]);
+  const levelTitle = getLevelTitle(levelProgress.level);
 
   const stats = useMemo(() => {
     if (!profile) return [];
@@ -131,15 +139,26 @@ export default function ProfileClient({
                 Cập nhật thông tin để cá nhân hóa trải nghiệm học tập.
               </p>
             </div>
-            {profile && !isEditing && (
-              <button
-                type="button"
-                onClick={() => setIsEditing(true)}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <Pencil className="h-4 w-4" />
-                Chỉnh sửa
-              </button>
+            {profile && (
+              <div className="flex flex-wrap items-center gap-2">
+                {!isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(true)}
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Chỉnh sửa
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void signOut({ callbackUrl: "/" })}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  Đăng xuất
+                </button>
+              </div>
             )}
           </div>
 
@@ -280,6 +299,38 @@ export default function ProfileClient({
             <p className="mt-2 text-sm text-slate-600">
               Tóm tắt hiệu suất học tập của bạn.
             </p>
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+            {!profile && (
+              <p className="text-sm text-slate-500">
+                Đăng nhập để xem tiến độ cấp độ.
+              </p>
+            )}
+
+            {profile && (
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                    Lv. {levelProgress.level} {levelTitle}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-500">
+                    {numberFormatter.format(levelProgress.progress)} /{" "}
+                    {numberFormatter.format(levelProgress.required)} XP
+                  </span>
+                </div>
+                <div className="mt-3 h-2 w-full rounded-full bg-white">
+                  <div
+                    className="h-2 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 transition-all duration-500"
+                    style={{ width: `${levelProgress.percent}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  {numberFormatter.format(levelProgress.remaining)} XP để lên cấp
+                  tiếp theo
+                </p>
+              </>
+            )}
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

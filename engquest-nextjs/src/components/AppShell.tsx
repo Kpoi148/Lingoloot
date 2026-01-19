@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import DailyRewardModal from "@/components/DailyRewardModal";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -27,6 +28,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <Navbar userName={userName} userAvatarUrl={userAvatarUrl} />
       )}
       {children}
+      <DailyRewardModal />
       <ScrollToTopButton />
     </>
   );

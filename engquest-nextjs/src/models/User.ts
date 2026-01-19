@@ -2,11 +2,21 @@ import mongoose from "mongoose";
 
 export type UserRole = "admin" | "user";
 
+export type UserGamification = {
+  xp: number;
+  level: number;
+  streak: number;
+  lastLoginDate: Date | null;
+  currency: number;
+  inventory: string[];
+};
+
 export type UserDocument = {
   name: string;
   email: string;
   password: string;
   role: UserRole;
+  gamification?: UserGamification;
   isBanned?: boolean;
   lastLoginAt?: Date;
   createdAt?: Date;
@@ -22,12 +32,25 @@ export type UserDocument = {
   };
 };
 
+const GamificationSchema = new mongoose.Schema<UserGamification>(
+  {
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    streak: { type: Number, default: 0 },
+    lastLoginDate: { type: Date, default: null },
+    currency: { type: Number, default: 0 },
+    inventory: { type: [String], default: [] },
+  },
+  { _id: false }
+);
+
 const UserSchema = new mongoose.Schema<UserDocument>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
+    gamification: { type: GamificationSchema, default: () => ({}) },
     isBanned: { type: Boolean, default: false },
     lastLoginAt: { type: Date },
     image: { type: String, trim: true },
