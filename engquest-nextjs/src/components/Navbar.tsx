@@ -9,6 +9,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { Menu, X } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
+import StreakNavbarItem from "@/components/StreakNavbarItem";
 
 type NavItem = {
   label: string;
@@ -78,11 +79,10 @@ export default function Navbar({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition ${
-                  isActive
-                    ? "text-slate-900 dark:text-white"
-                    : "text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
-                }`}
+                className={`text-sm font-medium transition ${isActive
+                  ? "text-slate-900 dark:text-white"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                  }`}
               >
                 {item.label}
               </Link>
@@ -128,9 +128,7 @@ export default function Navbar({
                 />
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-300">
-                <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
-                  Streak: {streak} ngày
-                </span>
+                {profile && <StreakNavbarItem gamification={profile.gamification} />}
                 <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
                   LingoGems: {gems}
                 </span>

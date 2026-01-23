@@ -21,10 +21,10 @@ export const getLevelFromXp = (xp: number) =>
   Math.max(1, Math.floor(Math.max(0, xp) / XP_PER_LEVEL) + 1);
 
 export const getLevelTitle = (level: number) => {
-  if (level < 5) return "Apprentice";
-  if (level < 10) return "Scholar";
-  if (level < 15) return "Expert";
-  return "Master";
+  if (level < 5) return "Tập sự";
+  if (level < 10) return "Học giả";
+  if (level < 15) return "Chuyên gia";
+  return "Bậc thầy";
 };
 
 export const getLevelProgress = (xp: number) => {
