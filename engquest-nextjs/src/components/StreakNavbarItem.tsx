@@ -15,9 +15,10 @@ interface GamificationData {
 
 interface StreakNavbarItemProps {
     gamification: GamificationData;
+    align?: "left" | "right";
 }
 
-export default function StreakNavbarItem({ gamification }: StreakNavbarItemProps) {
+export default function StreakNavbarItem({ gamification, align = "right" }: StreakNavbarItemProps) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +69,10 @@ export default function StreakNavbarItem({ gamification }: StreakNavbarItemProps
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 top-full mt-2 z-50 w-[340px] md:w-[480px] lg:w-[560px]"
+                        className={cn(
+                            "absolute top-full mt-2 z-50 w-[300px] max-w-[90vw] md:w-[480px] lg:w-[560px]",
+                            align === "left" ? "left-0" : "right-0"
+                        )}
                     >
                         <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-950/50">
                             <StreakBoard gamification={gamification} />

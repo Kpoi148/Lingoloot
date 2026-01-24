@@ -98,9 +98,11 @@ export default function Navbar({
             <ShoppingBag className="w-5 h-5" />
           </Link>
 
+          {/* Theme Toggle - Visible on Mobile too */}
+          <ThemeToggle />
+
           {/* Desktop Only Elements */}
           <div className="hidden md:flex items-center gap-3">
-            <ThemeToggle />
             <div className="flex w-full max-w-md items-center gap-3 rounded-3xl border border-slate-200 bg-white px-3 py-2 text-left shadow-sm transition dark:border-slate-800 dark:bg-slate-900 md:w-auto">
               {/* Desktop Profile Card Content */}
               <Link href="/profile" className="group">
@@ -129,7 +131,7 @@ export default function Navbar({
                       {displayName}
                     </p>
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-200">
-                      Lv. {levelProgress.level}
+                      Lv. {levelProgress.level} {levelTitle}
                     </span>
                   </div>
                   <div className="mt-1 h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
@@ -148,6 +150,9 @@ export default function Navbar({
                   )}
                   <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
                     {gems} 💎
+                  </span>
+                  <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
+                    Huy hiệu: {badges.length}
                   </span>
                 </div>
               </div>
@@ -186,12 +191,14 @@ export default function Navbar({
               </div>
               <div>
                 <p className="font-bold text-slate-900 dark:text-white">{displayName}</p>
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                  <span>Lv. {levelProgress.level}</span>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1">
+                  <span>Lv. {levelProgress.level} {levelTitle}</span>
                   <span>•</span>
                   <span>{gems} Gems</span>
                   <span>•</span>
-                  {profile && <div className="scale-75 origin-left"><StreakNavbarItem gamification={profile.gamification} /></div>}
+                  <span>{badges.length} Huy hiệu</span>
+                  <span>•</span>
+                  {profile && <div className="scale-75 origin-left"><StreakNavbarItem gamification={profile.gamification} align="left" /></div>}
                 </div>
               </div>
               <Link href="/profile" className="ml-auto text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full" onClick={() => setMenuOpen(false)}>
@@ -212,12 +219,7 @@ export default function Navbar({
               ))}
             </div>
 
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                Giao diện
-              </span>
-              <ThemeToggle />
-            </div>
+
           </div>
         </div>
       )}
