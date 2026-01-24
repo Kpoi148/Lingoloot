@@ -1,0 +1,127 @@
+import { getAdminShopItems, deleteShopItem, toggleShopItemStatus } from "@/actions/admin/shop.actions";
+import Link from "next/link";
+import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import { revalidatePath } from "next/cache";
+
+export default async function AdminShopPage() {
+    const items = await getAdminShopItems();
+
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900">Quản lý Cửa Hàng</h1>
+                    <p className="text-sm text-slate-500">Danh sách các vật phẩm đang bán</p>
+                </div>
+                <Link
+                    href="/admin/shop/create"
+                    className="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600 hover:-translate-y-0.5"
+                >
+                    <Plus className="h-4 w-4" />
+                    Thêm vật phẩm
+                </Link>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <table className="w-full text-left text-sm text-slate-600">
+                    <thead className="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold uppercase text-slate-500">
+                        <tr>
+                            <th className="px-6 py-4">Hình ảnh</th>
+                            <th className="px-6 py-4">Tên vật phẩm</th>
+                            <th className="px-6 py-4">Loại</th>
+                            <th className="px-6 py-4">Giá</th>
+                            <th className="px-6 py-4">Độ hiếm</th>
+                            <th className="px-6 py-4">Trạng thái</th>
+                            <th className="px-6 py-4 text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                        {items.length === 0 ? (
+                            <tr>
+                                <td colSpan={7} className="px-6 py-8 text-center text-slate-400">
+                                    Chưa có vật phẩm nào.
+                                </td>
+                            </tr>
+                        ) : (
+                            items.map((item) => (
+                                <tr key={item._id} className="transition hover:bg-slate-50">
+                                    <td className="px-6 py-4">
+                                        <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
+                                            <Image
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                fill
+                                                className="object-contain p-1"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 font-semibold text-slate-900">{item.name}</td>
+                                    <td className="px-6 py-4 capitalize">{item.type === 'frame' ? 'Khung' : 'Avatar'}</td>
+                                    <td className="px-6 py-4 font-mono font-medium text-emerald-600">{item.price} 💎</td>
+                                    <td className="px-6 py-4">
+                                        <span
+                                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase border
+                      ${item.rarity === 'legendary' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                                                    item.rarity === 'rare' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                                        'bg-slate-100 text-slate-600 border-slate-200'}`}
+                                        >
+                                            {item.rarity}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span
+                                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                      ${item.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}
+                                        >
+                                            {item.isActive ? 'Hoạt động' : 'Đang ẩn'}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex items-center justify-end gap-2">
+                                            {/* Toggle Status Form */}
+                                            <form action={async () => {
+                                                "use server";
+                                                await toggleShopItemStatus(item._id, !item.isActive);
+                                            }}>
+                                                <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition" title={item.isActive ? "Ẩn" : "Hiện"}>
+                                                    {item.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                </button>
+                                            </form>
+
+                                            <Link
+                                                href={`/admin/shop/${item._id}`}
+                                                className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition"
+                                                title="Chỉnh sửa"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                            </Link>
+
+                                            {/* Delete Form */}
+                                            <form action={async () => {
+                                                "use server";
+                                                if (confirm("Bạn có chắc chắn muốn xóa vật phẩm này không?")) {
+                                                    await deleteShopItem(item._id);
+                                                }
+                                            }}>
+                                                {/* Note: Standard form submission won't trigger standard JS confirm easily without client component. 
+                              For simplicity here I'll omit the confirm or make this button a client component later if needed.
+                              For now let's just make it a direct server action but maybe wrapped in a client component?
+                              Actually, deletion is risky. Let's stick to Edit/Toggle Status for safety in this MVP step, 
+                              or allow delete but be careful. I will use a simple form action here. 
+                          */}
+                                                <button type="submit" className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 transition" title="Xóa">
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}

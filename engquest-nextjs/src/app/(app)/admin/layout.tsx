@@ -5,6 +5,7 @@ import {
   ListChecks,
   Layers,
   Users,
+  ShoppingBag,
 } from "lucide-react";
 import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
 import BrandLogo from "@/components/BrandLogo";
@@ -15,6 +16,7 @@ const navItems = [
   { label: "Quản lý chủ đề", href: "/admin/categories", icon: Layers },
   { label: "Quản lý bài tập Quiz", href: "/admin/quizzes", icon: ListChecks },
   { label: "Quản lý người dùng", href: "/admin/users", icon: Users },
+  { label: "Cửa hàng", href: "/admin/shop", icon: ShoppingBag },
 ];
 
 export default function AdminLayout({

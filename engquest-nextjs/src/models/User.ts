@@ -9,6 +9,8 @@ export type UserGamification = {
   lastLoginDate: Date | null;
   currency: number;
   inventory: string[];
+  equippedFrame?: string;
+  equippedAvatar?: string;
 };
 
 export type UserDocument = {
@@ -40,6 +42,8 @@ const GamificationSchema = new mongoose.Schema<UserGamification>(
     lastLoginDate: { type: Date, default: null },
     currency: { type: Number, default: 0 },
     inventory: { type: [String], default: [] },
+    equippedFrame: { type: String },
+    equippedAvatar: { type: String },
   },
   { _id: false }
 );

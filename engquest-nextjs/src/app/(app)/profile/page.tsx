@@ -1,4 +1,5 @@
 import { getUserProfile } from "@/actions/profile.actions";
+import { getShopItems } from "@/actions/shop.actions";
 import ProfileClient from "./ProfileClient";
 
 export const dynamic = "force-dynamic";
@@ -6,9 +7,15 @@ export const dynamic = "force-dynamic";
 export default async function ProfilePage() {
   let profile = null;
   let error: string | null = null;
+  let shopItems: any[] = [];
 
   try {
-    profile = await getUserProfile();
+    const [fetchedProfile, fetchedShopItems] = await Promise.all([
+      getUserProfile(),
+      getShopItems(),
+    ]);
+    profile = fetchedProfile;
+    shopItems = fetchedShopItems;
   } catch (fetchError) {
     error =
       fetchError instanceof Error
@@ -16,5 +23,5 @@ export default async function ProfilePage() {
         : "Không thể tải thông tin hồ sơ.";
   }
 
-  return <ProfileClient initialProfile={profile} initialError={error} />;
+  return <ProfileClient initialProfile={profile} initialError={error} shopItems={shopItems} />;
 }

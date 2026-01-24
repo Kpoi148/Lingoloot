@@ -9,6 +9,8 @@ import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
+import InventoryModal from "@/components/InventoryModal";
+import { FrameRenderer } from "@/lib/frame-registry";
 
 const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
   ssr: false,
@@ -26,6 +28,7 @@ type ProfileFormState = {
 type ProfileClientProps = {
   initialProfile: UserProfile | null;
   initialError?: string | null;
+  shopItems?: any[];
 };
 
 const numberFormatter = new Intl.NumberFormat("en-US");
@@ -45,6 +48,7 @@ const buildFormState = (profile: UserProfile | null): ProfileFormState => ({
 export default function ProfileClient({
   initialProfile,
   initialError = null,
+  shopItems = [],
 }: ProfileClientProps) {
   const [profile, setProfile] = useState<UserProfile | null>(initialProfile);
   const [formState, setFormState] = useState<ProfileFormState>(() =>
@@ -182,20 +186,36 @@ export default function ProfileClient({
               {profile && !isEditing && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <Image
-                      src={profile.avatarUrl || "/logo.png"}
-                      alt={profile.displayName || profile.name}
-                      width={80}
-                      height={80}
-                      sizes="80px"
-                      className="h-20 w-20 rounded-full border border-slate-200 object-cover"
-                    />
+                    <div className="h-24 w-24 flex-shrink-0">
+                      {(() => {
+                        const equippedFrameId = profile.gamification.equippedFrame;
+                        const equippedFrameItem = equippedFrameId
+                          ? shopItems.find(i => i._id === equippedFrameId)
+                          : null;
+
+                        return (
+                          <FrameRenderer
+                            frameKey={equippedFrameItem?.renderKey}
+                            fallbackImageUrl={equippedFrameItem?.imageUrl}
+                            avatarUrl={profile.avatarUrl || "/logo.png"}
+                            className="h-full w-full"
+                          />
+                        );
+                      })()}
+                    </div>
                     <div>
                       <p className="text-lg font-semibold text-slate-900">
                         {profile.displayName || profile.name}
                       </p>
                       <p className="text-sm text-slate-500">{profile.email}</p>
                     </div>
+
+                    {/* Inventory / Edit Appearance */}
+                    <InventoryModal
+                      inventoryItems={shopItems.filter(item => profile.gamification.inventory.includes(item._id))}
+                      equippedFrame={profile.gamification.equippedFrame}
+                      equippedAvatar={profile.gamification.equippedAvatar}
+                    />
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">

@@ -17,6 +17,8 @@ type UserGamification = {
   streak: number;
   currency: number;
   inventory: string[];
+  equippedFrame?: string;
+  equippedAvatar?: string;
   lastLoginDate?: string | null;
 };
 
@@ -46,6 +48,8 @@ const toUserProfile = (user: {
     streak?: number;
     currency?: number;
     inventory?: string[];
+    equippedFrame?: string;
+    equippedAvatar?: string;
     lastLoginDate?: Date | null;
   };
 }): UserProfile => ({
@@ -66,6 +70,8 @@ const toUserProfile = (user: {
     streak: user.gamification?.streak ?? 0,
     currency: user.gamification?.currency ?? 0,
     inventory: user.gamification?.inventory ?? [],
+    equippedFrame: user.gamification?.equippedFrame,
+    equippedAvatar: user.gamification?.equippedAvatar,
     lastLoginDate: user.gamification?.lastLoginDate
       ? user.gamification.lastLoginDate.toISOString()
       : null,

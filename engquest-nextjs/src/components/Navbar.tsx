@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import BrandLogo from "@/components/BrandLogo";
 import ThemeToggle from "@/components/ThemeToggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import StreakNavbarItem from "@/components/StreakNavbarItem";
@@ -91,6 +91,9 @@ export default function Navbar({
         </div>
 
         <div className="flex w-full flex-wrap items-center justify-end gap-3 md:w-auto">
+          <Link href="/shop" className="flex items-center justify-center h-10 w-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-50 transition dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:text-emerald-400">
+            <ShoppingBag className="w-5 h-5" />
+          </Link>
           <ThemeToggle />
           <Link
             href="/profile"
