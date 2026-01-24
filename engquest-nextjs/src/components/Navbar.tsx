@@ -103,7 +103,7 @@ export default function Navbar({
             <ThemeToggle />
             <div className="flex w-full max-w-md items-center gap-3 rounded-3xl border border-slate-200 bg-white px-3 py-2 text-left shadow-sm transition dark:border-slate-800 dark:bg-slate-900 md:w-auto">
               {/* Desktop Profile Card Content */}
-              <Link href="/profile" className="flex items-center gap-3 group">
+              <Link href="/profile" className="group">
                 <div className="rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700 transition group-hover:scale-105">
                   {avatarUrl ? (
                     <Image
@@ -120,7 +120,10 @@ export default function Navbar({
                     </span>
                   )}
                 </div>
-                <div className="min-w-0 flex-1 cursor-pointer">
+              </Link>
+
+              <div className="min-w-0 flex-1 flex flex-col justify-center">
+                <Link href="/profile" className="group block">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
                       {displayName}
@@ -129,24 +132,24 @@ export default function Navbar({
                       Lv. {levelProgress.level}
                     </span>
                   </div>
-                  <div className="mt-2 h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                  <div className="mt-1 h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
                     <div
                       className="h-1.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 transition-all duration-500"
                       style={{ width: `${levelProgress.percent}%` }}
                     />
                   </div>
-                </div>
-              </Link>
+                </Link>
 
-              <div className="mt-0 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-300">
-                {profile && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <StreakNavbarItem gamification={profile.gamification} />
-                  </div>
-                )}
-                <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
-                  {gems} 💎
-                </span>
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-300">
+                  {profile && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <StreakNavbarItem gamification={profile.gamification} />
+                    </div>
+                  )}
+                  <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 dark:border-slate-700 dark:bg-slate-900">
+                    {gems} 💎
+                  </span>
+                </div>
               </div>
             </div>
           </div>
