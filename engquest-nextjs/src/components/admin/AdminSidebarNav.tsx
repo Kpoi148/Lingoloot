@@ -3,30 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-    BookOpen,
-    LayoutDashboard,
-    ListChecks,
-    Layers,
-    Users,
-    ShoppingBag,
-} from "lucide-react";
-
-const navItems = [
-    { label: "Tổng quan", href: "/admin", icon: LayoutDashboard },
-    { label: "Quản lý từ vựng", href: "/admin/vocabularies", icon: BookOpen },
-    { label: "Quản lý chủ đề", href: "/admin/categories", icon: Layers },
-    { label: "Quản lý bài tập Quiz", href: "/admin/quizzes", icon: ListChecks },
-    { label: "Quản lý người dùng", href: "/admin/users", icon: Users },
-    { label: "Cửa hàng", href: "/admin/shop", icon: ShoppingBag },
-];
+import { adminNavItems } from "@/constants/admin-nav";
 
 export default function AdminSidebarNav() {
     const pathname = usePathname();
 
     return (
         <nav className="flex flex-1 flex-col gap-2">
-            {navItems.map((item) => {
+            {adminNavItems.map((item) => {
                 const Icon = item.icon;
                 // Check exact match for root "/admin", or startWith for others (but handle "/admin" vs "/admin/abc" correctly)
                 // Actually for /admin root we want exact match, for others like /admin/shop we might want sub-paths?
