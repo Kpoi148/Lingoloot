@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState, useTransition, useOptimistic } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MoreHorizontal } from "lucide-react";
+import { Pencil, MoreHorizontal, Coins, Star, Trophy } from "lucide-react";
 import toast from "react-hot-toast";
+import { FrameRenderer } from "@/lib/frame-registry";
+import EditUserModal from "@/components/admin/EditUserModal";
 import {
   deleteUser,
   getUsers,
@@ -40,9 +42,6 @@ const formatDate = (value?: string) => {
   return dateFormatter.format(date);
 };
 
-const getAvatarSource = (user: UserListItem) =>
-  user.avatarUrl ?? user.image ?? "/logo.png";
-
 const getDisplayName = (user: UserListItem) => user.displayName ?? user.name;
 
 export default function AdminUsersClient({
@@ -58,6 +57,7 @@ export default function AdminUsersClient({
   const [error, setError] = useState<string | null>(initialError);
   const [loading, setLoading] = useState(!initialData);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<UserListItem | null>(null); // New state for editing
   const [searchValue, setSearchValue] = useState(initialQuery);
   const [isPending, startTransition] = useTransition();
   const initialLoadRef = useRef(true);
@@ -362,22 +362,20 @@ export default function AdminUsersClient({
                       </td>
                       <td className="py-4">
                         <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                            isAdmin
+                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isAdmin
                               ? "bg-blue-100 text-blue-700"
                               : "bg-slate-100 text-slate-600"
-                          }`}
+                            }`}
                         >
                           {isAdmin ? "Admin" : "User"}
                         </span>
                       </td>
                       <td className="py-4">
                         <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                            isBanned
+                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isBanned
                               ? "bg-red-100 text-red-600"
                               : "bg-emerald-100 text-emerald-600"
-                          }`}
+                            }`}
                         >
                           {isBanned ? "Banned" : "Active"}
                         </span>
@@ -418,11 +416,10 @@ export default function AdminUsersClient({
                                 type="button"
                                 onClick={() => handleToggleBan(user.id)}
                                 disabled={isSelf}
-                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${
-                                  isSelf
+                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
                                     ? "cursor-not-allowed text-slate-300"
                                     : "text-slate-700 hover:bg-slate-100"
-                                }`}
+                                  }`}
                               >
                                 {isBanned ? "Unban User" : "Ban User"}
                               </button>
@@ -430,11 +427,10 @@ export default function AdminUsersClient({
                                 type="button"
                                 onClick={() => handleDelete(user.id, getDisplayName(user))}
                                 disabled={isSelf}
-                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${
-                                  isSelf
+                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
                                     ? "cursor-not-allowed text-red-200"
                                     : "text-red-600 hover:bg-red-50"
-                                }`}
+                                  }`}
                               >
                                 Delete User
                               </button>
