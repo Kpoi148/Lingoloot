@@ -25,7 +25,8 @@ export default function AdminSidebarProfile({
 
     const equippedFrameItem = useMemo(() => {
         const frameId = profile?.gamification?.equippedFrame;
-        return frameId ? shopItems.find((i) => i._id === frameId) : null;
+        if (!frameId) return null;
+        return shopItems.find((i) => String(i._id) === String(frameId));
     }, [profile?.gamification?.equippedFrame, shopItems]);
 
     if (!profile) return null;

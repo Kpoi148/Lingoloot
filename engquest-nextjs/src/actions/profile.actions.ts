@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
+import ShopItem from "@/models/ShopItem"; // Import ShopItem model
 
 type UserStats = {
   totalVocabAdded: number;
@@ -18,6 +19,10 @@ type UserGamification = {
   currency: number;
   inventory: string[];
   equippedFrame?: string;
+  equippedFrameDetails?: {
+    renderKey?: string;
+    imageUrl?: string;
+  };
   equippedAvatar?: string;
   lastLoginDate?: string | null;
 };
@@ -49,6 +54,10 @@ const toUserProfile = (user: {
     currency?: number;
     inventory?: string[];
     equippedFrame?: string;
+    equippedFrameDetails?: {
+      renderKey?: string;
+      imageUrl?: string;
+    };
     equippedAvatar?: string;
     lastLoginDate?: Date | null;
   };
@@ -70,8 +79,13 @@ const toUserProfile = (user: {
     streak: user.gamification?.streak ?? 0,
     currency: user.gamification?.currency ?? 0,
     inventory: user.gamification?.inventory ?? [],
-    equippedFrame: user.gamification?.equippedFrame,
-    equippedAvatar: user.gamification?.equippedAvatar,
+    equippedFrame: user.gamification?.equippedFrame
+      ? String(user.gamification.equippedFrame)
+      : undefined,
+    equippedFrameDetails: user.gamification?.equippedFrameDetails,
+    equippedAvatar: user.gamification?.equippedAvatar
+      ? String(user.gamification.equippedAvatar)
+      : undefined,
     lastLoginDate: user.gamification?.lastLoginDate
       ? user.gamification.lastLoginDate.toISOString()
       : null,
@@ -93,7 +107,25 @@ export async function getUserProfile() {
     return null;
   }
 
-  return toUserProfile(user);
+  // Populate frame details manually if needed or simply fetch item
+  let equippedFrameDetails = undefined;
+  if (user.gamification?.equippedFrame) {
+    const frameItem = await ShopItem.findById(user.gamification.equippedFrame).select("renderKey imageUrl").lean();
+    if (frameItem) {
+      equippedFrameDetails = {
+        renderKey: frameItem.renderKey,
+        imageUrl: frameItem.imageUrl
+      };
+    }
+  }
+
+  return toUserProfile({
+    ...user,
+    gamification: {
+      ...user.gamification,
+      equippedFrameDetails
+    }
+  });
 }
 
 export async function updateUserProfile(formData: FormData) {

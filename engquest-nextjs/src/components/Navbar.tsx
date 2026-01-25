@@ -10,6 +10,7 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import StreakNavbarItem from "@/components/StreakNavbarItem";
+import { FrameRenderer } from "@/lib/frame-registry";
 
 type NavItem = {
   label: string;
@@ -107,14 +108,12 @@ export default function Navbar({
               {/* Desktop Profile Card Content */}
               <Link href="/profile" className="group">
                 <div className="rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700 transition group-hover:scale-105">
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt={displayName}
-                      width={52}
-                      height={52}
-                      sizes="52px"
-                      className="h-12 w-12 rounded-full border border-white object-cover dark:border-slate-900"
+                  {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
+                    <FrameRenderer
+                      frameKey={profile?.gamification?.equippedFrameDetails?.renderKey}
+                      fallbackImageUrl={profile?.gamification?.equippedFrameDetails?.imageUrl}
+                      avatarUrl={avatarUrl}
+                      className="h-12 w-12"
                     />
                   ) : (
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-sm font-semibold text-slate-600 dark:bg-slate-900 dark:text-slate-200">
@@ -182,9 +181,14 @@ export default function Navbar({
 
             {/* Mobile Profile Card */}
             <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <div className="h-12 w-12 rounded-full border border-slate-200 overflow-hidden">
-                {avatarUrl ? (
-                  <Image src={avatarUrl} alt={displayName} width={48} height={48} className="object-cover h-full w-full" />
+              <div className="h-12 w-12 rounded-full border border-slate-200 overflow-hidden relative">
+                {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
+                  <FrameRenderer
+                    frameKey={profile?.gamification?.equippedFrameDetails?.renderKey}
+                    fallbackImageUrl={profile?.gamification?.equippedFrameDetails?.imageUrl}
+                    avatarUrl={avatarUrl}
+                    className="h-full w-full"
+                  />
                 ) : (
                   <div className="h-full w-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold">{avatarLetter}</div>
                 )}

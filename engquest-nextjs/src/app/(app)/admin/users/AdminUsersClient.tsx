@@ -28,6 +28,7 @@ type AdminUsersClientProps = {
   initialQuery: string;
   initialPage: number;
   currentUserId?: string;
+  shopItems?: any[];
 };
 
 type OptimisticAction = {
@@ -53,6 +54,7 @@ export default function AdminUsersClient({
   initialQuery,
   initialPage,
   currentUserId,
+  shopItems = [],
 }: AdminUsersClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -349,13 +351,24 @@ export default function AdminUsersClient({
                       <tr key={user.id} className={isBanned ? "bg-red-50/40" : ""}>
                         <td className="py-4">
                           <div className="flex items-center gap-3">
-                            <Image
-                              src={getAvatarSource(user)}
-                              alt={getDisplayName(user)}
-                              width={44}
-                              height={44}
-                              className="h-11 w-11 rounded-full border border-slate-200 object-cover"
-                            />
+                            <div className="relative h-11 w-11 flex-shrink-0">
+                              <FrameRenderer
+                                frameKey={(() => {
+                                  const frameId = user.gamification?.equippedFrame;
+                                  if (!frameId) return undefined;
+                                  const item = shopItems.find(i => String(i._id) === String(frameId));
+                                  return item?.renderKey;
+                                })()}
+                                fallbackImageUrl={(() => {
+                                  const frameId = user.gamification?.equippedFrame;
+                                  if (!frameId) return undefined;
+                                  const item = shopItems.find(i => String(i._id) === String(frameId));
+                                  return item?.imageUrl;
+                                })()}
+                                avatarUrl={getAvatarSource(user)}
+                                className="h-full w-full"
+                              />
+                            </div>
                             <div>
                               <p className="font-medium text-slate-900">
                                 {getDisplayName(user)}

@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { getUsers } from "@/actions/user.actions";
+import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import { authOptions } from "@/lib/auth-options";
 import AdminUsersClient from "./AdminUsersClient";
 
@@ -42,6 +43,8 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
       error instanceof Error ? error.message : "Unable to load users.";
   }
 
+  const shopItems = await getAdminShopItems();
+
   return (
     <AdminUsersClient
       initialData={initialData}
@@ -49,6 +52,7 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
       initialQuery={query}
       initialPage={page}
       currentUserId={session.user.id}
+      shopItems={shopItems}
     />
   );
 }

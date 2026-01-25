@@ -82,7 +82,9 @@ const toUserListItem = (user: MongoUser): UserListItem => ({
     level: user.gamification?.level ?? 1,
     xp: user.gamification?.xp ?? 0,
     currency: user.gamification?.currency ?? 0,
-    equippedFrame: user.gamification?.equippedFrame,
+    equippedFrame: user.gamification?.equippedFrame
+      ? String(user.gamification.equippedFrame)
+      : undefined,
   },
 });
 
