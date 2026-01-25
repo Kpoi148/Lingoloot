@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BookA, BrainCircuit, Gamepad2 } from "lucide-react";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const features = [
   {

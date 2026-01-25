@@ -1,26 +1,10 @@
 import Link from "next/link";
-import {
-  BookOpen,
-  LayoutDashboard,
-  ListChecks,
-  Layers,
-  Users,
-  ShoppingBag,
-} from "lucide-react";
 import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
 import BrandLogo from "@/components/BrandLogo";
 import { getUserProfile } from "@/actions/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions"; // Need shop items for frame rendering
 import AdminSidebarProfile from "@/components/admin/AdminSidebarProfile";
-
-const navItems = [
-  { label: "Tổng quan", href: "/admin", icon: LayoutDashboard },
-  { label: "Quản lý từ vựng", href: "/admin/vocabularies", icon: BookOpen },
-  { label: "Quản lý chủ đề", href: "/admin/categories", icon: Layers },
-  { label: "Quản lý bài tập Quiz", href: "/admin/quizzes", icon: ListChecks },
-  { label: "Quản lý người dùng", href: "/admin/users", icon: Users },
-  { label: "Cửa hàng", href: "/admin/shop", icon: ShoppingBag },
-];
+import AdminSidebarNav from "@/components/admin/AdminSidebarNav";
 
 export default async function AdminLayout({
   children,
@@ -45,21 +29,7 @@ export default async function AdminLayout({
             </div>
           </Link>
 
-          <nav className="flex flex-1 flex-col gap-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <AdminSidebarNav />
 
           {/* Admin Sidebar Profile (Bottom) */}
           <AdminSidebarProfile profile={profile} shopItems={shopItems} />
