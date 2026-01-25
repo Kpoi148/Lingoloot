@@ -21,9 +21,10 @@ interface InventoryModalProps {
     inventoryItems: ShopItem[];
     equippedFrame?: string;
     equippedAvatar?: string;
+    trigger?: React.ReactNode;
 }
 
-export default function InventoryModal({ inventoryItems, equippedFrame, equippedAvatar }: InventoryModalProps) {
+export default function InventoryModal({ inventoryItems, equippedFrame, equippedAvatar, trigger }: InventoryModalProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<"frame" | "avatar">("frame");
@@ -51,13 +52,17 @@ export default function InventoryModal({ inventoryItems, equippedFrame, equipped
 
     return (
         <>
-            <button
-                onClick={() => setIsOpen(true)}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
-            >
-                <Shirt className="h-4 w-4" />
-                Chỉnh sửa giao diện
-            </button>
+            {trigger ? (
+                <div onClick={() => setIsOpen(true)}>{trigger}</div>
+            ) : (
+                <button
+                    onClick={() => setIsOpen(true)}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                    <Shirt className="h-4 w-4" />
+                    Chỉnh sửa giao diện
+                </button>
+            )}
 
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-in fade-in zoom-in duration-200">
