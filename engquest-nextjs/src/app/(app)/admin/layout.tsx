@@ -2,9 +2,10 @@ import Link from "next/link";
 import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
 import BrandLogo from "@/components/BrandLogo";
 import { getUserProfile } from "@/actions/profile.actions";
-import { getAdminShopItems } from "@/actions/admin/shop.actions"; // Need shop items for frame rendering
+import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import AdminSidebarProfile from "@/components/admin/AdminSidebarProfile";
 import AdminSidebarNav from "@/components/admin/AdminSidebarNav";
+import { adminNavItems } from "@/constants/admin-nav";
 
 export default async function AdminLayout({
   children,
@@ -12,7 +13,6 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const profile = await getUserProfile();
-  // We need shop items to render the frame in the sidebar
   const shopItems = await getAdminShopItems();
 
   return (
@@ -45,7 +45,7 @@ export default async function AdminLayout({
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2 md:hidden">
-              {navItems.map((item) => (
+              {adminNavItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
