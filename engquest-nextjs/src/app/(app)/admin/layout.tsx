@@ -69,18 +69,7 @@ export default async function AdminLayout({
           <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-4 shadow-sm backdrop-blur">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex items-center gap-4">
-                {/* Replaced fixed placeholder with logic or simple greetings */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20">
-                  {profile?.displayName?.charAt(0) || "A"}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">
-                    {profile?.displayName || "Quản trị viên"}
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    Đang quản lý nội dung hệ thống
-                  </p>
-                </div>
+                {/* Empty left side or breadcrumbs could go here */}
               </div>
               <AdminTopbarActions />
             </div>

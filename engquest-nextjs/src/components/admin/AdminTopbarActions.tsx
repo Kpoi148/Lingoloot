@@ -22,13 +22,6 @@ export default function AdminTopbarActions() {
       >
         Về trang chủ
       </Link>
-      <button
-        type="button"
-        onClick={() => void signOut({ callbackUrl: "/" })}
-        className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg"
-      >
-        Đăng xuất
-      </button>
     </div>
   );
 }
