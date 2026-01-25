@@ -8,6 +8,17 @@ interface FrameProps {
 export default function MysticFrame({ className, avatarUrl }: FrameProps) {
     return (
         <div className={cn("relative flex items-center justify-center", className)}>
+            {/* Avatar Container - Top Layer - Safe Inset */}
+            <div className="absolute inset-[15%] z-20 overflow-hidden rounded-full border-2 border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                {avatarUrl && (
+                    <img
+                        src={avatarUrl}
+                        alt="Avatar"
+                        className="h-full w-full object-cover"
+                    />
+                )}
+            </div>
+
             {/* Glow Def */}
             <svg className="absolute w-0 h-0">
                 <defs>
@@ -21,61 +32,50 @@ export default function MysticFrame({ className, avatarUrl }: FrameProps) {
                 </defs>
             </svg>
 
-            {/* Outer Runes - Rotating Slowly */}
-            <div className="absolute inset-0 animate-[spin_12s_linear_infinite]">
+            {/* Outer Runes - Rotating Slowly - Behind Avatar */}
+            <div className="absolute inset-0 pointer-events-none animate-[spin_12s_linear_infinite]">
                 <svg
                     viewBox="0 0 100 100"
                     className="h-full w-full text-purple-600"
                     style={{ filter: "url(#purple-glow)" }}
                 >
-                    {/* Decorative Runes / Shapes */}
+                    {/* Decorative Runes / Shapes - Pushed to corners */}
                     <path
-                        d="M50 0 L60 15 L50 30 L40 15 Z"
+                        d="M50 0 L55 10 L50 20 L45 10 Z"
                         fill="currentColor"
                         opacity="0.8"
                     />
                     <path
-                        d="M50 100 L40 85 L50 70 L60 85 Z"
+                        d="M50 100 L45 90 L50 80 L55 90 Z"
                         fill="currentColor"
                         opacity="0.8"
                     />
                     <path
-                        d="M0 50 L15 60 L30 50 L15 40 Z"
+                        d="M0 50 L10 55 L20 50 L10 45 Z"
                         fill="currentColor"
                         opacity="0.8"
                     />
                     <path
-                        d="M100 50 L85 40 L70 50 L85 60 Z"
+                        d="M100 50 L90 45 L80 50 L90 55 Z"
                         fill="currentColor"
                         opacity="0.8"
                     />
-                    <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3" />
+                    <circle cx="50" cy="50" r="49" stroke="currentColor" strokeWidth="0.5" fill="none" opacity="0.5" />
                 </svg>
             </div>
 
-            {/* Middle Ring - Counter Rotate */}
-            <div className="absolute inset-0 animate-[spin_8s_linear_infinite_reverse]">
+            {/* Middle Ring - Counter Rotate - Behind Avatar */}
+            <div className="absolute inset-0 pointer-events-none animate-[spin_8s_linear_infinite_reverse]">
                 <svg
                     viewBox="0 0 100 100"
                     className="h-full w-full text-fuchsia-500"
                 >
-                    <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="5 5" fill="none" />
+                    <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="5 5" fill="none" />
                 </svg>
             </div>
 
-            {/* Inner Pulsing Aura */}
-            <div className="absolute inset-1 rounded-full bg-purple-500/10 animate-pulse"></div>
-
-            {/* Avatar Container */}
-            <div className="relative z-10 h-[70%] w-[70%] overflow-hidden rounded-full border-2 border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
-                {avatarUrl && (
-                    <img
-                        src={avatarUrl}
-                        alt="Avatar"
-                        className="h-full w-full object-cover"
-                    />
-                )}
-            </div>
+            {/* Inner Pulsing Aura - Changed to Border to avoid covering face */}
+            <div className="absolute inset-0 z-10 pointer-events-none rounded-full border-2 border-purple-500/20 animate-pulse"></div>
         </div>
     );
 }

@@ -107,7 +107,11 @@ export default function Navbar({
             <div className="flex w-full max-w-md items-center gap-3 rounded-3xl border border-slate-200 bg-white px-3 py-2 text-left shadow-sm transition dark:border-slate-800 dark:bg-slate-900 md:w-auto">
               {/* Desktop Profile Card Content */}
               <Link href="/profile" className="group">
-                <div className="rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700 transition group-hover:scale-105">
+                {/* Desktop Avatar Container */}
+                <div className={`transition group-hover:scale-105 ${profile?.gamification?.equippedFrameDetails
+                    ? "" // If frame equipped: No border/bg ring, let frame handle shape
+                    : "rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700"
+                  }`}>
                   {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
                     <FrameRenderer
                       frameKey={profile?.gamification?.equippedFrameDetails?.renderKey}
@@ -181,7 +185,10 @@ export default function Navbar({
 
             {/* Mobile Profile Card */}
             <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <div className="h-12 w-12 rounded-full border border-slate-200 overflow-hidden relative">
+              <div className={`h-12 w-12 relative ${profile?.gamification?.equippedFrameDetails
+                  ? "flex-shrink-0" // Frame handles shape
+                  : "rounded-full border border-slate-200 overflow-hidden" // Default circle
+                }`}>
                 {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
                   <FrameRenderer
                     frameKey={profile?.gamification?.equippedFrameDetails?.renderKey}

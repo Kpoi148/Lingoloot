@@ -8,42 +8,8 @@ interface FrameProps {
 export default function HexFrame({ className, avatarUrl }: FrameProps) {
     return (
         <div className={cn("relative flex items-center justify-center", className)}>
-            {/* Glow */}
-            <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full scale-110"></div>
-
-            {/* Animated Hex Borders */}
-            <div className="absolute inset-0">
-                <svg
-                    viewBox="0 0 100 100"
-                    className="h-full w-full drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                    fill="none"
-                    stroke="url(#gold-gradient)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <defs>
-                        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#FDE68A" />
-                            <stop offset="50%" stopColor="#D97706" />
-                            <stop offset="100%" stopColor="#FDE68A" />
-                        </linearGradient>
-                    </defs>
-                    {/* Hexagon Path */}
-                    <path d="M50 2 L93.3 27 V77 L50 102 L6.7 77 V27 Z" />
-                </svg>
-
-                {/* Rotating Highlight */}
-                <div className="absolute inset-[-10%] animate-[spin_6s_linear_infinite]">
-                    <div className="h-full w-[2px] bg-white/50 blur-sm rotate-45 mx-auto"></div>
-                </div>
-            </div>
-
-            {/* Inner Avatar - Clip to Hexagon */}
-            <div className="relative z-10 h-[86%] w-[86%] overflow-hidden"
-                style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }}>
-                {/* Background if transparent */}
-                <div className="absolute inset-0 bg-slate-900"></div>
+            {/* Avatar Container - Bottom Layer - Safe Inset */}
+            <div className="absolute inset-[10%] z-20 overflow-hidden rounded-full bg-slate-900 border-2 border-slate-800">
                 {avatarUrl && (
                     <img
                         src={avatarUrl}
@@ -51,7 +17,65 @@ export default function HexFrame({ className, avatarUrl }: FrameProps) {
                         className="h-full w-full object-cover"
                     />
                 )}
-                <div className="absolute inset-0 border-[3px] border-yellow-500/30" style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }}></div>
+            </div>
+
+            {/* Glow Effect - Behind */}
+            <div className="absolute inset-0 bg-yellow-500/30 blur-xl rounded-full scale-100"></div>
+
+            {/* Rotating Outer Golden Ring */}
+            <div className="absolute inset-0 z-10 pointer-events-none animate-[spin_10s_linear_infinite]">
+                <svg
+                    viewBox="0 0 100 100"
+                    className="h-full w-full drop-shadow-[0_0_5px_rgba(234,179,8,0.8)]"
+                    fill="none"
+                    stroke="url(#gold-gradient-outer)"
+                    strokeWidth="2"
+                >
+                    <defs>
+                        <linearGradient id="gold-gradient-outer" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#FDE68A" />
+                            <stop offset="50%" stopColor="#D97706" />
+                            <stop offset="100%" stopColor="#FDE68A" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="48" strokeDasharray="40 10" />
+                </svg>
+            </div>
+
+            {/* Inner Golden Ring - Solid/Detailed */}
+            <div className="absolute inset-0 z-30 pointer-events-none">
+                <svg
+                    viewBox="0 0 100 100"
+                    className="h-full w-full"
+                    fill="none"
+                    stroke="url(#gold-gradient-inner)"
+                    strokeWidth="3"
+                >
+                    <defs>
+                        <linearGradient id="gold-gradient-inner" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#D97706" />
+                            <stop offset="50%" stopColor="#FCD34D" />
+                            <stop offset="100%" stopColor="#D97706" />
+                        </linearGradient>
+                    </defs>
+                    {/* Main Border Circle */}
+                    <circle cx="50" cy="50" r="44" />
+                </svg>
+            </div>
+
+            {/* Decorative Shimmers/Sparkles */}
+            <div className="absolute inset-[-5%] z-30 pointer-events-none animate-[spin_4s_linear_infinite_reverse]">
+                <svg viewBox="0 0 100 100" className="h-full w-full opacity-80">
+                    <circle cx="50" cy="5" r="2" fill="#FEF3C7" className="animate-pulse" />
+                    <circle cx="50" cy="95" r="2" fill="#FEF3C7" className="animate-pulse" />
+                    <circle cx="5" cy="50" r="2" fill="#FEF3C7" className="animate-pulse" />
+                    <circle cx="95" cy="50" r="2" fill="#FEF3C7" className="animate-pulse" />
+                </svg>
+            </div>
+
+            {/* Sunlight Shimmer Effect - Premium Motion */}
+            <div className="absolute inset-0 z-40 pointer-events-none rounded-full overflow-hidden">
+                <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" style={{ backgroundSize: '50% 100%', backgroundRepeat: 'no-repeat' }}></div>
             </div>
         </div>
     );
