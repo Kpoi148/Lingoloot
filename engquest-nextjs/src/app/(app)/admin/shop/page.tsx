@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { revalidatePath } from "next/cache";
+import DeleteShopItemButton from "@/components/admin/shop/DeleteShopItemButton";
+import RestoreDefaultsButton from "@/components/admin/shop/RestoreDefaultsButton";
+import ShopItemPreview from "@/components/admin/shop/ShopItemPreview";
 
 export default async function AdminShopPage() {
     const items = await getAdminShopItems();
@@ -14,13 +17,16 @@ export default async function AdminShopPage() {
                     <h1 className="text-2xl font-bold text-slate-900">Quản lý Cửa Hàng</h1>
                     <p className="text-sm text-slate-500">Danh sách các vật phẩm đang bán</p>
                 </div>
-                <Link
-                    href="/admin/shop/create"
-                    className="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600 hover:-translate-y-0.5"
-                >
-                    <Plus className="h-4 w-4" />
-                    Thêm vật phẩm
-                </Link>
+                <div className="flex gap-2">
+                    <RestoreDefaultsButton />
+                    <Link
+                        href="/admin/shop/create"
+                        className="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600 hover:-translate-y-0.5"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Thêm vật phẩm
+                    </Link>
+                </div>
             </div>
 
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -47,14 +53,7 @@ export default async function AdminShopPage() {
                             items.map((item) => (
                                 <tr key={item._id} className="transition hover:bg-slate-50">
                                     <td className="px-6 py-4">
-                                        <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
-                                            <Image
-                                                src={item.imageUrl}
-                                                alt={item.name}
-                                                fill
-                                                className="object-contain p-1"
-                                            />
-                                        </div>
+                                        <ShopItemPreview item={item} />
                                     </td>
                                     <td className="px-6 py-4 font-semibold text-slate-900">{item.name}</td>
                                     <td className="px-6 py-4 capitalize">{item.type === 'frame' ? 'Khung' : 'Avatar'}</td>
@@ -97,23 +96,9 @@ export default async function AdminShopPage() {
                                                 <Pencil className="h-4 w-4" />
                                             </Link>
 
-                                            {/* Delete Form */}
-                                            <form action={async () => {
-                                                "use server";
-                                                if (confirm("Bạn có chắc chắn muốn xóa vật phẩm này không?")) {
-                                                    await deleteShopItem(item._id);
-                                                }
-                                            }}>
-                                                {/* Note: Standard form submission won't trigger standard JS confirm easily without client component. 
-                              For simplicity here I'll omit the confirm or make this button a client component later if needed.
-                              For now let's just make it a direct server action but maybe wrapped in a client component?
-                              Actually, deletion is risky. Let's stick to Edit/Toggle Status for safety in this MVP step, 
-                              or allow delete but be careful. I will use a simple form action here. 
-                          */}
-                                                <button type="submit" className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 transition" title="Xóa">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </button>
-                                            </form>
+
+                                            {/* Delete Button (Client Component) */}
+                                            <DeleteShopItemButton itemId={item._id} />
                                         </div>
                                     </td>
                                 </tr>

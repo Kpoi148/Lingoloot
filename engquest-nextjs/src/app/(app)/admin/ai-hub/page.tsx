@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookA, BrainCircuit, Gamepad2 } from "lucide-react";
+import { BookA, BrainCircuit, Gamepad2, Wand2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +24,13 @@ const features = [
     href: "/admin/ai-hub/quizzes",
     icon: BrainCircuit,
     accent: "from-indigo-500 to-rose-400",
+  },
+  {
+    title: "Frame Generator",
+    description: "Thiết kế khung viền Avatar độc quyền với AI.",
+    href: "/admin/ai-hub/frames",
+    icon: Wand2,
+    accent: "from-amber-500 to-orange-400",
   },
 ];
 

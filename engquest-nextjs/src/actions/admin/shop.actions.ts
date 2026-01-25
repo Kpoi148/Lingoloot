@@ -115,3 +115,57 @@ export async function toggleShopItemStatus(id: string, isActive: boolean) {
         return { success: false, message: "Lỗi khi thay đổi trạng thái." };
     }
 }
+
+export async function restoreDefaultFrames() {
+    await ensureAdmin();
+    try {
+        const defaults = [
+            {
+                name: "Golden Hex",
+                type: "frame",
+                price: 1500,
+                rarity: "legendary",
+                renderKey: "hex-svg",
+                imageUrl: "https://api.dicebear.com/9.x/shapes/svg?seed=Hex&backgroundColor=F5A623",
+                isActive: true
+            },
+            {
+                name: "Tech Hud",
+                type: "frame",
+                price: 800,
+                rarity: "rare",
+                renderKey: "tech-svg",
+                imageUrl: "https://api.dicebear.com/9.x/shapes/svg?seed=Tech&backgroundColor=007CF0",
+                isActive: true
+            },
+            {
+                name: "Mystic Runes",
+                type: "frame",
+                price: 1200,
+                rarity: "rare",
+                renderKey: "mystic-svg",
+                imageUrl: "https://api.dicebear.com/9.x/shapes/svg?seed=Mystic&backgroundColor=7928CA",
+                isActive: true
+            }
+        ];
+
+        let restoredCount = 0;
+
+        for (const item of defaults) {
+            // Check if exists by renderKey (Cast item as any or partial matching shop item creation)
+            const exists = await ShopItem.findOne({ renderKey: item.renderKey });
+            if (!exists) {
+                await ShopItem.create(item);
+                restoredCount++;
+            }
+        }
+
+        revalidatePath("/admin/shop");
+        revalidatePath("/shop");
+        return { success: true, message: `Đã khôi phục ${restoredCount} khung mặc định.` };
+
+    } catch (error) {
+        console.error("Failed to restore default frames:", error);
+        return { success: false, message: "Lỗi khi khôi phục khung." };
+    }
+}
