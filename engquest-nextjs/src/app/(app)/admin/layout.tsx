@@ -45,9 +45,6 @@ export default async function AdminLayout({
             </div>
           </Link>
 
-          {/* Admin Sidebar Profile */}
-          <AdminSidebarProfile profile={profile} shopItems={shopItems} />
-
           <nav className="flex flex-1 flex-col gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -64,9 +61,8 @@ export default async function AdminLayout({
             })}
           </nav>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
-            Quản trị nội dung và theo dõi hoạt động học tập.
-          </div>
+          {/* Admin Sidebar Profile (Bottom) */}
+          <AdminSidebarProfile profile={profile} shopItems={shopItems} />
         </aside>
 
         <div className="flex flex-1 flex-col">
