@@ -129,6 +129,8 @@ export async function getUsers(query: string, page: number): Promise<UsersPageRe
         isBanned: user.isBanned,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
+        bio: user.bio,
+        gamification: user.gamification,
       })
     ),
     page: currentPage,

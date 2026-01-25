@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition, useOptimistic } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Pencil, MoreHorizontal, Coins, Star, Trophy } from "lucide-react";
+import { Pencil, MoreHorizontal, Gem, Sparkles, Trophy } from "lucide-react";
 import toast from "react-hot-toast";
 import { FrameRenderer } from "@/lib/frame-registry";
 import EditUserModal from "@/components/admin/EditUserModal";
@@ -41,6 +41,9 @@ const formatDate = (value?: string) => {
   if (Number.isNaN(date.getTime())) return "--";
   return dateFormatter.format(date);
 };
+
+const getAvatarSource = (user: UserListItem) =>
+  user.avatarUrl ?? user.image ?? "/logo.png";
 
 const getDisplayName = (user: UserListItem) => user.displayName ?? user.name;
 
@@ -276,199 +279,247 @@ export default function AdminUsersClient({
   const isBusy = loading || isPending;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            User Management
-          </h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Review and manage all registered users.
-          </p>
+    <>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-900">
+              User Management
+            </h1>
+            <p className="mt-2 text-sm text-slate-600">
+              Review and manage all registered users.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
+              placeholder="Search users"
+              className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none"
+            />
+          </div>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-            placeholder="Search users"
-            className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none"
-          />
-        </div>
-      </div>
 
-      {error && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
-      <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400">
-              <tr>
-                <th className="py-3">User</th>
-                <th className="py-3">Role</th>
-                <th className="py-3">Status</th>
-                <th className="py-3">Joined</th>
-                <th className="py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {isBusy && (
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left text-sm">
+              <thead className="text-xs uppercase tracking-[0.25em] text-slate-400">
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400">
-                    Loading users...
-                  </td>
+                  <th className="py-3">User</th>
+                  <th className="py-3">Role</th>
+                  <th className="py-3">Status</th>
+                  <th className="py-3 text-center">Level</th>
+                  <th className="py-3 text-center">XP</th>
+                  <th className="py-3 text-center">Gems</th>
+                  <th className="py-3">Joined</th>
+                  <th className="py-3 text-right">Actions</th>
                 </tr>
-              )}
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {isBusy && (
+                  <tr>
+                    <td colSpan={8} className="py-6 text-center text-slate-400">
+                      Loading users...
+                    </td>
+                  </tr>
+                )}
 
-              {!isBusy && !hasUsers && (
-                <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400">
-                    No users found.
-                  </td>
-                </tr>
-              )}
+                {!isBusy && !hasUsers && (
+                  <tr>
+                    <td colSpan={8} className="py-6 text-center text-slate-400">
+                      No users found.
+                    </td>
+                  </tr>
+                )}
 
-              {!isBusy &&
-                optimisticUsers.map((user) => {
-                  const isAdmin = user.role === "admin";
-                  const isBanned = user.isBanned;
-                  const isSelf = currentUserId === user.id;
+                {!isBusy &&
+                  optimisticUsers.map((user) => {
+                    const isAdmin = user.role === "admin";
+                    const isBanned = user.isBanned;
+                    const isSelf = currentUserId === user.id;
 
-                  return (
-                    <tr key={user.id} className={isBanned ? "bg-red-50/40" : ""}>
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src={getAvatarSource(user)}
-                            alt={getDisplayName(user)}
-                            width={44}
-                            height={44}
-                            className="h-11 w-11 rounded-full border border-slate-200 object-cover"
-                          />
-                          <div>
-                            <p className="font-medium text-slate-900">
-                              {getDisplayName(user)}
-                              {isSelf ? " (You)" : ""}
-                            </p>
-                            <p className="text-xs text-slate-500">
-                              {user.email}
-                            </p>
+                    return (
+                      <tr key={user.id} className={isBanned ? "bg-red-50/40" : ""}>
+                        <td className="py-4">
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={getAvatarSource(user)}
+                              alt={getDisplayName(user)}
+                              width={44}
+                              height={44}
+                              className="h-11 w-11 rounded-full border border-slate-200 object-cover"
+                            />
+                            <div>
+                              <p className="font-medium text-slate-900">
+                                {getDisplayName(user)}
+                                {isSelf ? " (You)" : ""}
+                              </p>
+                              <p className="text-xs text-slate-500">
+                                {user.email}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-4">
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isAdmin
+                        </td>
+                        <td className="py-4">
+                          <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isAdmin
                               ? "bg-blue-100 text-blue-700"
                               : "bg-slate-100 text-slate-600"
-                            }`}
-                        >
-                          {isAdmin ? "Admin" : "User"}
-                        </span>
-                      </td>
-                      <td className="py-4">
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isBanned
+                              }`}
+                          >
+                            {isAdmin ? "Admin" : "User"}
+                          </span>
+                        </td>
+                        <td className="py-4">
+                          <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isBanned
                               ? "bg-red-100 text-red-600"
                               : "bg-emerald-100 text-emerald-600"
-                            }`}
-                        >
-                          {isBanned ? "Banned" : "Active"}
-                        </span>
-                      </td>
-                      <td className="py-4 text-slate-600">
-                        {formatDate(user.createdAt)}
-                      </td>
-                      <td className="py-4 text-right">
-                        <div className="relative inline-flex" onClick={(event) => event.stopPropagation()}>
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setOpenMenuId((prev) =>
-                                prev === user.id ? null : user.id
-                              );
-                            }}
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                            aria-haspopup="menu"
-                            aria-expanded={openMenuId === user.id}
+                              }`}
                           >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </button>
-
-                          {openMenuId === user.id && (
-                            <div
-                              className="absolute right-0 top-11 z-10 w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg"
-                              onClick={(event) => event.stopPropagation()}
+                            {isBanned ? "Banned" : "Active"}
+                          </span>
+                        </td>
+                        <td className="py-4 text-center">
+                          <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 px-2.5 py-1">
+                            <Trophy className="h-3.5 w-3.5 text-amber-600" />
+                            <span className="text-xs font-bold text-amber-700">
+                              {user.gamification?.level ?? 1}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 text-center">
+                          <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-100 to-purple-100 px-2.5 py-1">
+                            <Sparkles className="h-3.5 w-3.5 text-violet-600" />
+                            <span className="text-xs font-bold text-violet-700">
+                              {(user.gamification?.xp ?? 0).toLocaleString()}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 text-center">
+                          <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-100 to-teal-100 px-2.5 py-1">
+                            <Gem className="h-3.5 w-3.5 text-cyan-600" />
+                            <span className="text-xs font-bold text-cyan-700">
+                              {(user.gamification?.currency ?? 0).toLocaleString()}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 text-slate-600">
+                          {formatDate(user.createdAt)}
+                        </td>
+                        <td className="py-4 text-right">
+                          <div className="relative inline-flex" onClick={(event) => event.stopPropagation()}>
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setOpenMenuId((prev) =>
+                                  prev === user.id ? null : user.id
+                                );
+                              }}
+                              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                              aria-haspopup="menu"
+                              aria-expanded={openMenuId === user.id}
                             >
-                              <button
-                                type="button"
-                                onClick={() => handleToggleRole(user.id)}
-                                className="w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                              <MoreHorizontal className="h-4 w-4" />
+                            </button>
+
+                            {openMenuId === user.id && (
+                              <div
+                                className="absolute right-0 top-11 z-10 w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg"
+                                onClick={(event) => event.stopPropagation()}
                               >
-                                {isAdmin ? "Demote Admin" : "Promote Admin"}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleToggleBan(user.id)}
-                                disabled={isSelf}
-                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingUser(user);
+                                    setOpenMenuId(null);
+                                  }}
+                                  className="w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100 flex items-center gap-2"
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                  Edit User
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleRole(user.id)}
+                                  className="w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                                >
+                                  {isAdmin ? "Demote Admin" : "Promote Admin"}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleBan(user.id)}
+                                  disabled={isSelf}
+                                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
                                     ? "cursor-not-allowed text-slate-300"
                                     : "text-slate-700 hover:bg-slate-100"
-                                  }`}
-                              >
-                                {isBanned ? "Unban User" : "Ban User"}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDelete(user.id, getDisplayName(user))}
-                                disabled={isSelf}
-                                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
+                                    }`}
+                                >
+                                  {isBanned ? "Unban User" : "Ban User"}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(user.id, getDisplayName(user))}
+                                  disabled={isSelf}
+                                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition ${isSelf
                                     ? "cursor-not-allowed text-red-200"
                                     : "text-red-600 hover:bg-red-50"
-                                  }`}
-                              >
-                                Delete User
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
+                                    }`}
+                                >
+                                  Delete User
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
-            Page {data?.page ?? currentPage} of {totalPages}
-          </p>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={!canGoBack}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={!canGoForward}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
-            </button>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              Page {data?.page ?? currentPage} of {totalPages}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!canGoBack}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!canGoForward}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {editingUser && (
+        <EditUserModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onUpdate={refreshUsers}
+        />
+      )}
+    </>
   );
 }

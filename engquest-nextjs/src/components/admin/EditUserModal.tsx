@@ -64,7 +64,7 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-6 space-y-6">
+                <div className="overflow-y-auto p-6 space-y-6 scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     {/* General Info */}
                     <section className="space-y-4">
                         <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Thông tin chung</h3>
@@ -95,8 +95,8 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
                             <button
                                 onClick={() => setFormData({ ...formData, role: formData.role === "admin" ? "user" : "admin" })}
                                 className={`flex items-center gap-3 rounded-xl border p-3 transition ${formData.role === "admin"
-                                        ? "border-blue-200 bg-blue-50 text-blue-700"
-                                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                                    ? "border-blue-200 bg-blue-50 text-blue-700"
+                                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                                     }`}
                             >
                                 <Shield className="h-5 w-5" />
@@ -109,8 +109,8 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
                             <button
                                 onClick={() => setFormData({ ...formData, isBanned: !formData.isBanned })}
                                 className={`flex items-center gap-3 rounded-xl border p-3 transition ${formData.isBanned
-                                        ? "border-red-200 bg-red-50 text-red-700"
-                                        : "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                    ? "border-red-200 bg-red-50 text-red-700"
+                                    : "border-emerald-200 bg-emerald-50 text-emerald-700"
                                     }`}
                             >
                                 <Ban className="h-5 w-5" />
