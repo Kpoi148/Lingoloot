@@ -14,7 +14,7 @@ const features = [
   {
     title: "Game Builder",
     description: "Tạo Story Cloze game từ chủ đề và từ vựng đã có.",
-    href: "/admin/games/create",
+    href: "/admin/ai-hub/games",
     icon: Gamepad2,
     accent: "from-emerald-500 to-teal-400",
   },
