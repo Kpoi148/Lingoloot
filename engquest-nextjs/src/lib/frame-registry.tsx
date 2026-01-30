@@ -38,7 +38,7 @@ export function FrameRenderer({
         <div className={`relative flex items-center justify-center ${className}`}>
             {/* Avatar (Bottom Layer) */}
             <div
-                className={`absolute overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800 ${fallbackImageUrl ? 'inset-[10%]' : 'inset-0'}`}
+                className={`absolute overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800 ${fallbackImageUrl ? 'inset-[15%]' : 'inset-0'}`}
                 style={{ borderRadius: '50%' }}
             >
                 {avatarUrl && (

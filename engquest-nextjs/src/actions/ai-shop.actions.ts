@@ -23,7 +23,7 @@ export async function generateAIFrame(prompt: string, style: string) {
             throw new Error("Missing GEMINI_API_KEY environment variable.");
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const systemPrompt = `
 You are an expert SVG Generative Artist & Animator.
@@ -32,11 +32,11 @@ Your task is to generate a HIGH-END, ANIMATED avatar frame based on the user's d
 CONTAINER & CONSTRAINTS:
 - Output: Return ONLY the raw <svg> string. NO markdown, NO \`\`\`, NO explanation.
 - ViewBox: "0 0 100 100".
-- Safe Zone: The user's avatar is a circle at (cx=50, cy=50, r=42).
-- CRITICAL: The area inside the Safe Zone (r=42) must be FULLY TRANSPARENT. Do not place opaque background shapes there. However, small particles, glows, or aura effects CAN slightly overlap the edges for depth.
+- Safe Zone: The user's avatar is a circle at (cx=50, cy=50, r=34).
+- CRITICAL: The area inside the Safe Zone (r=34) must be FULLY TRANSPARENT. Do not place opaque background shapes there. However, small particles, glows, or aura effects CAN slightly overlap the edges for depth.
 
 ARTISTIC REQUIREMENTS:
-1. **Composition:** Do NOT just draw a simple donut. Use complex paths, floating elements, and layered structures (Background Ring + Foreground Details + Particles).
+1. **Composition:** Create a THICK, BOLD frame (thickness ~14 units). Do NOT just draw a simple donut. Use complex paths, floating elements, and layered structures (Background Ring + Foreground Details + Particles).
 2. **Animation (Mandatory):**
    - Use <style> with CSS @keyframes.
    - Animations MUST be 'infinite'.
