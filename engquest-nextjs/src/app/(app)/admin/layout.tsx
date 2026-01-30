@@ -16,16 +16,16 @@ export default async function AdminLayout({
   const shopItems = await getAdminShopItems();
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-[1440px]">
-        <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white/80 px-4 py-6 md:flex">
-          <Link href="/" className="mb-6 flex items-center gap-3 px-2">
-            <BrandLogo className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20" />
+        <aside className="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200/70 bg-white/80 px-4 py-6 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80 md:flex">
+          <Link href="/" className="mb-8 flex items-center gap-3 px-2">
+            <BrandLogo className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20 dark:bg-white dark:text-slate-900" />
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
                 LingoLoot
               </p>
-              <p className="text-sm font-semibold text-slate-900">Admin</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Admin Portal</p>
             </div>
           </Link>
 
@@ -36,10 +36,12 @@ export default async function AdminLayout({
         </aside>
 
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-4 shadow-sm backdrop-blur">
+          <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 px-6 py-4 shadow-sm backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex items-center gap-4">
-                {/* Empty left side or breadcrumbs could go here */}
+                <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                  Dashboard
+                </h1>
               </div>
               <AdminTopbarActions />
             </div>
@@ -49,7 +51,7 @@ export default async function AdminLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm"
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
                 >
                   {item.label}
                 </Link>
@@ -57,7 +59,7 @@ export default async function AdminLayout({
             </div>
           </header>
 
-          <main className="flex-1 px-4 py-8">{children}</main>
+          <main className="flex-1 px-4 py-8 md:px-8">{children}</main>
         </div>
       </div>
     </div>
