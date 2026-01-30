@@ -100,8 +100,22 @@ export async function getUserProfile() {
 
   await connectToDatabase();
   const user = await User.findById(session.user.id)
-    .select("name email avatarUrl displayName bio stats image gamification")
+    .select("name email avatarUrl displayName bio stats image gamification role") // Select role
     .lean();
+
+  if (user && user.role === "admin") {
+    const allShopItems = await ShopItem.find({ isActive: true }).select("_id").lean();
+    const allItemIds = allShopItems.map(item => String(item._id));
+
+    // Ensure user.gamification exists
+    if (!user.gamification) {
+      user.gamification = { inventory: [], xp: 0, level: 1, streak: 0, currency: 0, lastLoginDate: null };
+    }
+
+    // Merge existing inventory with all shop items (using Set to avoid duplicates)
+    const existingInventory = user.gamification.inventory || [];
+    user.gamification.inventory = Array.from(new Set([...existingInventory, ...allItemIds]));
+  }
 
   if (!user) {
     return null;

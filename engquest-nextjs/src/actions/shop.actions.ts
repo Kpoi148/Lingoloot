@@ -90,8 +90,12 @@ export async function equipItem(type: "frame" | "avatar", itemId: string) {
     const updateField = type === "frame" ? "gamification.equippedFrame" : "gamification.equippedAvatar";
 
     // Validate ownership
-    const user = await User.findById(session.user.id).select("gamification.inventory").lean();
-    if (!user || !user.gamification?.inventory.includes(itemId)) {
+    const user = await User.findById(session.user.id).select("gamification.inventory role").lean();
+
+    // Allow admins to equip any item regardless of inventory
+    const isAdmin = user?.role === "admin";
+
+    if (!user || (!isAdmin && !user.gamification?.inventory.includes(itemId))) {
         return { success: false, message: "Bạn không sở hữu vật phẩm này." };
     }
 
