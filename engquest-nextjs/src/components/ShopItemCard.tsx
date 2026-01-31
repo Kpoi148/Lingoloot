@@ -6,7 +6,7 @@ import { Loader2, Check } from "lucide-react";
 import { buyItem } from "@/actions/shop.actions";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 interface ShopItemCardProps {
     item: {

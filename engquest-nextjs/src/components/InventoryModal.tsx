@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { Check, Loader2, Shirt, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 interface ShopItem {
     _id: string;

@@ -10,7 +10,7 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import StreakNavbarItem from "@/components/StreakNavbarItem";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 type NavItem = {
   label: string;
@@ -109,8 +109,8 @@ export default function Navbar({
               <Link href="/profile" className="group">
                 {/* Desktop Avatar Container */}
                 <div className={`transition group-hover:scale-105 ${profile?.gamification?.equippedFrameDetails
-                    ? "" // If frame equipped: No border/bg ring, let frame handle shape
-                    : "rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700"
+                  ? "" // If frame equipped: No border/bg ring, let frame handle shape
+                  : "rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700"
                   }`}>
                   {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
                     <FrameRenderer
@@ -186,8 +186,8 @@ export default function Navbar({
             {/* Mobile Profile Card */}
             <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className={`h-12 w-12 relative ${profile?.gamification?.equippedFrameDetails
-                  ? "flex-shrink-0" // Frame handles shape
-                  : "rounded-full border border-slate-200 overflow-hidden" // Default circle
+                ? "flex-shrink-0" // Frame handles shape
+                : "rounded-full border border-slate-200 overflow-hidden" // Default circle
                 }`}>
                 {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
                   <FrameRenderer

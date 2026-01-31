@@ -1,8 +1,6 @@
 "use server";
 
 import mongoose from "mongoose";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
 import { connectToDatabase } from "@/lib/mongodb";
 import User, { type UserRole } from "@/models/User";
 
@@ -36,13 +34,7 @@ export type UsersPageResult = {
   pageSize: number;
 };
 
-const ensureAdminSession = async () => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== "admin") {
-    throw new Error("Unauthorized.");
-  }
-  return session;
-};
+import { ensureAdminSession } from "@/lib/auth-utils";
 
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 

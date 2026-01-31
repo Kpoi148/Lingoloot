@@ -7,7 +7,7 @@ import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress } from "@/lib/gamification";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 type AdminSidebarProfileProps = {
     profile: UserProfile | null;

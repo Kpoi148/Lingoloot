@@ -6,7 +6,7 @@ import { createShopItem, updateShopItem, type ShopItemFormData } from "@/actions
 import toast from "react-hot-toast";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 interface ShopItemFormProps {
     initialData?: ShopItemFormData & { _id: string };

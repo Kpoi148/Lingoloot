@@ -4,7 +4,7 @@ import { useState, useTransition, useEffect } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { generateAIFrame, saveAIFrameToShop } from "@/actions/ai-shop.actions";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import { Loader2, Save, RefreshCw, Wand2, Check, Sparkles, Zap, X, Coins } from "lucide-react";
 
 type FrameGeneratorProps = {

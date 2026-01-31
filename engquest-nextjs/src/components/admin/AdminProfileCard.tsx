@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { UserProfile, updateUserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import dynamic from "next/dynamic";
 import InventoryModal from "@/components/InventoryModal";
 import toast from "react-hot-toast";

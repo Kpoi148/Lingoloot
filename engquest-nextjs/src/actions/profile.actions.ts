@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { getSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
 import ShopItem from "@/models/ShopItem"; // Import ShopItem model
@@ -93,7 +92,7 @@ const toUserProfile = (user: {
 });
 
 export async function getUserProfile() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (!session?.user?.id) {
     return null;
   }
@@ -143,7 +142,7 @@ export async function getUserProfile() {
 }
 
 export async function updateUserProfile(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (!session?.user?.id) {
     return { success: false, message: "Unauthorized." };
   }

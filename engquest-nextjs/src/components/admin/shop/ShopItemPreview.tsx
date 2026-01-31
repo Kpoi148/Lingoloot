@@ -1,6 +1,6 @@
 "use client";
 
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import Image from "next/image";
 
 interface ShopItemPreviewProps {

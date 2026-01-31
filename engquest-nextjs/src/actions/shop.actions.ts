@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { getSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
 import ShopItem, { ShopItemDocument } from "@/models/ShopItem";
 import User from "@/models/User";
@@ -27,7 +26,7 @@ export type BuyItemResult =
     | { success: false; message: string };
 
 export async function buyItem(itemId: string): Promise<BuyItemResult> {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     if (!session?.user?.id) {
         return { success: false, message: "Bạn cần đăng nhập để mua hàng." };
     }
@@ -80,7 +79,7 @@ export async function buyItem(itemId: string): Promise<BuyItemResult> {
 }
 
 export async function equipItem(type: "frame" | "avatar", itemId: string) {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     if (!session?.user?.id) {
         return { success: false, message: "Unauthorized." };
     }

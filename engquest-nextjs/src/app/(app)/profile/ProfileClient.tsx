@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import InventoryModal from "@/components/InventoryModal";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
   ssr: false,

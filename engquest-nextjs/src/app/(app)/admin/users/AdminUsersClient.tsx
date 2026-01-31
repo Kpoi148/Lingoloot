@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pencil, MoreHorizontal, Gem, Sparkles, Trophy } from "lucide-react";
 import toast from "react-hot-toast";
-import { FrameRenderer } from "@/lib/frame-registry";
+import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import EditUserModal from "@/components/admin/EditUserModal";
 import {
   deleteUser,
