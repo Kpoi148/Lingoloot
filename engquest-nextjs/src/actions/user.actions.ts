@@ -238,7 +238,7 @@ export async function updateUserAdmin(userId: string, data: UpdateUserAdminInput
 
   await connectToDatabase();
 
-  const update: any = {};
+  const update: Record<string, any> = {};
   if (data.displayName !== undefined) update.displayName = data.displayName;
   if (data.bio !== undefined) update.bio = data.bio;
   if (data.role !== undefined) update.role = data.role;

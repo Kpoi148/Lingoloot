@@ -63,7 +63,7 @@ export default function FrameGenerator({ userAvatarUrl }: FrameGeneratorProps) {
                 setGeneratedImage(result.imageUrl);
                 toast.success("Đã tạo khung thành công! 🎨");
             } else {
-                toast.error(result.msg || "Có lỗi xảy ra khi tạo khung.");
+                toast.error(result.message || "Có lỗi xảy ra khi tạo khung.");
             }
         });
     };
@@ -326,7 +326,7 @@ export default function FrameGenerator({ userAvatarUrl }: FrameGeneratorProps) {
                                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Độ Hiếm</label>
                                     <select
                                         value={saveData.rarity}
-                                        onChange={e => setSaveData({ ...saveData, rarity: e.target.value as any })}
+                                        onChange={e => setSaveData({ ...saveData, rarity: e.target.value as "common" | "rare" | "legendary" })}
                                         className={`w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-3 font-bold focus:border-indigo-500 focus:outline-none capitalize ${getRarityText(saveData.rarity)}`}
                                     >
                                         <option value="common">Common</option>

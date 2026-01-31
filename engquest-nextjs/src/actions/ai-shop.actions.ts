@@ -1,7 +1,7 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { ensureAuthenticated } from "@/lib/auth-utils";
+import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import ShopItem from "@/models/ShopItem";
 import { connectToDatabase } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
@@ -25,27 +25,7 @@ export async function generateAIFrame(prompt: string, style: string) {
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const systemPrompt = `
-You are an expert SVG Generative Artist & Animator.
-Your task is to generate a HIGH-END, ANIMATED avatar frame based on the user's description.
-
-CONTAINER & CONSTRAINTS:
-- Output: Return ONLY the raw <svg> string. NO markdown, NO \`\`\`, NO explanation.
-- ViewBox: "0 0 100 100".
-- Safe Zone: The user's avatar is a circle at (cx=50, cy=50, r=34).
-- CRITICAL: The area inside the Safe Zone (r=34) must be FULLY TRANSPARENT. Do not place opaque background shapes there. However, small particles, glows, or aura effects CAN slightly overlap the edges for depth.
-
-ARTISTIC REQUIREMENTS:
-1. **Composition:** Create a THICK, BOLD frame (thickness ~14 units). Do NOT just draw a simple donut. Use complex paths, floating elements, and layered structures (Background Ring + Foreground Details + Particles).
-2. **Animation (Mandatory):**
-   - Use <style> with CSS @keyframes.
-   - Animations MUST be 'infinite'.
-   - Include diverse movements: spin (rotate), pulse (scale), float (translate), or dash-offset (marching ants).
-3. **Visuals:** Use <defs> for Linear/Radial Gradients and <filter> for Glow/Blur/Shadow effects.
-4. **Uniqueness:** Make it look like a premium video game item (Rare/Legendary tier).
-
-USER PROMPT: "${prompt}"
-`;
+        const systemPrompt = AI_FRAME_SYSTEM_PROMPT.replace("{prompt}", prompt);
 
         const result = await model.generateContent(systemPrompt);
         const response = await result.response;
@@ -65,13 +45,13 @@ USER PROMPT: "${prompt}"
         return {
             success: true,
             imageUrl: dataUrl,
-            msg: "Frame generated successfully!",
+            message: "Frame generated successfully!",
         };
     } catch (error) {
         console.error("Error generating AI frame:", error);
         return {
             success: false,
-            msg: error instanceof Error ? error.message : "Failed to generate frame. Please try again.",
+            message: error instanceof Error ? error.message : "Failed to generate frame. Please try again.",
         };
     }
 }
@@ -86,10 +66,7 @@ export async function saveAIFrameToShop(data: {
     rarity: "common" | "rare" | "legendary";
 }) {
     try {
-        const session = await getServerSession(authOptions);
-        if (!session?.user) {
-            throw new Error("Unauthorized");
-        }
+        const session = await ensureAuthenticated();
 
         await connectToDatabase();
 
@@ -109,13 +86,13 @@ export async function saveAIFrameToShop(data: {
         return {
             success: true,
             item: JSON.parse(JSON.stringify(newItem)),
-            msg: "Frame saved to Shop successfully!",
+            message: "Frame saved to Shop successfully!",
         };
     } catch (error) {
         console.error("Error saving AI frame to shop:", error);
         return {
             success: false,
-            msg: "Failed to save frame to shop.",
+            message: "Failed to save frame to shop.",
         };
     }
 }

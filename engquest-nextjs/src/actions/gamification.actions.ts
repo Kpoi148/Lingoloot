@@ -25,24 +25,19 @@ export type DailyLoginReward = {
 export type DailyLoginResult =
   | { status: "already-claimed" }
   | {
-      status: "claimed";
-      reward: DailyLoginReward;
-      levelUp: boolean;
-      newLevel: number;
-      newXp: number;
-      newCurrency: number;
-    };
+    status: "claimed";
+    reward: DailyLoginReward;
+    levelUp: boolean;
+    newLevel: number;
+    newXp: number;
+    newCurrency: number;
+  };
 
-const ensureSessionUser = async () => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized.");
-  }
-  return session.user.id;
-};
+import { ensureAuthenticated } from "@/lib/auth-utils";
 
 export async function checkDailyLogin(userId?: string): Promise<DailyLoginResult> {
-  const sessionUserId = await ensureSessionUser();
+  const session = await ensureAuthenticated();
+  const sessionUserId = session.user.id;
   if (userId && userId !== sessionUserId) {
     throw new Error("Forbidden.");
   }
