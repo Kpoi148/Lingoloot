@@ -14,6 +14,8 @@ type AdminSidebarProfileProps = {
     shopItems?: any[];
 };
 
+import { motion } from "framer-motion";
+
 export default function AdminSidebarProfile({
     profile,
     shopItems = [],
@@ -48,7 +50,7 @@ export default function AdminSidebarProfile({
                     href="/admin/profile"
                     className="group flex items-center gap-3 rounded-2xl p-2 transition hover:bg-slate-50 dark:hover:bg-slate-900"
                 >
-                    <div className="relative h-10 w-10 flex-shrink-0">
+                    <div className="relative h-10 w-10 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                         <FrameRenderer
                             frameKey={equippedFrameItem?.renderKey}
                             fallbackImageUrl={equippedFrameItem?.imageUrl}
@@ -57,7 +59,7 @@ export default function AdminSidebarProfile({
                         />
                     </div>
                     <div className="flex-1 overflow-hidden">
-                        <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <p className="truncate text-sm font-semibold text-slate-900 group-hover:text-indigo-600 dark:text-slate-100 dark:group-hover:text-indigo-400">
                             {profile.displayName || profile.name}
                         </p>
                         <div className="flex items-center gap-2">
@@ -65,9 +67,11 @@ export default function AdminSidebarProfile({
                                 Lv. {levelProgress.level}
                             </span>
                             <div className="h-1.5 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
-                                <div
+                                <motion.div
                                     className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
-                                    style={{ width: `${levelProgress.percent}%` }}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${levelProgress.percent}%` }}
+                                    transition={{ duration: 1, ease: "easeOut" }}
                                 />
                             </div>
                         </div>

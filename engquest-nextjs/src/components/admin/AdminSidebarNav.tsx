@@ -23,22 +23,32 @@ export default function AdminSidebarNav() {
                     <Link
                         key={item.href}
                         href={item.href}
-                        className={`relative flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium transition-colors ${isActive
-                                ? "text-slate-900 dark:text-slate-100"
-                                : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                        className={`group relative flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium transition-colors ${isActive
+                            ? "text-indigo-600 dark:text-indigo-300"
+                            : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
                             }`}
                     >
                         {isActive && (
                             <motion.div
                                 layoutId="active-pill"
-                                className="absolute inset-0 rounded-2xl bg-slate-100 dark:bg-slate-800"
+                                className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-50 to-blue-50 shadow-sm dark:from-indigo-500/20 dark:to-blue-500/10 dark:shadow-[0_0_15px_-3px_rgba(99,102,241,0.2)]"
                                 transition={{ type: "spring", duration: 0.6 }}
                             />
                         )}
                         <span className="relative z-10">
-                            <Icon className="h-4 w-4" />
+                            <Icon className={`h-4 w-4 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110 group-hover:rotate-3'}`} />
                         </span>
-                        <span className="relative z-10">{item.label}</span>
+                        <span className="relative z-10 font-medium tracking-wide">{item.label}</span>
+
+                        {isActive && (
+                            <motion.div
+                                layoutId="active-indicator"
+                                className="absolute left-0 h-8 w-1 rounded-r-full bg-indigo-500 dark:bg-indigo-400"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                            />
+                        )}
                     </Link>
                 );
             })}
