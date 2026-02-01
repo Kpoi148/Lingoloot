@@ -183,12 +183,12 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
             Quản lý chủ đề
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Sắp xếp chủ đề hiển thị cho người học.
           </p>
         </div>
@@ -198,22 +198,22 @@ export default function AdminCategoriesPage() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Tìm theo tên hoặc slug..."
-            className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none"
+            className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-700"
           />
           <button
             type="button"
             onClick={openCreateModal}
-            className="h-11 rounded-2xl bg-slate-900 px-5 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="h-11 rounded-2xl bg-slate-900 px-5 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg dark:bg-slate-100 dark:text-slate-900 dark:shadow-slate-100/20"
           >
             Thêm chủ đề
           </button>
         </div>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+      <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400">
+            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">
               <tr>
                 <th className="py-3">Chủ đề</th>
                 <th className="py-3">Slug</th>
@@ -222,10 +222,10 @@ export default function AdminCategoriesPage() {
                 <th className="py-3 text-right">Tác vụ</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {loading && (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400 dark:text-slate-500">
                     Đang tải...
                   </td>
                 </tr>
@@ -233,7 +233,7 @@ export default function AdminCategoriesPage() {
 
               {!loading && filteredItems.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400 dark:text-slate-500">
                     Chưa có chủ đề nào.
                   </td>
                 </tr>
@@ -243,14 +243,14 @@ export default function AdminCategoriesPage() {
                 filteredItems.map((item) => (
                   <tr key={item._id}>
                     <td className="py-4">
-                      <p className="font-medium text-slate-900">{item.name}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="font-medium text-slate-900 dark:text-slate-200">{item.name}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         {item.description ?? "Chưa có mô tả"}
                       </p>
                     </td>
-                    <td className="py-4 text-slate-600">{item.slug}</td>
-                    <td className="py-4 text-slate-600">{item.order}</td>
-                    <td className="py-4 text-slate-600">
+                    <td className="py-4 text-slate-600 dark:text-slate-400">{item.slug}</td>
+                    <td className="py-4 text-slate-600 dark:text-slate-400">{item.order}</td>
+                    <td className="py-4 text-slate-600 dark:text-slate-400">
                       {item.count ?? 0}
                     </td>
                     <td className="py-4 text-right">
@@ -258,14 +258,14 @@ export default function AdminCategoriesPage() {
                         <button
                           type="button"
                           onClick={() => openEditModal(item)}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                         >
                           Sửa
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(item)}
-                          className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                          className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400"
                         >
                           Xóa
                         </button>
@@ -279,16 +279,16 @@ export default function AdminCategoriesPage() {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6">
-          <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6 backdrop-blur-sm">
+          <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-950">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {editingItem ? "Sửa chủ đề" : "Thêm chủ đề"}
               </h2>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600"
+                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:text-slate-400"
               >
                 Đóng
               </button>
@@ -308,7 +308,7 @@ export default function AdminCategoriesPage() {
                         name: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="Giao thông"
                   />
                 </div>
@@ -324,7 +324,7 @@ export default function AdminCategoriesPage() {
                         slug: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="giao-thong"
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function AdminCategoriesPage() {
                       description: event.target.value,
                     }))
                   }
-                  className="min-h-[96px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                  className="min-h-[96px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                   placeholder="Mô tả ngắn về chủ đề."
                 />
               </div>
@@ -360,7 +360,7 @@ export default function AdminCategoriesPage() {
                         image_url: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="https://..."
                   />
                 </div>
@@ -377,7 +377,7 @@ export default function AdminCategoriesPage() {
                         order: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="0"
                   />
                 </div>
@@ -394,7 +394,7 @@ export default function AdminCategoriesPage() {
                         count: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="20"
                   />
                 </div>
@@ -404,13 +404,13 @@ export default function AdminCategoriesPage() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm"
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20"
+                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900"
                 >
                   {editingItem ? "Lưu thay đổi" : "Thêm chủ đề"}
                 </button>
@@ -422,11 +422,10 @@ export default function AdminCategoriesPage() {
 
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${
-            toast.type === "success"
+          className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
               ? "bg-emerald-500 text-white"
               : "bg-red-500 text-white"
-          }`}
+            }`}
         >
           {toast.message}
         </div>

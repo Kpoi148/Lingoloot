@@ -262,12 +262,12 @@ export default function AdminVocabulariesClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
             Quản lý từ vựng
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Theo dõi, thêm mới và chỉnh sửa từ vựng theo chủ đề.
           </p>
         </div>
@@ -277,20 +277,20 @@ export default function AdminVocabulariesClient({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Tìm theo từ..."
-            className="h-11 w-56 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none"
+            className="h-11 w-56 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-700"
           />
           <button
             type="button"
             onClick={openCreateModal}
-            className="h-11 rounded-2xl bg-slate-900 px-5 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="h-11 rounded-2xl bg-slate-900 px-5 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg dark:bg-slate-100 dark:text-slate-900 dark:shadow-slate-100/20"
           >
             Thêm từ mới
           </button>
         </div>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+      <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
           <span>
             Hiển thị{" "}
             {totalItems ? (currentPage - 1) * pageSize + 1 : 0} -{" "}
@@ -302,7 +302,7 @@ export default function AdminVocabulariesClient({
               <select
                 value={pageSize}
                 onChange={(event) => setPageSize(Number(event.target.value))}
-                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 shadow-sm"
+                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
               >
                 {[10, 20, 30, 50].map((size) => (
                   <option key={size} value={size}>
@@ -316,7 +316,7 @@ export default function AdminVocabulariesClient({
                 type="button"
                 onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                 disabled={currentPage <= 1}
-                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
               >
                 Trước
               </button>
@@ -329,7 +329,7 @@ export default function AdminVocabulariesClient({
                   setPage((prev) => Math.min(totalPages, prev + 1))
                 }
                 disabled={currentPage >= totalPages}
-                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
               >
                 Sau
               </button>
@@ -337,10 +337,10 @@ export default function AdminVocabulariesClient({
           </div>
         </div>
 
-        <div className="max-h-[65vh] min-h-[520px] overflow-auto rounded-2xl border border-slate-100">
+        <div className="max-h-[65vh] min-h-[520px] overflow-auto rounded-2xl border border-slate-100 dark:border-slate-800">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="sticky top-0 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm">
-              <tr className="bg-slate-50/80 text-[10px] normal-case text-slate-500">
+            <thead className="sticky top-0 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm dark:bg-slate-900 dark:text-slate-500">
+              <tr className="bg-slate-50/80 text-[10px] normal-case text-slate-500 dark:bg-slate-800/80 dark:text-slate-400">
                 <th className="px-3 py-3">
                   <input
                     value={filters.word}
@@ -351,7 +351,7 @@ export default function AdminVocabulariesClient({
                       }))
                     }
                     placeholder="Lọc từ"
-                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
                   />
                 </th>
                 <th className="px-3 py-3">
@@ -364,7 +364,7 @@ export default function AdminVocabulariesClient({
                       }))
                     }
                     placeholder="Lọc nghĩa"
-                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
                   />
                 </th>
                 <th className="px-3 py-3">
@@ -377,7 +377,7 @@ export default function AdminVocabulariesClient({
                       }))
                     }
                     placeholder="Lọc ví dụ"
-                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
                   />
                 </th>
                 <th className="px-3 py-3">
@@ -389,7 +389,7 @@ export default function AdminVocabulariesClient({
                         categoryId: event.target.value,
                       }))
                     }
-                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none"
+                    className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
                   >
                     <option value="">Tất cả chủ đề</option>
                     {categories.map((category) => (
@@ -410,7 +410,7 @@ export default function AdminVocabulariesClient({
                         categoryId: "",
                       })
                     }
-                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
                   >
                     Xóa lọc
                   </button>
@@ -424,31 +424,31 @@ export default function AdminVocabulariesClient({
                 <th className="px-3 py-3 text-right">Tác vụ</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {loading &&
                 skeletonRows.map((_, index) => (
                   <tr key={`skeleton-${index}`}>
                     <td className="px-3 py-4">
-                      <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200/70" />
+                      <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800" />
                     </td>
                     <td className="px-3 py-4">
-                      <div className="h-4 w-40 animate-pulse rounded-full bg-slate-200/70" />
+                      <div className="h-4 w-40 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800" />
                     </td>
                     <td className="px-3 py-4">
-                      <div className="h-4 w-48 animate-pulse rounded-full bg-slate-200/70" />
+                      <div className="h-4 w-48 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800" />
                     </td>
                     <td className="px-3 py-4">
-                      <div className="h-4 w-28 animate-pulse rounded-full bg-slate-200/70" />
+                      <div className="h-4 w-28 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800" />
                     </td>
                     <td className="px-3 py-4">
-                      <div className="ml-auto h-6 w-24 animate-pulse rounded-full bg-slate-200/70" />
+                      <div className="ml-auto h-6 w-24 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800" />
                     </td>
                   </tr>
                 ))}
 
               {!loading && filteredItems.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400">
+                  <td colSpan={5} className="py-6 text-center text-slate-400 dark:text-slate-500">
                     Chưa có từ vựng nào.
                   </td>
                 </tr>
@@ -457,26 +457,26 @@ export default function AdminVocabulariesClient({
               {!loading &&
                 pagedItems.map((item) => (
                   <tr key={item._id}>
-                    <td className="px-3 py-4 font-medium text-slate-900">
+                    <td className="px-3 py-4 font-medium text-slate-900 dark:text-slate-200">
                       {item.word}
                     </td>
-                    <td className="px-3 py-4 text-slate-600">
+                    <td className="px-3 py-4 text-slate-600 dark:text-slate-400">
                       <span className="block max-w-[200px] truncate" title={item.meaning}>
                         {item.meaning}
                       </span>
                     </td>
-                    <td className="px-3 py-4 text-slate-600">
+                    <td className="px-3 py-4 text-slate-600 dark:text-slate-400">
                       {item.example ? (
                         <div className="space-y-1">
                           <p
-                            className="max-w-[240px] truncate text-sm text-slate-700"
+                            className="max-w-[240px] truncate text-sm text-slate-700 dark:text-slate-300"
                             title={item.example}
                           >
                             {item.example}
                           </p>
                           {item.example_meaning && (
                             <p
-                              className="max-w-[240px] truncate text-xs text-slate-500"
+                              className="max-w-[240px] truncate text-xs text-slate-500 dark:text-slate-500"
                               title={item.example_meaning}
                             >
                               {item.example_meaning}
@@ -484,10 +484,10 @@ export default function AdminVocabulariesClient({
                           )}
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-400">--</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-600">--</span>
                       )}
                     </td>
-                    <td className="px-3 py-4 text-slate-600">
+                    <td className="px-3 py-4 text-slate-600 dark:text-slate-400">
                       {item.category?.name ?? "Chưa xác định"}
                     </td>
                     <td className="px-3 py-4 text-right">
@@ -495,14 +495,14 @@ export default function AdminVocabulariesClient({
                         <button
                           type="button"
                           onClick={() => openEditModal(item)}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                         >
                           Sửa
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(item)}
-                          className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                          className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400"
                         >
                           Xóa
                         </button>
@@ -516,16 +516,16 @@ export default function AdminVocabulariesClient({
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6 backdrop-blur-sm">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-950">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {editingItem ? "Sửa từ vựng" : "Thêm từ mới"}
               </h2>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600"
+                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:text-slate-400"
               >
                 Đóng
               </button>
@@ -545,7 +545,7 @@ export default function AdminVocabulariesClient({
                         word: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="Bicycle"
                   />
                 </div>
@@ -561,7 +561,7 @@ export default function AdminVocabulariesClient({
                         ipa: event.target.value,
                       }))
                     }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="/ˈbaɪ.sɪ.kəl/"
                   />
                 </div>
@@ -580,7 +580,7 @@ export default function AdminVocabulariesClient({
                     }))
                   }
                   rows={3}
-                  className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                  className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                   placeholder="Xe đạp"
                 />
               </div>
@@ -599,7 +599,7 @@ export default function AdminVocabulariesClient({
                       }))
                     }
                     rows={3}
-                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="I ride a bicycle to work."
                   />
                 </div>
@@ -616,7 +616,7 @@ export default function AdminVocabulariesClient({
                       }))
                     }
                     rows={3}
-                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     placeholder="Tôi đi làm bằng xe đạp."
                   />
                 </div>
@@ -634,7 +634,7 @@ export default function AdminVocabulariesClient({
                       category_id: event.target.value,
                     }))
                   }
-                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                   <option value="">Chọn chủ đề</option>
                   {categories.map((category) => (
@@ -684,7 +684,7 @@ export default function AdminVocabulariesClient({
                       audio: event.target.value,
                     }))
                   }
-                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                   placeholder="https://..."
                 />
               </div>
@@ -693,13 +693,13 @@ export default function AdminVocabulariesClient({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm"
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20"
+                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900"
                 >
                   {editingItem ? "Lưu thay đổi" : "Thêm từ"}
                 </button>
@@ -711,11 +711,10 @@ export default function AdminVocabulariesClient({
 
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${
-            toast.type === "success"
+          className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
               ? "bg-emerald-500 text-white"
               : "bg-red-500 text-white"
-          }`}
+            }`}
         >
           {toast.message}
         </div>
