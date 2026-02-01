@@ -410,11 +410,11 @@ export default function GameBuilder() {
 
     return (
         <div className="space-y-6">
-            <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-                <h1 className="text-2xl font-semibold text-slate-900">
+            <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
+                <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                     Game Management System
                 </h1>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                     Generate story cloze games with AI, edit the JSON, and preview before
                     publishing.
                 </p>
@@ -422,13 +422,13 @@ export default function GameBuilder() {
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr),minmax(0,0.9fr)]">
                 <section className="space-y-6">
-                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
                         <div className="flex flex-wrap items-center justify-between gap-4">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
                                     Editor
                                 </p>
-                                <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                                <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                                     Topic + Vocabulary
                                 </h2>
                             </div>
@@ -445,13 +445,13 @@ export default function GameBuilder() {
 
                         <div className="mt-5 grid gap-4 md:grid-cols-3">
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                                     Topic
                                 </label>
                                 <select
                                     value={topic}
                                     onChange={(event) => setTopic(event.target.value)}
-                                    className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+                                    className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
                                 >
                                     <option value="">Select a topic</option>
                                     {categories.map((item) => (
@@ -473,7 +473,7 @@ export default function GameBuilder() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                                     Difficulty
                                 </label>
                                 <select
@@ -481,7 +481,7 @@ export default function GameBuilder() {
                                     onChange={(event) =>
                                         setDifficulty(event.target.value as Difficulty)
                                     }
-                                    className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+                                    className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
                                 >
                                     <option value="easy">Easy</option>
                                     <option value="medium">Medium</option>
@@ -492,13 +492,13 @@ export default function GameBuilder() {
 
                         <div className="mt-6 space-y-4">
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                                     Vocabulary Source
                                 </label>
                                 <input
                                     value={vocabSearch}
                                     onChange={(event) => setVocabSearch(event.target.value)}
-                                    className="h-10 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+                                    className="h-10 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
                                     placeholder="Search vocabulary..."
                                 />
                                 <div className="flex items-center justify-between text-xs text-slate-500">
@@ -511,14 +511,14 @@ export default function GameBuilder() {
                                                     filteredVocabularies.map((item) => item._id)
                                                 )
                                             }
-                                            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                                            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                         >
                                             Select all
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setSelectedWordIds([])}
-                                            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                                            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                         >
                                             Clear
                                         </button>
@@ -532,7 +532,7 @@ export default function GameBuilder() {
                                 </div>
                             )}
 
-                            <div className="max-h-64 space-y-2 overflow-auto rounded-2xl border border-slate-200 bg-white/80 p-3 text-sm text-slate-600">
+                            <div className="max-h-64 space-y-2 overflow-auto rounded-2xl border border-slate-200 bg-white/80 p-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
                                 {!topic && (
                                     <p className="text-xs text-slate-400">
                                         Select a topic to load vocabulary.
@@ -550,15 +550,15 @@ export default function GameBuilder() {
                                             <label
                                                 key={item._id}
                                                 className={`flex cursor-pointer items-center justify-between rounded-xl border px-3 py-2 transition ${isSelected
-                                                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                                    : "border-transparent hover:border-slate-200 hover:bg-slate-50"
+                                                    ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-400"
+                                                    : "border-transparent hover:border-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                                                     }`}
                                             >
                                                 <div>
-                                                    <p className="font-semibold text-slate-700">
+                                                    <p className="font-semibold text-slate-700 dark:text-slate-200">
                                                         {item.word}
                                                     </p>
-                                                    <p className="text-xs text-slate-500">
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400">
                                                         {item.meaning}
                                                     </p>
                                                 </div>
@@ -590,13 +590,13 @@ export default function GameBuilder() {
                         )}
                     </div>
 
-                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
                                     JSON Output
                                 </p>
-                                <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                                <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                                     Raw Game Data
                                 </h2>
                             </div>
@@ -611,7 +611,7 @@ export default function GameBuilder() {
                             </button>
                         </div>
 
-                        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+                        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
                             <MonacoEditor
                                 height="360px"
                                 language="json"
@@ -646,21 +646,21 @@ export default function GameBuilder() {
                 </section>
 
                 <section className="space-y-6">
-                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                    <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
                             Live Preview
                         </p>
-                        <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                        <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                             Student View
                         </h2>
-                        <p className="mt-2 text-sm text-slate-600">
+                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                             The preview updates when JSON is valid.
                         </p>
                     </div>
 
-                    <div className="rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-2xl shadow-slate-200/70">
+                    <div className="rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-2xl shadow-slate-200/70 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20">
                         {!game && (
-                            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-6 text-center text-sm text-slate-500">
+                            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400">
                                 Generate or paste valid JSON to preview the game.
                             </div>
                         )}
@@ -668,15 +668,15 @@ export default function GameBuilder() {
                         {game && (
                             <div className="space-y-5">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
                                         Story Cloze
                                     </p>
-                                    <h3 className="mt-2 text-2xl font-semibold text-slate-900">
+                                    <h3 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                         {game.title}
                                     </h3>
                                 </div>
 
-                                <p className="text-base leading-7 text-slate-700">
+                                <p className="text-base leading-7 text-slate-700 dark:text-slate-300">
                                     {game.content.map((item, index) => {
                                         if (item.type === "text") {
                                             return splitIntoTokens(item.text).map((token, tokenIndex) => {
@@ -698,8 +698,8 @@ export default function GameBuilder() {
                                                             }
                                                         }}
                                                         className={`mx-0.5 inline-flex items-center rounded-md px-1 text-sm font-semibold ${isAnswer
-                                                            ? "cursor-default text-slate-400"
-                                                            : "text-slate-700 underline decoration-dotted hover:text-slate-900"
+                                                            ? "cursor-default text-slate-400 dark:text-slate-500"
+                                                            : "text-slate-700 underline decoration-dotted hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
                                                             }`}
                                                     >
                                                         {token.value}
@@ -710,7 +710,7 @@ export default function GameBuilder() {
                                         return (
                                             <span
                                                 key={`${item.text}-${index}`}
-                                                className="mx-1 inline-flex items-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-2 py-0.5 text-sm text-slate-500"
+                                                className="mx-1 inline-flex items-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-2 py-0.5 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                                             >
                                                 {item.text || "___"}
                                             </span>
@@ -726,7 +726,7 @@ export default function GameBuilder() {
                                         {previewWordBank.map((word, index) => (
                                             <span
                                                 key={`${word}-${index}`}
-                                                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-600 shadow-sm"
+                                                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                             >
                                                 {word}
                                             </span>

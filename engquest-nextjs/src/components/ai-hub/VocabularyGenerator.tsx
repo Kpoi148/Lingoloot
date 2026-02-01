@@ -238,18 +238,18 @@ export default function VocabularyGenerator() {
     return (
         <div className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-12">
-                <section className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:col-span-4">
+                <section className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20 lg:col-span-4">
                     <div>
-                        <h2 className="text-lg font-semibold text-slate-900">
+                        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                             Input Parameters
                         </h2>
-                        <p className="mt-1 text-sm text-slate-600">
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                             Cấu hình nhanh nội dung bạn muốn AI tạo ra.
                         </p>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                             Nhập từ khóa hoặc chủ đề
                         </label>
                         <textarea
@@ -257,12 +257,12 @@ export default function VocabularyGenerator() {
                             onChange={(event) => setPrompt(event.target.value)}
                             rows={6}
                             placeholder="Ví dụ: Travel, Food, Technology..."
-                            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none"
+                            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-600"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                             Chọn cấp độ
                         </label>
                         <select
@@ -270,7 +270,7 @@ export default function VocabularyGenerator() {
                             onChange={(event) =>
                                 setLevel(event.target.value as (typeof levels)[number])
                             }
-                            className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none"
+                            className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-600"
                         >
                             {levels.map((item) => (
                                 <option key={item} value={item}>
@@ -281,13 +281,13 @@ export default function VocabularyGenerator() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                             Chủ đề lưu (bắt buộc khi lưu)
                         </label>
                         <select
                             value={categoryId}
                             onChange={(event) => setCategoryId(event.target.value)}
-                            className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none"
+                            className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-600"
                         >
                             <option value="">Chọn chủ đề</option>
                             {categories.map((category) => (
@@ -315,13 +315,15 @@ export default function VocabularyGenerator() {
                     </button>
                 </section>
 
-                <section className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 lg:col-span-8">
+
+
+                <section className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20 lg:col-span-8">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
-                            <h2 className="text-lg font-semibold text-slate-900">
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                                 Preview Zone
                             </h2>
-                            <p className="mt-1 text-sm text-slate-600">
+                            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                                 Kết quả từ AI sẽ được hiển thị trực quan tại đây.
                             </p>
                         </div>
@@ -330,7 +332,7 @@ export default function VocabularyGenerator() {
                                 type="button"
                                 onClick={handleGenerate}
                                 disabled={isLoading || !prompt.trim()}
-                                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                             >
                                 <RefreshCcw className="h-4 w-4" />
                                 Regenerate
@@ -348,7 +350,7 @@ export default function VocabularyGenerator() {
                     </div>
 
                     {!resultData && (
-                        <div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-400">
+                        <div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-400 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-500">
                             Kết quả sẽ hiển thị ở đây...
                         </div>
                     )}
@@ -358,35 +360,35 @@ export default function VocabularyGenerator() {
                             {wordItems?.map((item, index) => (
                                 <div
                                     key={`${item.word}-${index}`}
-                                    className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
+                                    className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
                                 >
                                     <p className="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-400">
                                         Flashcard
                                     </p>
-                                    <h3 className="mt-3 text-2xl font-semibold text-slate-900">
+                                    <h3 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                         {item.word}
                                     </h3>
                                     {item.ipa && (
-                                        <p className="text-sm text-slate-500">{item.ipa}</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">{item.ipa}</p>
                                     )}
 
-                                    <div className="mt-4 space-y-3 text-sm text-slate-600">
+                                    <div className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-400">
                                         {item.meaning && (
                                             <div>
-                                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                                                     Meaning
                                                 </p>
-                                                <p className="mt-1 text-slate-700">{item.meaning}</p>
+                                                <p className="mt-1 text-slate-700 dark:text-slate-300">{item.meaning}</p>
                                             </div>
                                         )}
                                         {item.example && (
                                             <div>
-                                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                                                     Example
                                                 </p>
-                                                <p className="mt-1 text-slate-700">{item.example}</p>
+                                                <p className="mt-1 text-slate-700 dark:text-slate-300">{item.example}</p>
                                                 {item.example_meaning && (
-                                                    <p className="mt-1 text-xs text-slate-500">
+                                                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                                                         {item.example_meaning}
                                                     </p>
                                                 )}
@@ -446,6 +448,6 @@ export default function VocabularyGenerator() {
                     )}
                 </section>
             </div>
-        </div>
+        </div >
     );
 }

@@ -17,7 +17,7 @@ export default async function AIFrameGeneratorPage() {
         <div className="space-y-6">
 
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/50">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20">
                 <FrameGenerator userAvatarUrl={userProfile?.avatarUrl} />
             </div>
         </div>

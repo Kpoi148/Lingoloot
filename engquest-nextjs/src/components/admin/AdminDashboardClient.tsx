@@ -31,12 +31,12 @@ export default function AdminDashboardClient({
 
             <section className="space-y-4">
                 <div>
-                    <h2 className="text-xl font-semibold text-slate-900">Thống kê hệ thống</h2>
-                    <p className="text-sm text-slate-500">Tổng quan về nội dung và người dùng.</p>
+                    <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Thống kê hệ thống</h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Tổng quan về nội dung và người dùng.</p>
                 </div>
 
                 {error && (
-                    <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                    <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
                         {error}
                     </div>
                 )}
@@ -45,18 +45,18 @@ export default function AdminDashboardClient({
                     {stats.map((item) => (
                         <div
                             key={item.label}
-                            className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+                            className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20"
                         >
                             <div className="relative z-10">
-                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
                                     {item.label}
                                 </p>
-                                <p className="mt-3 text-3xl font-semibold text-slate-900">
+                                <p className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100">
                                     {typeof item.value === "number" ? item.value : "--"}
                                 </p>
                             </div>
                             {/* Decorative background element */}
-                            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-slate-50 transition-transform group-hover:scale-110" />
+                            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-slate-50 transition-transform group-hover:scale-110 dark:bg-slate-800/50" />
                         </div>
                     ))}
                 </div>
