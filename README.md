@@ -37,42 +37,6 @@
 - **AI**: [Google Generative AI SDK](https://ai.google.dev/) (Gemini)
 - **State/Effects**: `framer-motion`, `zustand`, `confetti`.
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- MongoDB Database string
-
-### Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/your-username/lingoloot.git
-    cd lingoloot/engquest-nextjs
-    ```
-
-2.  **Install dependencies**
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
-
-3.  **Environment Setup**
-    Create a `.env.local` file in the root directory and add the following:
-    ```env
-    MONGODB_URI=your_mongodb_connection_string
-    NEXTAUTH_SECRET=your_nextauth_secret
-    NEXTAUTH_URL=http://localhost:3000
-    GOOGLE_API_KEY=your_gemini_api_key
-    ```
-
-4.  **Run the development server**
-    ```bash
-    npm run dev
-    ```
-
-    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 🤝 Contributing
 
