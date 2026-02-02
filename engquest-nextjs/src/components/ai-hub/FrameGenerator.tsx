@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import Image from "next/image";
+// Image removed as it is unused
 import toast from "react-hot-toast";
 import { generateAIFrame, saveAIFrameToShop } from "@/actions/ai-shop.actions";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
-import { Loader2, Save, RefreshCw, Wand2, Check, Sparkles, Zap, X, Coins } from "lucide-react";
+import { Loader2, Save, RefreshCw, Wand2, Sparkles, X, Coins } from "lucide-react";
 
 type FrameGeneratorProps = {
     userAvatarUrl?: string;

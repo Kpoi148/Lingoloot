@@ -3,7 +3,8 @@ import { authOptions } from "@/lib/auth-options";
 import { redirect } from "next/navigation";
 import FrameGenerator from "@/components/ai-hub/FrameGenerator";
 import { getUserProfile } from "@/actions/profile.actions";
-import { Sparkles, Wand2 } from "lucide-react";
+// Sparkles and Wand2 removed as they are unused
+
 
 export default async function AIFrameGeneratorPage() {
     const session = await getServerSession(authOptions);

@@ -17,12 +17,12 @@ export default async function AdminLayout({
   const shopItems = await getAdminShopItems();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 relative">
       {/* Background Particles */}
       <ParticlesBackground />
 
       <div className="mx-auto flex min-h-screen w-full max-w-[1440px] relative z-10">
-        <aside className="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200/70 bg-white/80 px-4 py-6 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80 md:flex">
+        <aside className="sticky top-0 hidden h-screen max-h-screen w-72 flex-col overflow-y-auto border-r border-slate-200/70 bg-white/80 px-4 py-6 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80 md:flex">
           <Link href="/" className="mb-8 flex items-center gap-3 px-2">
             <BrandLogo className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-md shadow-slate-900/20 dark:bg-white dark:text-slate-900" />
             <div>
