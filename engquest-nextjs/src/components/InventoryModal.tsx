@@ -1,24 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { equipItem } from "@/actions/shop.actions";
 import toast from "react-hot-toast";
-import { Check, Loader2, Shirt, X } from "lucide-react";
+import { Shirt, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { FrameRenderer } from "@/components/shop/FrameRenderer";
-
-interface ShopItem {
-    _id: string;
-    name: string;
-    type: string;
-    imageUrl: string;
-    renderKey?: string;
-}
+import InventoryItem, { InventoryItemType } from "@/components/InventoryItem";
 
 interface InventoryModalProps {
-    inventoryItems: ShopItem[];
+    inventoryItems: InventoryItemType[];
     equippedFrame?: string;
     equippedAvatar?: string;
     trigger?: React.ReactNode;
@@ -117,41 +108,13 @@ export default function InventoryModal({ inventoryItems, equippedFrame, equipped
                                                 : equippedAvatar === item._id;
 
                                         return (
-                                            <div
+                                            <InventoryItem
                                                 key={item._id}
-                                                className={cn(
-                                                    "relative flex flex-col items-center rounded-2xl border p-4 transition cursor-pointer hover:shadow-md",
-                                                    isEquipped
-                                                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-500"
-                                                        : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
-                                                )}
-                                                onClick={() => !isEquipped && handleEquip(activeTab, item._id)}
-                                            >
-                                                {isEquipped && (
-                                                    <div className="absolute top-2 right-2 bg-emerald-500 text-white rounded-full p-1">
-                                                        <Check className="w-3 h-3" />
-                                                    </div>
-                                                )}
-
-                                                <div className="relative mb-3 h-20 w-20 flex items-center justify-center">
-                                                    <FrameRenderer
-                                                        frameKey={item.renderKey}
-                                                        fallbackImageUrl={item.imageUrl}
-                                                        className="h-full w-full"
-                                                    // For avatar preview we might want to show user avatar if it's a frame, 
-                                                    // but here it's just the item selection.
-                                                    />
-                                                </div>
-                                                <p className="text-center text-xs font-bold text-slate-700 dark:text-slate-300">
-                                                    {item.name}
-                                                </p>
-
-                                                {loading === item._id && (
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 rounded-2xl">
-                                                        <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
-                                                    </div>
-                                                )}
-                                            </div>
+                                                item={item}
+                                                isEquipped={isEquipped}
+                                                onEquip={() => handleEquip(activeTab, item._id)}
+                                                isLoading={loading === item._id}
+                                            />
                                         );
                                     })
                                 )}

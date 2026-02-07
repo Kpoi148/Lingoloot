@@ -1,10 +1,15 @@
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
+import { GAMIFICATION_CONFIG, LEVEL_SYSTEM } from "./gamification-config";
 
-export const BASE_DAILY_XP = 50;
-export const STREAK_BONUS_PER_DAY = 10;
-export const WEEKLY_BONUS_XP = 150;
-export const WEEKLY_BONUS_GEMS = 25;
-export const XP_PER_LEVEL = 100;
+// Re-export constants for backward compatibility
+export const {
+  XP_PER_LEVEL,
+  BASE_DAILY_XP,
+  STREAK_BONUS_PER_DAY,
+  WEEKLY_BONUS_XP,
+  WEEKLY_BONUS_GEMS
+} = GAMIFICATION_CONFIG;
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export const startOfUtcDay = (date: Date) =>
   new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -20,11 +25,15 @@ export const getUtcDayDiff = (from: Date, to: Date) =>
 export const getLevelFromXp = (xp: number) =>
   Math.max(1, Math.floor(Math.max(0, xp) / XP_PER_LEVEL) + 1);
 
+/**
+ * Get level title from configuration
+ * Implements Open/Closed Principle
+ */
 export const getLevelTitle = (level: number) => {
-  if (level < 5) return "Tập sự";
-  if (level < 10) return "Học giả";
-  if (level < 15) return "Chuyên gia";
-  return "Bậc thầy";
+  const tier = LEVEL_SYSTEM.find(
+    (t) => level >= t.minLevel && (t.maxLevel === undefined || level <= t.maxLevel)
+  );
+  return tier?.title ?? "Tập sự";
 };
 
 export const getLevelProgress = (xp: number) => {
