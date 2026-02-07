@@ -15,7 +15,7 @@ import { FrameRenderer } from "@/components/shop/FrameRenderer";
 const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
   ssr: false,
   loading: () => (
-    <div className="h-52 w-full animate-pulse rounded-2xl border border-dashed border-slate-200 bg-slate-50" />
+    <div className="h-52 w-full animate-pulse rounded-2xl border border-dashed border-edge bg-surface-muted" />
   ),
 });
 
@@ -129,21 +129,21 @@ export default function ProfileClient({
   };
 
   return (
-    <main className="min-h-screen bg-slate-50/70 px-4 py-10 text-slate-900">
+    <main className="min-h-screen bg-surface-page px-4 py-10 text-content">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
 
 
         <div className="flex w-full flex-col gap-6 lg:flex-row">
-          <section className="w-full rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60 lg:w-[38%]">
+          <section className="w-full rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme lg:w-[38%]">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-content-muted">
                   Hồ sơ cá nhân
                 </p>
-                <h1 className="mt-2 text-2xl font-semibold text-slate-900">
+                <h1 className="mt-2 text-2xl font-semibold text-content">
                   Thông tin cá nhân
                 </h1>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-content-secondary">
                   Cập nhật thông tin để cá nhân hóa trải nghiệm học tập.
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function ProfileClient({
                     <button
                       type="button"
                       onClick={() => setIsEditing(true)}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                      className="inline-flex items-center gap-2 rounded-full border border-edge bg-surface-card px-4 py-2 text-xs font-semibold text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <Pencil className="h-4 w-4" />
                       Chỉnh sửa
@@ -162,7 +162,7 @@ export default function ProfileClient({
                   <button
                     type="button"
                     onClick={() => void signOut({ callbackUrl: "/" })}
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="inline-flex items-center gap-2 rounded-full border border-edge bg-surface-card px-4 py-2 text-xs font-semibold text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
                     Đăng xuất
                   </button>
@@ -172,13 +172,13 @@ export default function ProfileClient({
 
             <div className="mt-6 space-y-5">
               {initialError && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-800/50 dark:bg-red-950/50 dark:text-red-400">
                   {initialError}
                 </div>
               )}
 
               {!profile && !initialError && (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-edge bg-surface-muted p-6 text-sm text-content-muted">
                   Vui lòng đăng nhập để xem hồ sơ.
                 </div>
               )}
@@ -204,10 +204,10 @@ export default function ProfileClient({
                       })()}
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-slate-900">
+                      <p className="text-lg font-semibold text-content">
                         {profile.displayName || profile.name}
                       </p>
-                      <p className="text-sm text-slate-500">{profile.email}</p>
+                      <p className="text-sm text-content-muted">{profile.email}</p>
                     </div>
 
                     {/* Inventory / Edit Appearance */}
@@ -218,10 +218,10 @@ export default function ProfileClient({
                     />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                       Giới thiệu
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-sm leading-relaxed text-content-secondary">
                       {profile.bio || "Thêm vài dòng giới thiệu về bạn."}
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export default function ProfileClient({
               {profile && isEditing && (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                       Ảnh đại diện
                     </label>
                     <MediaUploader
@@ -244,7 +244,7 @@ export default function ProfileClient({
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                       Tên hiển thị
                     </label>
                     <input
@@ -255,25 +255,25 @@ export default function ProfileClient({
                           displayName: event.target.value,
                         }))
                       }
-                      className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700"
+                      className="h-11 w-full rounded-2xl border border-edge bg-surface-card px-4 text-sm text-content"
                       placeholder="Tên của bạn"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                       Email (chỉ đọc)
                     </label>
                     <input
                       value={profile.email}
                       readOnly
                       disabled
-                      className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-500"
+                      className="h-11 w-full rounded-2xl border border-edge bg-surface-muted px-4 text-sm text-content-muted"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                       Giới thiệu
                     </label>
                     <textarea
@@ -285,7 +285,7 @@ export default function ProfileClient({
                         }))
                       }
                       rows={4}
-                      className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                      className="w-full rounded-2xl border border-edge bg-surface-card px-4 py-3 text-sm text-content"
                       placeholder="Chia sẻ mục tiêu học tập của bạn..."
                     />
                   </div>
@@ -294,14 +294,14 @@ export default function ProfileClient({
                     <button
                       type="button"
                       onClick={handleCancel}
-                      className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm"
+                      className="rounded-full border border-edge bg-surface-card px-4 py-2 text-sm font-semibold text-content-secondary shadow-sm"
                     >
                       Hủy
                     </button>
                     <button
                       type="submit"
                       disabled={isSaving}
-                      className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
+                      className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-slate-900"
                     >
                       <Save className="h-4 w-4" />
                       {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
@@ -312,22 +312,22 @@ export default function ProfileClient({
             </div>
           </section>
 
-          <section className="flex w-full flex-1 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <section className="flex w-full flex-1 flex-col rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-content-muted">
                 Thống kê học tập
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+              <h2 className="mt-2 text-2xl font-semibold text-content">
                 Tổng quan tiến độ
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-content-secondary">
                 Tóm tắt hiệu suất học tập của bạn.
               </p>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+            <div className="mt-6 rounded-2xl border border-edge bg-surface-muted p-4">
               {!profile && (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-content-muted">
                   Đăng nhập để xem tiến độ cấp độ.
                 </p>
               )}
@@ -335,21 +335,21 @@ export default function ProfileClient({
               {profile && (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                    <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">
                       Lv. {levelProgress.level} {levelTitle}
                     </span>
-                    <span className="text-xs font-semibold text-slate-500">
+                    <span className="text-xs font-semibold text-content-muted">
                       {numberFormatter.format(levelProgress.progress)} /{" "}
                       {numberFormatter.format(levelProgress.required)} XP
                     </span>
                   </div>
-                  <div className="mt-3 h-2 w-full rounded-full bg-white">
+                  <div className="mt-3 h-2 w-full rounded-full bg-progress-track">
                     <div
                       className="h-2 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 transition-all duration-500"
                       style={{ width: `${levelProgress.percent}%` }}
                     />
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-content-muted">
                     {numberFormatter.format(levelProgress.remaining)} XP để lên cấp
                     tiếp theo
                   </p>
@@ -359,7 +359,7 @@ export default function ProfileClient({
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {!profile && (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500 sm:col-span-2 xl:col-span-3">
+                <div className="rounded-2xl border border-dashed border-edge bg-surface-muted p-6 text-sm text-content-muted sm:col-span-2 xl:col-span-3">
                   Chưa có dữ liệu thống kê.
                 </div>
               )}
@@ -370,17 +370,17 @@ export default function ProfileClient({
                   return (
                     <div
                       key={item.label}
-                      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                      className="rounded-2xl border border-edge bg-surface-card p-5 shadow-sm"
                     >
                       <div
                         className={`flex h-10 w-10 items-center justify-center rounded-2xl ${item.accent}`}
                       >
                         <Icon className="h-5 w-5" />
                       </div>
-                      <p className="mt-4 text-3xl font-semibold text-slate-900">
+                      <p className="mt-4 text-3xl font-semibold text-content">
                         {item.value}
                       </p>
-                      <p className="mt-2 text-sm text-slate-500">{item.label}</p>
+                      <p className="mt-2 text-sm text-content-muted">{item.label}</p>
                     </div>
                   );
                 })}

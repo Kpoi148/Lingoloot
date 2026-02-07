@@ -56,7 +56,7 @@ function Flashcard({
     <button
       type="button"
       onClick={onToggle}
-      className="relative h-72 w-full cursor-pointer rounded-3xl border border-slate-200/70 bg-white/80 p-6 text-left shadow-xl shadow-slate-200/60 transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
+      className="relative h-72 w-full cursor-pointer rounded-3xl border border-edge-muted bg-surface-card-alpha p-6 text-left shadow-xl shadow-shadow-theme transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
       style={{ perspective: "1200px" }}
       aria-pressed={flipped}
     >
@@ -69,14 +69,14 @@ function Flashcard({
           style={{ backfaceVisibility: "hidden" }}
         >
           <div className="space-y-3">
-            <span className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+            <span className="inline-flex w-fit items-center rounded-full border border-edge bg-surface-card px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-content-muted">
               Flashcard
             </span>
-            <h2 className="text-3xl font-semibold text-slate-900">{word}</h2>
-            {ipa && <p className="text-sm text-slate-500">{ipa}</p>}
+            <h2 className="text-3xl font-semibold text-content">{word}</h2>
+            {ipa && <p className="text-sm text-content-muted">{ipa}</p>}
           </div>
           {imageUrl && (
-            <div className="relative mt-6 h-24 w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+            <div className="relative mt-6 h-24 w-full overflow-hidden rounded-2xl border border-edge bg-surface-muted">
               <Image
                 src={imageUrl}
                 alt={word}
@@ -87,14 +87,14 @@ function Flashcard({
             </div>
           )}
           {!imageUrl && (
-            <p className="mt-6 text-sm text-slate-500">
+            <p className="mt-6 text-sm text-content-muted">
               Nhấn vào thẻ để xem nghĩa.
             </p>
           )}
         </div>
 
         <div
-          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-y-auto overscroll-contain rounded-3xl bg-slate-900 px-6 py-6 pr-5 text-white"
+          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-y-auto overscroll-contain rounded-3xl bg-slate-900 px-6 py-6 pr-5 text-white dark:bg-slate-100 dark:text-slate-900"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="space-y-3">
@@ -271,37 +271,37 @@ export default function FlashcardsPage({
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 px-4 py-12 text-slate-900">
+    <main className="min-h-screen bg-surface-page px-4 py-12 text-content">
       <div className="mx-auto w-full max-w-4xl space-y-8">
-        <div className="flex flex-col gap-4 rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-lg shadow-slate-200/60">
+        <div className="flex flex-col gap-4 rounded-3xl border border-edge-muted bg-surface-card-alpha p-6 shadow-lg shadow-shadow-theme">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-content-muted">
                 Flashcards
               </p>
-              <h1 className="text-2xl font-semibold text-slate-900">
+              <h1 className="text-2xl font-semibold text-content">
                 {category?.name ?? "Đang tải..."}
               </h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-content-muted">
                 {category?.description ?? "Luyện tập từ vựng theo chủ đề."}
               </p>
             </div>
             <Link
               href={`/learning/${slug ?? ""}`}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-full border border-edge bg-surface-card px-4 py-2 text-sm font-medium text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               Trở về
             </Link>
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+            <div className="flex items-center justify-between text-xs font-semibold text-content-muted">
               <span>
                 Từ {total ? currentIndex + 1 : 0} / {total}
               </span>
               <span>{progressPercent}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-100">
+            <div className="h-2 w-full rounded-full bg-progress-track">
               <div
                 className="h-2 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400 transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
@@ -311,17 +311,17 @@ export default function FlashcardsPage({
         </div>
 
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-800/50 dark:bg-red-950/50 dark:text-red-400">
             {error}
           </div>
         )}
 
         {loading && (
-          <div className="h-72 animate-pulse rounded-3xl border border-slate-200/70 bg-white/70" />
+          <div className="h-72 animate-pulse rounded-3xl border border-edge-muted bg-surface-card-alpha" />
         )}
 
         {!loading && !currentItem && !error && (
-          <div className="rounded-2xl border border-slate-200 bg-white/80 px-6 py-8 text-center text-sm text-slate-500">
+          <div className="rounded-2xl border border-edge bg-surface-card-alpha px-6 py-8 text-center text-sm text-content-muted">
             Chủ đề này chưa có từ vựng.
           </div>
         )}
@@ -343,7 +343,7 @@ export default function FlashcardsPage({
               <button
                 type="button"
                 onClick={handleAudio}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="rounded-full border border-edge bg-surface-card px-4 py-2 text-sm font-semibold text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 Nghe phát âm
               </button>
@@ -351,7 +351,7 @@ export default function FlashcardsPage({
                 type="button"
                 onClick={handlePrevious}
                 disabled={currentIndex === 0}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-edge bg-surface-card px-4 py-2 text-sm font-semibold text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Trước
               </button>
@@ -359,7 +359,7 @@ export default function FlashcardsPage({
                 type="button"
                 onClick={handleNext}
                 disabled={currentIndex >= total - 1}
-                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-slate-900"
               >
                 Tiếp theo
               </button>
@@ -381,11 +381,10 @@ export default function FlashcardsPage({
 
         {toast && (
           <div
-            className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${
-              toast.type === "success"
+            className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
                 ? "bg-emerald-500 text-white"
                 : "bg-red-500 text-white"
-            }`}
+              }`}
           >
             {toast.message}
           </div>

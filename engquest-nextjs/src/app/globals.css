@@ -2,6 +2,59 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ============================================
+   THEME SYSTEM - CSS VARIABLES
+   Thay đổi colors tại đây sẽ áp dụng toàn app
+   ============================================ */
+
+:root {
+  /* Backgrounds */
+  --bg-page: theme('colors.slate.50');
+  --bg-card: white;
+  --bg-card-alpha: rgba(255, 255, 255, 0.8);
+  --bg-muted: theme('colors.slate.50');
+
+  /* Text */
+  --text-primary: theme('colors.slate.900');
+  --text-secondary: theme('colors.slate.600');
+  --text-muted: theme('colors.slate.500');
+
+  /* Borders - đặt transparent để bỏ viền */
+  --border-default: transparent;
+  --border-muted: transparent;
+
+  /* Shadows - rất nhẹ */
+  --shadow-color: rgba(226, 232, 240, 0.2);
+
+  /* Progress bar track */
+  --progress-track: theme('colors.slate.100');
+}
+
+.dark {
+  /* Backgrounds */
+  --bg-page: theme('colors.slate.950');
+  --bg-card: theme('colors.slate.900');
+  --bg-card-alpha: rgba(15, 23, 42, 0.8);
+  --bg-muted: theme('colors.slate.800');
+
+  /* Text */
+  --text-primary: theme('colors.slate.100');
+  --text-secondary: theme('colors.slate.400');
+  --text-muted: theme('colors.slate.400');
+
+  /* Borders - đặt transparent để bỏ viền */
+  --border-default: transparent;
+  --border-muted: transparent;
+
+  /* Shadows */
+  --shadow-color: rgba(2, 6, 23, 0.6);
+
+  /* Progress bar track */
+  --progress-track: theme('colors.slate.700');
+}
+
+/* ============================================ */
+
 * {
   box-sizing: border-box;
 }
@@ -13,7 +66,24 @@ body {
 
 body {
   margin: 0;
-  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   GLOBAL BORDER OVERRIDE
+   Làm nhẹ tất cả border-slate trong app
+   ============================================ */
+[class*="border-slate-100"],
+[class*="border-slate-200"],
+[class*="border-slate-300"] {
+  border-color: transparent !important;
+}
+
+.dark [class*="border-slate-700"],
+.dark [class*="border-slate-800"],
+.dark [class*="border-slate-900"] {
+  border-color: transparent !important;
 }
 
 /* Custom Animations */

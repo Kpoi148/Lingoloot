@@ -1,12 +1,12 @@
 const SkeletonBlock = ({ className }: { className: string }) => (
-  <div className={`animate-pulse rounded-2xl bg-slate-200/70 ${className}`} />
+  <div className={`animate-pulse rounded-2xl bg-surface-muted ${className}`} />
 );
 
 export default function ProfileLoading() {
   return (
-    <main className="min-h-screen bg-slate-50/70 px-4 py-10 text-slate-900">
+    <main className="min-h-screen bg-surface-page px-4 py-10 text-content">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:flex-row">
-        <section className="w-full rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60 lg:w-[38%]">
+        <section className="w-full rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme lg:w-[38%]">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2">
               <SkeletonBlock className="h-3 w-32" />
@@ -29,7 +29,7 @@ export default function ProfileLoading() {
           </div>
         </section>
 
-        <section className="flex w-full flex-1 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+        <section className="flex w-full flex-1 flex-col rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme">
           <div className="space-y-2">
             <SkeletonBlock className="h-3 w-40" />
             <SkeletonBlock className="h-7 w-52" />
@@ -40,7 +40,7 @@ export default function ProfileLoading() {
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={`stat-skeleton-${index}`}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-edge bg-surface-card p-5 shadow-sm"
               >
                 <SkeletonBlock className="h-10 w-10 rounded-2xl" />
                 <SkeletonBlock className="mt-4 h-6 w-24" />

@@ -2,10 +2,10 @@ export default function TopicsLoading() {
   const skeletonCards = Array.from({ length: 6 });
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 px-4 py-12 text-slate-900">
+    <main className="min-h-screen bg-surface-page px-4 py-12 text-content">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-10 flex flex-col gap-4">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 shadow-sm">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-edge bg-surface-card px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-content-muted shadow-sm">
             LingoLoot
           </span>
           <div className="space-y-3">
@@ -19,7 +19,7 @@ export default function TopicsLoading() {
           {skeletonCards.map((_, index) => (
             <div
               key={`skeleton-${index}`}
-              className="h-48 animate-pulse rounded-3xl border border-slate-200/70 bg-white/70"
+              className="h-48 animate-pulse rounded-3xl border border-edge-muted bg-surface-card-alpha"
             />
           ))}
         </div>
