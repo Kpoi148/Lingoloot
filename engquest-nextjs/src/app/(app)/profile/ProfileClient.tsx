@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 
 import dynamic from "next/dynamic";
-import { Pencil, Save } from "lucide-react";
+import { Pencil, Save, Shirt } from "lucide-react";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
@@ -118,6 +118,20 @@ export default function ProfileClient({
               </div>
               {profile && (
                 <div className="flex flex-wrap items-center gap-2">
+                  <InventoryModal
+                    inventoryItems={shopItems.filter(item => profile.gamification.inventory.includes(item._id))}
+                    equippedFrame={profile.gamification.equippedFrame}
+                    equippedAvatar={profile.gamification.equippedAvatar}
+                    trigger={
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-2 rounded-full border border-edge bg-surface-card px-4 py-2 text-xs font-semibold text-content-secondary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                      >
+                        <Shirt className="h-4 w-4" />
+                        Giao diện
+                      </button>
+                    }
+                  />
                   {!isEditing && (
                     <button
                       type="button"
@@ -179,12 +193,7 @@ export default function ProfileClient({
                       <p className="text-sm text-content-muted">{profile.email}</p>
                     </div>
 
-                    {/* Inventory / Edit Appearance */}
-                    <InventoryModal
-                      inventoryItems={shopItems.filter(item => profile.gamification.inventory.includes(item._id))}
-                      equippedFrame={profile.gamification.equippedFrame}
-                      equippedAvatar={profile.gamification.equippedAvatar}
-                    />
+
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
