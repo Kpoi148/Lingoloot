@@ -2,9 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import DailyRewardModal from "@/components/DailyRewardModal";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
+import Navbar from "@/components/layout/Navbar";
+import DailyRewardModal from "@/components/gamification/DailyRewardModal";
+import ScrollToTopButton from "@/components/common/ScrollToTopButton";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

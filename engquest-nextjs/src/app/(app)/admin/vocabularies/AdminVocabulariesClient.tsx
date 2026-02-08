@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
-const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
+const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
   ssr: false,
   loading: () => (
     <div className="h-48 w-full animate-pulse rounded-2xl border border-dashed border-slate-200 bg-slate-50" />
@@ -712,8 +712,8 @@ export default function AdminVocabulariesClient({
       {toast && (
         <div
           className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
-              ? "bg-emerald-500 text-white"
-              : "bg-red-500 text-white"
+            ? "bg-emerald-500 text-white"
+            : "bg-red-500 text-white"
             }`}
         >
           {toast.message}

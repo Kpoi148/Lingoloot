@@ -9,7 +9,7 @@ import InventoryModal from "@/components/shop/InventoryModal";
 import toast from "react-hot-toast";
 import { Pencil, Camera, Save, X } from "lucide-react";
 
-const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
+const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
     ssr: false,
     loading: () => null,
 });

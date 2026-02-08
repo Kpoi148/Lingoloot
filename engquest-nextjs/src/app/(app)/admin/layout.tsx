@@ -1,6 +1,6 @@
 import Link from "next/link";
 import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
-import BrandLogo from "@/components/BrandLogo";
+import BrandLogo from "@/components/common/BrandLogo";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import AdminSidebarProfile from "@/components/admin/AdminSidebarProfile";

@@ -4,14 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import BrandLogo from "@/components/BrandLogo";
-import ThemeToggle from "@/components/ThemeToggle";
+import BrandLogo from "@/components/common/BrandLogo";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
-import StreakNavbarItem from "@/components/StreakNavbarItem";
+import StreakNavbarItem from "@/components/gamification/StreakNavbarItem";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
-import NavbarUserMenu from "@/components/NavbarUserMenu";
+import NavbarUserMenu from "@/components/layout/NavbarUserMenu";
 
 type NavItem = {
   label: string;

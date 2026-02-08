@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { type UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
-import StreakNavbarItem from "@/components/StreakNavbarItem";
+import StreakNavbarItem from "@/components/gamification/StreakNavbarItem";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 
 type NavbarUserMenuProps = {

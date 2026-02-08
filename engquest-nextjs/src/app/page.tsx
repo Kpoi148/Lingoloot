@@ -1,11 +1,10 @@
 "use client";
-
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { PenLine, Sparkles, Star } from "lucide-react";
-import LoginForm from "@/components/LoginForm";
-import RegisterForm from "@/components/RegisterForm";
-import ThemeToggle from "@/components/ThemeToggle";
+import LoginForm from "@/components/auth/LoginForm";
+import RegisterForm from "@/components/auth/RegisterForm";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { Manrope, Space_Grotesk } from "next/font/google";
 
 const manrope = Manrope({
@@ -47,11 +46,10 @@ function Navbar({ onNavigate }: NavbarProps) {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className={`mt-4 flex items-center justify-between rounded-full border px-4 py-3 transition duration-300 sm:px-6 ${
-            isScrolled
-              ? "border-white/60 bg-white/75 shadow-lg shadow-slate-200/70 backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-slate-950/40"
-              : "border-transparent bg-white/0 dark:border-transparent dark:bg-transparent"
-          }`}
+          className={`mt-4 flex items-center justify-between rounded-full border px-4 py-3 transition duration-300 sm:px-6 ${isScrolled
+            ? "border-white/60 bg-white/75 shadow-lg shadow-slate-200/70 backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-slate-950/40"
+            : "border-transparent bg-white/0 dark:border-transparent dark:bg-transparent"
+            }`}
         >
           <button
             type="button"

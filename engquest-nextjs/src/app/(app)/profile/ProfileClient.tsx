@@ -11,7 +11,7 @@ import InventoryModal from "@/components/shop/InventoryModal";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import ProfileStats from "@/components/profile/ProfileStats";
 
-const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
+const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
   ssr: false,
   loading: () => (
     <div className="h-52 w-full animate-pulse rounded-2xl border border-dashed border-edge bg-surface-muted" />

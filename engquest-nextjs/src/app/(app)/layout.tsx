@@ -1,5 +1,5 @@
-import AppShell from "@/components/AppShell";
-import Providers from "@/components/Providers";
+import AppShell from "@/components/layout/AppShell";
+import Providers from "@/components/providers/Providers";
 
 export default function AppLayout({
   children,
