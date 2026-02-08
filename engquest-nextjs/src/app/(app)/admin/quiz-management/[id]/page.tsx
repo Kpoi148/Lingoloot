@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Quiz from "@/models/Quiz";
 import { connectToDatabase } from "@/lib/mongodb";
-import QuizTitleEditor from "@/components/admin/QuizTitleEditor";
-import QuizTimeEditor from "@/components/admin/QuizTimeEditor";
+import QuizTitleEditor from "@/components/admin/quiz/QuizTitleEditor";
+import QuizTimeEditor from "@/components/admin/quiz/QuizTimeEditor";
 
 type QuizDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -46,7 +46,7 @@ export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
           </p>
         </div>
         <Link
-          href="/admin/quizzes"
+          href="/admin/quiz-management"
           className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
         >
           Quay lại danh sách
@@ -71,11 +71,10 @@ export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
                 return (
                   <div
                     key={`${quiz._id}-${index}-${optionIndex}`}
-                    className={`rounded-2xl border px-4 py-3 text-sm font-medium ${
-                      isCorrect
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                        : "border-slate-200 text-slate-600"
-                    }`}
+                    className={`rounded-2xl border px-4 py-3 text-sm font-medium ${isCorrect
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-slate-200 text-slate-600"
+                      }`}
                   >
                     {option}
                   </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import GameBuilder from "@/components/ai-hub/GameBuilder";
+import GameBuilder from "@/components/admin/ai-hub/GameBuilder";
 
 export const dynamic = "force-static";
 

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import AdminTopbarActions from "@/components/admin/AdminTopbarActions";
+import AdminTopbarActions from "@/components/admin/layout/AdminTopbarActions";
 import BrandLogo from "@/components/common/BrandLogo";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
-import AdminSidebarProfile from "@/components/admin/AdminSidebarProfile";
-import AdminSidebarNav from "@/components/admin/AdminSidebarNav";
+import AdminSidebarProfile from "@/components/admin/layout/AdminSidebarProfile";
+import AdminSidebarNav from "@/components/admin/layout/AdminSidebarNav";
 import { adminNavItems } from "@/constants/admin-nav";
 import ParticlesBackground from "@/components/ui/ParticlesBackground";
 

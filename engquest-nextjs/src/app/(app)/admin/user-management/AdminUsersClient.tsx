@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Pencil, MoreHorizontal, Gem, Sparkles, Trophy } from "lucide-react";
 import toast from "react-hot-toast";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
-import EditUserModal from "@/components/admin/EditUserModal";
+import EditUserModal from "@/components/admin/users/EditUserModal";
 import {
   deleteUser,
   getUsers,

@@ -1,6 +1,6 @@
 "use client";
 
-import QuizBuilder from "@/components/ai-hub/QuizBuilder";
+import QuizBuilder from "@/components/admin/ai-hub/QuizBuilder";
 
 export const dynamic = "force-static";
 

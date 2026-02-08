@@ -52,7 +52,7 @@ export default function ShopItemForm({ initialData, isEditMode = false }: ShopIt
 
             if (result.success) {
                 toast.success(result.message);
-                router.push("/admin/shop");
+                router.push("/admin/shop-management");
                 router.refresh();
             } else {
                 toast.error(result.message);
@@ -67,7 +67,7 @@ export default function ShopItemForm({ initialData, isEditMode = false }: ShopIt
     return (
         <div className="max-w-2xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
-                <Link href="/admin/shop" className="p-2 rounded-full hover:bg-slate-100 transition">
+                <Link href="/admin/shop-management" className="p-2 rounded-full hover:bg-slate-100 transition">
                     <ArrowLeft className="w-5 h-5 text-slate-500" />
                 </Link>
                 <h1 className="text-2xl font-bold text-slate-900">
@@ -176,7 +176,7 @@ export default function ShopItemForm({ initialData, isEditMode = false }: ShopIt
                     </div>
 
                     <div className="flex justify-end gap-3">
-                        <Link href="/admin/shop" className="px-6 py-2.5 rounded-full border border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 transition">
+                        <Link href="/admin/shop-management" className="px-6 py-2.5 rounded-full border border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 transition">
                             Hủy
                         </Link>
                         <button

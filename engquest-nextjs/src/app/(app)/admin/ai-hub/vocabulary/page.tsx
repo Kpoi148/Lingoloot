@@ -1,6 +1,6 @@
 "use client";
 
-import VocabularyGenerator from "@/components/ai-hub/VocabularyGenerator";
+import VocabularyGenerator from "@/components/admin/ai-hub/VocabularyGenerator";
 
 export const dynamic = "force-static";
 

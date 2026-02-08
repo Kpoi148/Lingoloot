@@ -5,6 +5,10 @@ import ThemeProvider from "@/components/providers/theme-provider";
 export const metadata = {
   title: "LingoLoot",
   description: "Authentication for LingoLoot",
+  icons: {
+    icon: "/icons/icon",
+    apple: "/icons/apple-icon",
+  },
 };
 
 const manrope = Manrope({

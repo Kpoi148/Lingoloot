@@ -1,6 +1,6 @@
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
-import AdminProfileCard from "@/components/admin/AdminProfileCard";
+import AdminProfileCard from "@/components/admin/users/AdminProfileCard";
 
 export const dynamic = "force-dynamic";
 

@@ -66,7 +66,7 @@ export async function createShopItem(data: ShopItemFormData) {
     await ensureAdmin();
     try {
         const newItem = await ShopItem.create(data);
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
         revalidatePath("/shop");
         return { success: true, message: "Đã tạo vật phẩm mới.", id: newItem._id.toString() };
     } catch (error) {
@@ -79,7 +79,7 @@ export async function updateShopItem(id: string, data: Partial<ShopItemFormData>
     await ensureAdmin();
     try {
         await ShopItem.findByIdAndUpdate(id, { $set: data });
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
         revalidatePath("/shop");
         return { success: true, message: "Đã cập nhật vật phẩm." };
     } catch (error) {
@@ -94,7 +94,7 @@ export async function deleteShopItem(id: string) {
         // Ideally we might want 'soft delete' logic, but for now strict delete is requested in plan implies management choice.
         // Or we can just set isActive: false if preferred, but let's support delete.
         await ShopItem.findByIdAndDelete(id);
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
         revalidatePath("/shop");
         return { success: true, message: "Đã xóa vật phẩm." };
     } catch (error) {
@@ -107,7 +107,7 @@ export async function toggleShopItemStatus(id: string, isActive: boolean) {
     await ensureAdmin();
     try {
         await ShopItem.findByIdAndUpdate(id, { $set: { isActive } });
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
         revalidatePath("/shop");
         return { success: true, message: isActive ? "Đã kích hoạt vật phẩm." : "Đã ẩn vật phẩm." };
     } catch (error) {
@@ -160,7 +160,7 @@ export async function restoreDefaultFrames() {
             }
         }
 
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
         revalidatePath("/shop");
         return { success: true, message: `Đã khôi phục ${restoredCount} khung mặc định.` };
 
