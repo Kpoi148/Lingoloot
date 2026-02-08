@@ -14,7 +14,7 @@ import {
   toggleUserRole,
   type UserListItem,
   type UsersPageResult,
-} from "@/actions/user.actions";
+} from "@/actions/admin/user.actions";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",

@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import BrandLogo from "@/components/BrandLogo";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Menu, X, ShoppingBag } from "lucide-react";
-import { getUserProfile, type UserProfile } from "@/actions/profile.actions";
+import { getUserProfile, type UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import StreakNavbarItem from "@/components/StreakNavbarItem";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";

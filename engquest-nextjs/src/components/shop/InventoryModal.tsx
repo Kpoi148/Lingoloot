@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { equipItem } from "@/actions/shop.actions";
+import { equipItem } from "@/actions/user/shop.actions";
 import toast from "react-hot-toast";
 import { Shirt, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import InventoryItem, { InventoryItemType } from "@/components/InventoryItem";
+import InventoryItem, { InventoryItemType } from "./InventoryItem";
 
 interface InventoryModalProps {
     inventoryItems: InventoryItemType[];

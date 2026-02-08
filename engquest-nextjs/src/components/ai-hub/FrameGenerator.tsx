@@ -3,7 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 // Image removed as it is unused
 import toast from "react-hot-toast";
-import { generateAIFrame, saveAIFrameToShop } from "@/actions/ai-shop.actions";
+import { generateAIFrame, saveAIFrameToShop } from "@/actions/admin/ai-shop.actions";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import { Loader2, Save, RefreshCw, Wand2, Sparkles, X, Coins } from "lucide-react";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ShopItemCard from "@/components/ShopItemCard";
+import ShopItemCard from "./ShopItemCard";
 import { cn } from "@/lib/utils";
 import { LayoutGrid, User } from "lucide-react";
 

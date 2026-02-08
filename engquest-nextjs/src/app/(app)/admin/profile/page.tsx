@@ -1,4 +1,4 @@
-import { getUserProfile } from "@/actions/profile.actions";
+import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import AdminProfileCard from "@/components/admin/AdminProfileCard";
 

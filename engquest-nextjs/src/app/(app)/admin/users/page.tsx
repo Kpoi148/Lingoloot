@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { getUsers } from "@/actions/user.actions";
+import { getUsers } from "@/actions/admin/user.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import { authOptions } from "@/lib/auth-options";
 import AdminUsersClient from "./AdminUsersClient";

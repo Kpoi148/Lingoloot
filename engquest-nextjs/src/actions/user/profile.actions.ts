@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
 import ShopItem from "@/models/ShopItem"; // Import ShopItem model
+import { ActionResponse } from "@/types/action-response";
+import { userProfileSchema } from "@/lib/validations/user";
 
 type UserStats = {
   totalVocabAdded: number;
@@ -141,56 +143,79 @@ export async function getUserProfile() {
   });
 }
 
-export async function updateUserProfile(formData: FormData) {
+
+
+export async function updateUserProfile(formData: FormData): Promise<ActionResponse<UserProfile>> {
   const session = await getSession();
   if (!session?.user?.id) {
     return { success: false, message: "Unauthorized." };
   }
 
-  const nameValue = formData.get("name");
-  const displayNameValue = formData.get("displayName");
-  const bioValue = formData.get("bio");
-  const avatarValue = formData.get("avatarUrl");
+  const rawInput = {
+    displayName: formData.get("displayName")?.toString(),
+    bio: formData.get("bio")?.toString(),
+    avatarUrl: formData.get("avatarUrl")?.toString(),
+  };
 
-  const updates: Record<string, string> = {};
+  const validationResult = userProfileSchema.safeParse(rawInput);
 
-  if (typeof nameValue === "string" && nameValue.trim()) {
-    updates.name = nameValue.trim();
-    if (!(typeof displayNameValue === "string" && displayNameValue.trim())) {
-      updates.displayName = updates.name;
-    }
+  if (!validationResult.success) {
+    const errors: Record<string, string[]> = {};
+    validationResult.error.issues.forEach((err) => {
+      const path = err.path[0] as string;
+      if (!errors[path]) errors[path] = [];
+      errors[path].push(err.message);
+    });
+    return {
+      success: false,
+      message: "Dữ liệu không hợp lệ.",
+      errors,
+    };
   }
 
-  if (typeof displayNameValue === "string" && displayNameValue.trim()) {
-    updates.displayName = displayNameValue.trim();
-  }
+  const { displayName, bio, avatarUrl } = validationResult.data;
+  const updates: Record<string, any> = {};
 
-  if (typeof bioValue === "string") {
-    updates.bio = bioValue.trim();
-  }
-
-  if (typeof avatarValue === "string") {
-    const avatarUrl = avatarValue.trim();
-    updates.avatarUrl = avatarUrl;
-    updates.image = avatarUrl;
+  if (displayName !== undefined && displayName.trim() !== "") updates.displayName = displayName.trim();
+  if (bio !== undefined) updates.bio = bio.trim();
+  if (avatarUrl !== undefined && avatarUrl.trim() !== "") {
+    updates.avatarUrl = avatarUrl.trim();
+    updates.image = avatarUrl.trim();
   }
 
   if (Object.keys(updates).length === 0) {
-    return { success: false, message: "No changes provided." };
+    return { success: false, message: "Không có thay đổi nào." };
   }
 
-  await connectToDatabase();
-  const updated = await User.findByIdAndUpdate(
-    session.user.id,
-    { $set: updates },
-    { new: true }
-  )
-    .select("name email avatarUrl displayName bio stats image gamification")
-    .lean();
+  try {
+    await connectToDatabase();
+    const updated = await User.findByIdAndUpdate(
+      session.user.id,
+      { $set: updates },
+      { new: true }
+    )
+      .select("name email avatarUrl displayName bio stats image gamification role")
+      .lean();
 
-  if (!updated) {
-    return { success: false, message: "User not found." };
+    if (!updated) {
+      return { success: false, message: "Không tìm thấy người dùng." };
+    }
+
+    // Ensure gamification structure for consistent formatting
+    if (!updated.gamification) {
+      updated.gamification = {
+        inventory: [],
+        xp: 0,
+        level: 1,
+        streak: 0,
+        currency: 0,
+        lastLoginDate: null
+      };
+    }
+
+    return { success: true, message: "Cập nhật thành công.", data: toUserProfile(updated) };
+  } catch (error) {
+    console.error("Profile update error:", error);
+    return { success: false, message: "Lỗi hệ thống khi cập nhật hồ sơ." };
   }
-
-  return { success: true, data: toUserProfile(updated) };
 }

@@ -9,7 +9,7 @@ import { Gift, Sparkles, Star } from "lucide-react";
 import {
   checkDailyLogin,
   type DailyLoginReward,
-} from "@/actions/gamification.actions";
+} from "@/actions/user/gamification.actions";
 import { getLevelTitle } from "@/lib/gamification";
 
 type RewardState = DailyLoginReward & {

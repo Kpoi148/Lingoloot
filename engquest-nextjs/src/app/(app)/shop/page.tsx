@@ -1,6 +1,6 @@
-import { getShopItems } from "@/actions/shop.actions";
-import { getUserProfile } from "@/actions/profile.actions";
-import ShopClient from "@/components/ShopClient";
+import { getShopItems } from "@/actions/user/shop.actions";
+import { getUserProfile } from "@/actions/user/profile.actions";
+import ShopClient from "@/components/shop/ShopClient";
 import { ShoppingBag } from "lucide-react";
 
 export default async function ShopPage() {

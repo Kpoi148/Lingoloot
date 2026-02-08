@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Loader2, Check } from "lucide-react";
-import { buyItem } from "@/actions/shop.actions";
+import { buyItem } from "@/actions/user/shop.actions";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";

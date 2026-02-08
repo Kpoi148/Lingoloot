@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { redirect } from "next/navigation";
 import FrameGenerator from "@/components/ai-hub/FrameGenerator";
-import { getUserProfile } from "@/actions/profile.actions";
+import { getUserProfile } from "@/actions/user/profile.actions";
 // Sparkles and Wand2 removed as they are unused
 
 

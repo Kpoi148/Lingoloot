@@ -1,5 +1,5 @@
-import { getUserProfile } from "@/actions/profile.actions";
-import { getShopItems } from "@/actions/shop.actions";
+import { getUserProfile } from "@/actions/user/profile.actions";
+import { getShopItems } from "@/actions/user/shop.actions";
 import ProfileClient from "./ProfileClient";
 
 export const dynamic = "force-dynamic";

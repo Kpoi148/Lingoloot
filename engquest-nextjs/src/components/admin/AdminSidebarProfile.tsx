@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { UserProfile } from "@/actions/profile.actions";
+import { UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress } from "@/lib/gamification";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 

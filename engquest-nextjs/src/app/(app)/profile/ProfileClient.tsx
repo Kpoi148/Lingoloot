@@ -6,10 +6,10 @@ import dynamic from "next/dynamic";
 import { Pencil, Save, Shirt } from "lucide-react";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
-import { updateUserProfile, type UserProfile } from "@/actions/profile.actions";
-import InventoryModal from "@/components/InventoryModal";
+import { updateUserProfile, type UserProfile } from "@/actions/user/profile.actions";
+import InventoryModal from "@/components/shop/InventoryModal";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
-import ProfileStats from "@/components/ProfileStats";
+import ProfileStats from "@/components/profile/ProfileStats";
 
 const MediaUploader = dynamic(() => import("@/components/MediaUploader"), {
   ssr: false,

@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { UserProfile, updateUserProfile } from "@/actions/profile.actions";
+import { UserProfile, updateUserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import dynamic from "next/dynamic";
-import InventoryModal from "@/components/InventoryModal";
+import InventoryModal from "@/components/shop/InventoryModal";
 import toast from "react-hot-toast";
 import { Pencil, Camera, Save, X } from "lucide-react";
 

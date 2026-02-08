@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserListItem, updateUserAdmin } from "@/actions/user.actions";
+import { UserListItem, updateUserAdmin } from "@/actions/admin/user.actions";
 import { X, Save, Shield, Ban, Coins, Trophy, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";

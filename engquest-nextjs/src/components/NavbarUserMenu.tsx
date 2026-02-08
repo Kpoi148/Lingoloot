@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type UserProfile } from "@/actions/profile.actions";
+import { type UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
 import StreakNavbarItem from "@/components/StreakNavbarItem";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
@@ -34,8 +34,8 @@ export default function NavbarUserMenu({
             <Link href="/profile" className="group">
                 <div
                     className={`transition group-hover:scale-105 ${profile?.gamification?.equippedFrameDetails
-                            ? ""
-                            : "rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700"
+                        ? ""
+                        : "rounded-full bg-gradient-to-br from-amber-200 via-slate-100 to-slate-200 p-0.5 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700"
                         }`}
                 >
                     {avatarUrl || profile?.gamification?.equippedFrameDetails ? (
