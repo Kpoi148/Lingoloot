@@ -2,8 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Quiz from "@/models/Quiz";
 import { connectToDatabase } from "@/lib/mongodb";
-import QuizTitleEditor from "@/components/admin/quiz/QuizTitleEditor";
-import QuizTimeEditor from "@/components/admin/quiz/QuizTimeEditor";
 
 type QuizDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -27,23 +25,17 @@ export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
             Quiz
           </p>
           <h1 className="text-2xl font-semibold text-slate-900">{quiz.title}</h1>
-          <QuizTitleEditor
-            quizId={quiz._id.toString()}
-            initialTitle={quiz.title}
-          />
-          <div className="mt-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-              Thời gian làm bài
-            </p>
-            <QuizTimeEditor
-              quizId={quiz._id.toString()}
-              initialTimeLimit={quiz.timeLimit ?? 120}
-            />
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              ⏱ {quiz.timeLimit ?? 120}s
+            </span>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              📚 {quiz.category}
+            </span>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              📊 {quiz.level ?? "Trung bình"}
+            </span>
           </div>
-          <p className="mt-2 text-sm text-slate-600">Chủ đề: {quiz.category}</p>
-          <p className="mt-1 text-sm text-slate-600">
-            Mức độ: {quiz.level ?? "Trung bình"}
-          </p>
         </div>
         <Link
           href="/admin/quiz-management"

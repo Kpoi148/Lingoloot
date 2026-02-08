@@ -8,6 +8,7 @@ type QuizItem = {
   title: string;
   category: string;
   level?: string;
+  timeLimit?: number;
   questionCount: number;
   createdAt?: string;
 };
@@ -17,11 +18,24 @@ type ToastState = {
   type: "success" | "error";
 };
 
+const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
+
+const emptyForm = {
+  title: "",
+  timeLimit: "120",
+  category: "",
+  level: "Trung bình" as (typeof levels)[number],
+};
+
 export default function AdminQuizzesPage() {
   const [items, setItems] = useState<QuizItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState<ToastState | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<QuizItem | null>(null);
+  const [formState, setFormState] = useState({ ...emptyForm });
+  const [saving, setSaving] = useState(false);
 
   const filteredItems = useMemo(() => {
     if (!search.trim()) return items;
@@ -65,6 +79,65 @@ export default function AdminQuizzesPage() {
     const timer = setTimeout(() => setToast(null), 2500);
     return () => clearTimeout(timer);
   }, [toast]);
+
+  const openEditModal = (item: QuizItem) => {
+    setEditingItem(item);
+    setFormState({
+      title: item.title,
+      timeLimit: String(item.timeLimit ?? 120),
+      category: item.category,
+      level: (item.level as (typeof levels)[number]) ?? "Trung bình",
+    });
+    setModalOpen(true);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!editingItem) return;
+
+    const trimmedTitle = formState.title.trim();
+    const parsedTime = Number.parseInt(formState.timeLimit, 10);
+
+    if (!trimmedTitle) {
+      setToast({ message: "Vui lòng nhập tên quiz.", type: "error" });
+      return;
+    }
+
+    if (!Number.isFinite(parsedTime) || parsedTime < 30 || parsedTime > 3600) {
+      setToast({ message: "Thời gian phải từ 30 đến 3600 giây.", type: "error" });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/admin/quizzes/${editingItem._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: trimmedTitle,
+          timeLimit: parsedTime,
+        }),
+      });
+
+      const payload = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(payload.message ?? "Không thể cập nhật quiz.");
+      }
+
+      await loadData();
+      setToast({ message: "Đã cập nhật quiz.", type: "success" });
+      setModalOpen(false);
+    } catch (error) {
+      setToast({
+        message: error instanceof Error ? error.message : "Không thể cập nhật quiz.",
+        type: "error",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleDelete = async (item: QuizItem) => {
     if (!confirm(`Xóa quiz "${item.title}"?`)) {
@@ -155,6 +228,13 @@ export default function AdminQuizzesPage() {
                     <td className="py-4 text-slate-600 dark:text-slate-400">{item.questionCount}</td>
                     <td className="py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(item)}
+                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+                        >
+                          Sửa
+                        </button>
                         <Link
                           href={`/admin/quiz-management/${item._id}`}
                           className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
@@ -176,6 +256,111 @@ export default function AdminQuizzesPage() {
           </table>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {modalOpen && editingItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-950">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                Chỉnh sửa Quiz
+              </h2>
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:text-slate-400"
+              >
+                Đóng
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  Tên Quiz
+                </label>
+                <input
+                  value={formState.title}
+                  onChange={(event) =>
+                    setFormState((prev) => ({ ...prev, title: event.target.value }))
+                  }
+                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                  placeholder="Quiz giao thông"
+                />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    Thời gian (giây)
+                  </label>
+                  <input
+                    type="number"
+                    min={30}
+                    max={3600}
+                    value={formState.timeLimit}
+                    onChange={(event) =>
+                      setFormState((prev) => ({ ...prev, timeLimit: event.target.value }))
+                    }
+                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                    placeholder="120"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    Mức độ
+                  </label>
+                  <select
+                    value={formState.level}
+                    onChange={(event) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        level: event.target.value as (typeof levels)[number],
+                      }))
+                    }
+                    className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                  >
+                    {levels.map((lvl) => (
+                      <option key={lvl} value={lvl}>
+                        {lvl}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  Chủ đề
+                </label>
+                <input
+                  value={formState.category}
+                  disabled
+                  className="h-11 w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
+                />
+                <p className="text-xs text-slate-500">Không thể thay đổi chủ đề sau khi tạo.</p>
+              </div>
+
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-slate-100 dark:text-slate-900"
+                >
+                  {saving ? "Đang lưu..." : "Lưu thay đổi"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {toast && (
         <div
