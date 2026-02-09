@@ -1,39 +1,30 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Volume2 } from "lucide-react";
 
 export default function FlashcardMockup() {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative hidden lg:block"
-        >
-            {/* Floating animation wrapper */}
-            <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="relative"
-            >
+        <div className="relative hidden animate-fade-in-up lg:block">
+            {/* Floating animation wrapper - using CSS animation */}
+            <div className="relative animate-float">
                 {/* Main Card */}
                 <div className="relative w-72 overflow-hidden rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-2xl shadow-slate-200/60 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/90 dark:shadow-slate-950/50">
                     {/* Decorative gradient blob */}
-                    <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/50 blur-2xl dark:bg-emerald-500/20" />
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/50 blur-2xl dark:bg-emerald-500/20"
+                    />
 
                     {/* Card Header */}
                     <div className="flex items-center justify-between">
                         <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
                             Flashcard
                         </span>
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                        <button
+                            type="button"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:scale-110 hover:bg-slate-200 active:scale-95 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                            aria-label="Phát âm"
                         >
                             <Volume2 className="h-4 w-4" />
-                        </motion.button>
+                        </button>
                     </div>
 
                     {/* Word */}
@@ -62,7 +53,11 @@ export default function FlashcardMockup() {
                             Ví dụ
                         </p>
                         <p className="mt-1 text-sm italic text-slate-600 dark:text-slate-300">
-                            "Life is either a daring <span className="font-semibold text-amber-600 dark:text-amber-400">adventure</span> or nothing at all."
+                            &ldquo;Life is either a daring{" "}
+                            <span className="font-semibold text-amber-600 dark:text-amber-400">
+                                adventure
+                            </span>{" "}
+                            or nothing at all.&rdquo;
                         </p>
                     </div>
 
@@ -76,9 +71,15 @@ export default function FlashcardMockup() {
                 </div>
 
                 {/* Stacked cards behind (decorative) */}
-                <div className="absolute -bottom-2 -right-2 -z-10 h-full w-full rounded-3xl border border-slate-200/50 bg-white/50 dark:border-slate-800/50 dark:bg-slate-900/50" />
-                <div className="absolute -bottom-4 -right-4 -z-20 h-full w-full rounded-3xl border border-slate-200/30 bg-white/30 dark:border-slate-800/30 dark:bg-slate-900/30" />
-            </motion.div>
-        </motion.div>
+                <div
+                    aria-hidden="true"
+                    className="absolute -bottom-2 -right-2 -z-10 h-full w-full rounded-3xl border border-slate-200/50 bg-white/50 dark:border-slate-800/50 dark:bg-slate-900/50"
+                />
+                <div
+                    aria-hidden="true"
+                    className="absolute -bottom-4 -right-4 -z-20 h-full w-full rounded-3xl border border-slate-200/30 bg-white/30 dark:border-slate-800/30 dark:bg-slate-900/30"
+                />
+            </div>
+        </div>
     );
 }
