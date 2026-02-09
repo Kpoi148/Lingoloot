@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, PenLine, Sparkles, Star, X } from "lucide-react";
 import AuthTabs from "@/components/auth/AuthTabs";
+import FlashcardMockup from "@/components/landing/FlashcardMockup";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { Manrope, Space_Grotesk } from "next/font/google";
 
@@ -194,7 +195,7 @@ export default function HomePage() {
 
       <Navbar onNavigate={handleNavigate} />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-14 pt-24 lg:flex-row lg:items-start lg:pt-16">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-14 pt-24 lg:flex-row lg:items-start lg:gap-8 lg:pt-16">
         <section id="hero" className="flex-1 space-y-6 scroll-mt-28">
           <span className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white shadow-sm dark:bg-white dark:text-slate-900">
             LingoLoot
@@ -240,7 +241,10 @@ export default function HomePage() {
 
         </section>
 
-        <section className="flex w-full flex-1 flex-col gap-6">
+        {/* Flashcard Mockup - Center on desktop */}
+        <FlashcardMockup />
+
+        <section className="flex w-full flex-1 flex-col gap-6 lg:max-w-md">
           <AuthTabs />
         </section>
       </div>
