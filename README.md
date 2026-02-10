@@ -77,36 +77,6 @@ engquest-nextjs/
 ├── tailwind.config.js
 └── package.json
 ```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- **Node.js** >= 18
-- **MongoDB** instance (local hoặc Atlas)
-- **Google AI API Key** (cho tính năng AI Hub)
-
-### Cài đặt
-
-```bash
-# Clone repo
-git clone <repo-url>
-cd LingoLoot/engquest-nextjs
-
-# Cài dependencies
-npm install
-
-# Tạo file .env.local với các biến:
-# MONGODB_URI=<your-mongodb-uri>
-# NEXTAUTH_SECRET=<your-secret>
-# NEXTAUTH_URL=http://localhost:3000
-# GEMINI_API_KEY=<your-google-ai-key>
-
-# Chạy dev server
-npm run dev
-```
-
-Truy cập [http://localhost:3000](http://localhost:3000) để xem ứng dụng.
-
 ### Scripts
 
 | Lệnh | Mô tả |
