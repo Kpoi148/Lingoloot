@@ -1,6 +1,15 @@
+"use client";
+
 import { Volume2 } from "lucide-react";
 
 export default function FlashcardMockup() {
+    const handleSpeak = () => {
+        const utterance = new SpeechSynthesisUtterance("adventure");
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+    };
+
     return (
         <div className="relative hidden animate-fade-in-up lg:block">
             {/* Floating animation wrapper - using CSS animation */}
@@ -20,6 +29,7 @@ export default function FlashcardMockup() {
                         </span>
                         <button
                             type="button"
+                            onClick={handleSpeak}
                             className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:scale-110 hover:bg-slate-200 active:scale-95 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
                             aria-label="Phát âm"
                         >

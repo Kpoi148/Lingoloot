@@ -1,4 +1,4 @@
-import { Bot, Brain } from "lucide-react";
+import { Gamepad2, ShoppingBag } from "lucide-react";
 
 export default function HeroSection() {
     return (
@@ -14,11 +14,11 @@ export default function HeroSection() {
                 <p className="max-w-xl text-base leading-relaxed text-slate-700 dark:text-slate-300 sm:text-lg">
                     Nền tảng học tập tối giản giúp bạn{" "}
                     <span className="font-semibold text-slate-900 dark:text-slate-100">
-                        tạo Flashcard tự động bằng AI
+                        nắm vững từ vựng qua Flashcard trực quan
                     </span>
-                    , luyện phát âm chuẩn IPA và{" "}
+                    , thử thách bản thân qua{" "}
                     <span className="font-semibold text-slate-900 dark:text-slate-100">
-                        ôn tập qua Quiz thông minh
+                        Quiz và minigame Story Cloze
                     </span>
                     .
                 </p>
@@ -30,15 +30,15 @@ export default function HeroSection() {
                 className="grid max-w-lg scroll-mt-28 grid-cols-1 gap-4 sm:grid-cols-2"
             >
                 <FeatureCard
-                    icon={<Bot className="h-5 w-5" />}
-                    title="AI Automation"
-                    description="Tự động điền nghĩa, phiên âm IPA và ví dụ ngữ cảnh chuẩn xác chỉ với một từ khóa."
+                    icon={<Gamepad2 className="h-5 w-5" />}
+                    title="Story Cloze"
+                    description="Kéo thả từ vào khoảng trống để hoàn thành câu chuyện - học từ trong ngữ cảnh thực tế."
                     color="emerald"
                 />
                 <FeatureCard
-                    icon={<Brain className="h-5 w-5" />}
-                    title="Smart Review"
-                    description="Hệ thống tự tạo bài Quiz trắc nghiệm đa dạng dựa trên chính danh sách từ vựng của bạn."
+                    icon={<ShoppingBag className="h-5 w-5" />}
+                    title="Gem & Shop"
+                    description="Kiếm Gem khi hoàn thành bài học, đổi lấy Avatar và Frame độc quyền cho hồ sơ."
                     color="amber"
                 />
             </div>

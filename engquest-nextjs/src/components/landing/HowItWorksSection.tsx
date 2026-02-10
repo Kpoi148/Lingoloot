@@ -1,4 +1,4 @@
-import { PenLine, Sparkles } from "lucide-react";
+import { BookOpenText, Sparkles } from "lucide-react";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
 
 export default function HowItWorksSection() {
@@ -13,11 +13,11 @@ export default function HowItWorksSection() {
                         Vì sao LingoLoot?
                     </p>
                     <h2 className="font-[var(--font-display)] text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
-                        Đừng tốn thời gian chép từ vựng thủ công nữa!
+                        Học từ vựng không còn nhàm chán nữa!
                     </h2>
                     <p className="text-base text-slate-600 dark:text-slate-300 sm:text-lg">
-                        Học nhanh hơn, nhàn hạ hơn, vui vẻ hơn khi mọi thao tác nhàm chán đã
-                        có AI xử lý giúp bạn.
+                        LingoLoot biến việc học thành hành trình chinh phục — với flashcard
+                        trực quan, minigame hấp dẫn và phần thưởng mỗi ngày.
                     </p>
                 </div>
 
@@ -26,14 +26,14 @@ export default function HowItWorksSection() {
                     <div className="rounded-2xl border border-slate-200/70 bg-slate-50/80 p-6 text-slate-500 dark:border-slate-800/80 dark:bg-slate-900/80 dark:text-slate-400">
                         <div className="flex items-start gap-4">
                             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-200/70 text-slate-600 dark:bg-slate-800 dark:text-slate-200">
-                                <PenLine className="h-6 w-6" />
+                                <BookOpenText className="h-6 w-6" />
                             </span>
                             <div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
                                     Cách cũ
                                 </p>
                                 <p className="mt-3 text-lg font-semibold text-slate-700 dark:text-slate-200">
-                                    Tra từ điển, chép tay, mau quên.
+                                    Học máy móc, thiếu động lực, dễ bỏ cuộc.
                                 </p>
                             </div>
                         </div>
@@ -54,8 +54,8 @@ export default function HowItWorksSection() {
                                     Cách LingoLoot
                                 </p>
                                 <p className="mt-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                                    Gõ 1 từ, AI lo phần còn lại (IPA, Nghĩa, Ví dụ) trong tích
-                                    tắc.
+                                    Flashcard trực quan, Quiz thông minh, phần thưởng Gem mỗi
+                                    ngày.
                                 </p>
                             </div>
                         </div>
@@ -65,3 +65,4 @@ export default function HowItWorksSection() {
         </AnimatedSection>
     );
 }
+
