@@ -10,6 +10,10 @@ export const dynamic = "force-dynamic";
 type AdminUsersPageProps = {
   searchParams?: Promise<{
     q?: string | string[];
+    name?: string | string[];
+    email?: string | string[];
+    role?: string | string[];
+    status?: string | string[];
     page?: string | string[];
   }>;
 };
@@ -30,14 +34,26 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
   }
 
   const resolvedSearchParams = await searchParams;
-  const query = parseQueryValue(resolvedSearchParams?.q);
+  // Map legacy name/email params to general search 'q' if 'q' is missing
+  let query = parseQueryValue(resolvedSearchParams?.q);
+  if (!query) {
+    query =
+      parseQueryValue(resolvedSearchParams?.name) ||
+      parseQueryValue(resolvedSearchParams?.email);
+  }
+
+  const role = parseQueryValue(resolvedSearchParams?.role);
+  const status = parseQueryValue(resolvedSearchParams?.status);
   const page = parsePageValue(resolvedSearchParams?.page);
+
+  // We intentionally leave name/email empty to enforce unified search behavior
+  const filters = { search: query, name: "", email: "", role, status };
 
   let initialData = null;
   let initialError: string | null = null;
 
   try {
-    initialData = await getUsers(query, page);
+    initialData = await getUsers(filters, page);
   } catch (error) {
     initialError =
       error instanceof Error ? error.message : "Unable to load users.";
@@ -49,7 +65,7 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
     <AdminUsersClient
       initialData={initialData}
       initialError={initialError}
-      initialQuery={query}
+      initialFilters={filters}
       initialPage={page}
       currentUserId={session.user.id}
       shopItems={shopItems}

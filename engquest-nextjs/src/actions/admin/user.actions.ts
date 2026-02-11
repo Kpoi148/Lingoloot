@@ -80,28 +80,64 @@ const toUserListItem = (user: MongoUser): UserListItem => ({
   },
 });
 
-export async function getUsers(query: string, page: number): Promise<UsersPageResult> {
+export type UserFilters = {
+  search?: string;
+  name?: string;
+  email?: string;
+  role?: string;
+  status?: string; // "banned" | "active"
+};
+
+export async function getUsers(
+  filters: UserFilters,
+  page: number
+): Promise<UsersPageResult> {
   await ensureAdminSession();
 
-  const searchValue = typeof query === "string" ? query.trim() : "";
+  const searchValue = filters.search?.trim() || "";
+  const nameFilter = filters.name?.trim() || "";
+  const emailFilter = filters.email?.trim() || "";
+  const roleFilter = filters.role?.trim() || "";
+  const statusFilter = filters.status?.trim() || "";
+
   const pageValue = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
 
   await connectToDatabase();
 
-  const filter = searchValue
-    ? {
-      $or: [
-        { name: { $regex: escapeRegex(searchValue), $options: "i" } },
-        { email: { $regex: escapeRegex(searchValue), $options: "i" } },
-      ],
-    }
-    : {};
+  const mongoFilter: any = {};
 
-  const totalCount = await User.countDocuments(filter);
+  if (searchValue) {
+    mongoFilter.$or = [
+      { name: { $regex: escapeRegex(searchValue), $options: "i" } },
+      { email: { $regex: escapeRegex(searchValue), $options: "i" } },
+    ];
+  }
+
+  if (nameFilter) {
+    mongoFilter.name = { $regex: escapeRegex(nameFilter), $options: "i" };
+  }
+
+  if (emailFilter) {
+    mongoFilter.email = { $regex: escapeRegex(emailFilter), $options: "i" };
+  }
+
+  if (roleFilter && (roleFilter === "admin" || roleFilter === "user")) {
+    mongoFilter.role = roleFilter;
+  }
+
+  if (statusFilter) {
+    if (statusFilter === "banned") {
+      mongoFilter.isBanned = true;
+    } else if (statusFilter === "active") {
+      mongoFilter.isBanned = { $ne: true };
+    }
+  }
+
+  const totalCount = await User.countDocuments(mongoFilter);
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   const currentPage = Math.min(pageValue, totalPages);
 
-  const users = await User.find(filter)
+  const users = await User.find(mongoFilter)
     .select(
       "name email role avatarUrl image displayName isBanned createdAt lastLoginAt bio gamification"
     )

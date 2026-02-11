@@ -30,7 +30,7 @@ const emptyForm = {
 export default function AdminQuizzesPage() {
   const [items, setItems] = useState<QuizItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({ title: "", category: "", level: "" });
   const [toast, setToast] = useState<ToastState | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<QuizItem | null>(null);
@@ -38,15 +38,19 @@ export default function AdminQuizzesPage() {
   const [saving, setSaving] = useState(false);
 
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return items;
-    const needle = search.trim().toLowerCase();
-    return items.filter(
-      (item) =>
-        item.title.toLowerCase().includes(needle) ||
-        item.category.toLowerCase().includes(needle) ||
-        (item.level ?? "").toLowerCase().includes(needle)
-    );
-  }, [items, search]);
+    return items.filter((item) => {
+      const matchesTitle = item.title
+        .toLowerCase()
+        .includes(filters.title.toLowerCase());
+      const matchesCategory = item.category
+        .toLowerCase()
+        .includes(filters.category.toLowerCase());
+      const matchesLevel =
+        filters.level === "" || item.level === filters.level;
+
+      return matchesTitle && matchesCategory && matchesLevel;
+    });
+  }, [items, filters]);
 
   const loadData = async () => {
     setLoading(true);
@@ -117,6 +121,7 @@ export default function AdminQuizzesPage() {
         body: JSON.stringify({
           title: trimmedTitle,
           timeLimit: parsedTime,
+          level: formState.level,
         }),
       });
 
@@ -170,13 +175,6 @@ export default function AdminQuizzesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <input
-            type="text"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Tìm theo tên hoặc chủ đề..."
-            className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-700"
-          />
           <Link
             href="/admin/quiz-management/create"
             className="flex h-11 items-center rounded-2xl bg-slate-900 px-5 text-sm font-semibold text-white shadow-md shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-lg dark:bg-slate-100 dark:text-slate-900 dark:shadow-slate-100/20"
@@ -189,13 +187,63 @@ export default function AdminQuizzesPage() {
       <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">
+            <thead className="sticky top-0 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm dark:bg-slate-900 dark:text-slate-500">
+              <tr className="bg-slate-50/80 text-[10px] normal-case text-slate-500 dark:bg-slate-800/80 dark:text-slate-400">
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.title}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, title: e.target.value }))
+                    }
+                    placeholder="Filter Title"
+                    className="h-8 w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.category}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, category: e.target.value }))
+                    }
+                    placeholder="Filter Category"
+                    className="h-8 w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <select
+                    value={filters.level}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, level: e.target.value }))
+                    }
+                    className="h-8 w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
+                  >
+                    <option value="">All Levels</option>
+                    {levels.map((lvl) => (
+                      <option key={lvl} value={lvl}>
+                        {lvl}
+                      </option>
+                    ))}
+                  </select>
+                </th>
+                <th className="px-3 py-3"></th>
+                <th className="px-3 py-3 text-right">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFilters({ title: "", category: "", level: "" })
+                    }
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                  >
+                    Clear
+                  </button>
+                </th>
+              </tr>
               <tr>
-                <th className="py-3">Tên quiz</th>
-                <th className="py-3">Chủ đề</th>
-                <th className="py-3">Mức độ</th>
-                <th className="py-3">Số câu</th>
-                <th className="py-3 text-right">Tác vụ</th>
+                <th className="py-3 px-3">Tên quiz</th>
+                <th className="py-3 px-3">Chủ đề</th>
+                <th className="py-3 px-3">Mức độ</th>
+                <th className="py-3 px-3">Số câu</th>
+                <th className="py-3 px-3 text-right">Tác vụ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">

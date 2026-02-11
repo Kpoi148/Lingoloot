@@ -29,21 +29,23 @@ const emptyForm = {
 export default function AdminCategoriesPage() {
   const [items, setItems] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({ name: "", slug: "" });
   const [toast, setToast] = useState<ToastState | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formState, setFormState] = useState({ ...emptyForm });
   const [editingItem, setEditingItem] = useState<CategoryItem | null>(null);
 
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return items;
-    const needle = search.trim().toLowerCase();
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(needle) ||
-        item.slug.toLowerCase().includes(needle)
-    );
-  }, [items, search]);
+    return items.filter((item) => {
+      const matchesName = item.name
+        .toLowerCase()
+        .includes(filters.name.toLowerCase());
+      const matchesSlug = item.slug
+        .toLowerCase()
+        .includes(filters.slug.toLowerCase());
+      return matchesName && matchesSlug;
+    });
+  }, [items, filters]);
 
   useEffect(() => {
     let active = true;
@@ -102,10 +104,15 @@ export default function AdminCategoriesPage() {
       slug: item.slug,
       description: item.description ?? "",
       image_url: item.image_url ?? "",
-      order: String(item.order ?? 0),
+      order: String(item.order),
       count: item.count !== undefined ? String(item.count) : "",
     });
     setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingItem(null);
   };
 
   const refreshItems = async () => {
@@ -193,13 +200,6 @@ export default function AdminCategoriesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <input
-            type="text"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Tìm theo tên hoặc slug..."
-            className="h-11 w-64 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-700"
-          />
           <button
             type="button"
             onClick={openCreateModal}
@@ -213,13 +213,46 @@ export default function AdminCategoriesPage() {
       <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-900/20">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">
+            <thead className="sticky top-0 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm dark:bg-slate-900 dark:text-slate-500">
+              <tr className="bg-slate-50/80 text-[10px] normal-case text-slate-500 dark:bg-slate-800/80 dark:text-slate-400">
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.name}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                    placeholder="Filter Name"
+                    className="h-8 w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
+                  />
+                </th>
+                <th className="px-3 py-3">
+                  <input
+                    value={filters.slug}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, slug: e.target.value }))
+                    }
+                    placeholder="Filter Slug"
+                    className="h-8 w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-slate-600"
+                  />
+                </th>
+                <th className="px-3 py-3"></th>
+                <th className="px-3 py-3"></th>
+                <th className="px-3 py-3 text-right">
+                  <button
+                    type="button"
+                    onClick={() => setFilters({ name: "", slug: "" })}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                  >
+                    Clear
+                  </button>
+                </th>
+              </tr>
               <tr>
-                <th className="py-3">Chủ đề</th>
-                <th className="py-3">Slug</th>
-                <th className="py-3">Thứ tự</th>
-                <th className="py-3">Từ vựng</th>
-                <th className="py-3 text-right">Tác vụ</th>
+                <th className="py-3 px-3">Chủ đề</th>
+                <th className="py-3 px-3">Slug</th>
+                <th className="py-3 px-3">Thứ tự</th>
+                <th className="py-3 px-3">Từ vựng</th>
+                <th className="py-3 px-3 text-right">Tác vụ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -423,8 +456,8 @@ export default function AdminCategoriesPage() {
       {toast && (
         <div
           className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
-              ? "bg-emerald-500 text-white"
-              : "bg-red-500 text-white"
+            ? "bg-emerald-500 text-white"
+            : "bg-red-500 text-white"
             }`}
         >
           {toast.message}
