@@ -94,7 +94,7 @@ function Flashcard({
         </div>
 
         <div
-          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-y-auto overscroll-contain rounded-3xl bg-slate-900 px-6 py-6 pr-5 text-white dark:bg-slate-100 dark:text-slate-900"
+          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-y-auto overscroll-contain rounded-3xl bg-slate-900 px-6 py-6 pr-5 text-white"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="space-y-3">
@@ -382,8 +382,8 @@ export default function FlashcardsPage({
         {toast && (
           <div
             className={`fixed bottom-6 right-6 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg ${toast.type === "success"
-                ? "bg-emerald-500 text-white"
-                : "bg-red-500 text-white"
+              ? "bg-emerald-500 text-white"
+              : "bg-red-500 text-white"
               }`}
           >
             {toast.message}
