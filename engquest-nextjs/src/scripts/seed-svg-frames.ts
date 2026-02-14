@@ -1,5 +1,3 @@
-// @ts-nocheck
-import mongoose from "mongoose";
 import ShopItem from "../models/ShopItem";
 import { connectToDatabase } from "../lib/mongodb";
 

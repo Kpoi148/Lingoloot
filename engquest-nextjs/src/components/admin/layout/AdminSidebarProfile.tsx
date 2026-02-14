@@ -1,17 +1,17 @@
 "use client";
 
 import { useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { UserProfile } from "@/actions/user/profile.actions";
 import { getLevelProgress } from "@/lib/gamification";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
+import type { ShopVisualItem } from "@/types/shop-item";
 
 type AdminSidebarProfileProps = {
     profile: UserProfile | null;
-    shopItems?: any[];
+    shopItems?: ShopVisualItem[];
 };
 
 import { motion } from "framer-motion";

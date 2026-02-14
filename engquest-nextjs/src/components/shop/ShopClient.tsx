@@ -1,27 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ShopItemCard from "./ShopItemCard";
 import { cn } from "@/lib/utils";
 import { LayoutGrid, User } from "lucide-react";
-
-interface ShopItem {
-    _id: string;
-    name: string;
-    type: string;
-    imageUrl: string;
-    price: number;
-    rarity: string;
-}
+import type { ShopCatalogItem } from "@/types/shop-item";
 
 interface ShopClientProps {
-    items: ShopItem[];
+    items: ShopCatalogItem[];
     inventory: string[];
     currency: number;
 }
 
 export default function ShopClient({ items, inventory, currency }: ShopClientProps) {
     const [activeTab, setActiveTab] = useState<"frame" | "avatar">("frame");
+    const [ownedItemIds, setOwnedItemIds] = useState<string[]>(inventory);
+    const [currentCurrency, setCurrentCurrency] = useState(currency);
+
+    useEffect(() => {
+        setOwnedItemIds(inventory);
+    }, [inventory]);
+
+    useEffect(() => {
+        setCurrentCurrency(currency);
+    }, [currency]);
+
+    const handlePurchaseSuccess = (itemId: string, newBalance: number) => {
+        setOwnedItemIds((prev) =>
+            prev.includes(itemId) ? prev : [...prev, itemId]
+        );
+        setCurrentCurrency(newBalance);
+    };
 
     const frames = items.filter((item) => item.type === "frame");
     const avatars = items.filter((item) => item.type === "avatar");
@@ -64,8 +73,9 @@ export default function ShopClient({ items, inventory, currency }: ShopClientPro
                         <ShopItemCard
                             key={item._id}
                             item={item}
-                            isOwned={inventory.includes(item._id)}
-                            canAfford={currency >= item.price}
+                            isOwned={ownedItemIds.includes(item._id)}
+                            canAfford={currentCurrency >= item.price}
+                            onPurchaseSuccess={handlePurchaseSuccess}
                         />
                     ))
                 ) : (

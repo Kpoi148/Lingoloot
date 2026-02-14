@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import InventoryModal from "@/components/shop/InventoryModal";
 import toast from "react-hot-toast";
 import { Pencil, Camera, Save, X } from "lucide-react";
+import type { ShopVisualItem } from "@/types/shop-item";
 
 const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
     ssr: false,
@@ -16,7 +17,7 @@ const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"),
 
 type AdminProfileCardProps = {
     profile: UserProfile;
-    shopItems?: any[];
+    shopItems?: ShopVisualItem[];
 };
 
 const numberFormatter = new Intl.NumberFormat("en-US");

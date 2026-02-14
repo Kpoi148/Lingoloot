@@ -10,6 +10,7 @@ import { updateUserProfile, type UserProfile } from "@/actions/user/profile.acti
 import InventoryModal from "@/components/shop/InventoryModal";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import ProfileStats from "@/components/profile/ProfileStats";
+import type { ShopCatalogItem } from "@/types/shop-item";
 
 const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
   ssr: false,
@@ -27,7 +28,7 @@ type ProfileFormState = {
 type ProfileClientProps = {
   initialProfile: UserProfile | null;
   initialError?: string | null;
-  shopItems?: any[];
+  shopItems?: ShopCatalogItem[];
 };
 
 const numberFormatter = new Intl.NumberFormat("en-US");

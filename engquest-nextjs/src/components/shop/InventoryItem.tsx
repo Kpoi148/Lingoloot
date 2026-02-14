@@ -1,14 +1,9 @@
 import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
+import type { ShopVisualItem } from "@/types/shop-item";
 
-export type InventoryItemType = {
-    _id: string;
-    name: string;
-    type: string;
-    imageUrl: string;
-    renderKey?: string;
-};
+export type InventoryItemType = ShopVisualItem;
 
 type InventoryItemProps = {
     item: InventoryItemType;

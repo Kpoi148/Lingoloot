@@ -174,7 +174,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
   }
 
   const { displayName, bio, avatarUrl } = validationResult.data;
-  const updates: Record<string, any> = {};
+  const updates: Record<string, string> = {};
 
   if (displayName !== undefined && displayName.trim() !== "") updates.displayName = displayName.trim();
   if (bio !== undefined) updates.bio = bio.trim();

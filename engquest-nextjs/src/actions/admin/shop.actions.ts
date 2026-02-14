@@ -3,9 +3,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { connectToDatabase } from "@/lib/mongodb";
-import ShopItem, { ShopItemDocument } from "@/models/ShopItem"; // Keeping ShopItemDocument import for potential typing
+import ShopItem from "@/models/ShopItem";
 import User from "@/models/User"; // We might need this to check admin role
 import { revalidatePath } from "next/cache";
+import type { AdminShopItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";
 
 // Type definition for form data handling
 export type ShopItemFormData = {
@@ -33,13 +34,19 @@ async function ensureAdmin() {
     }
 }
 
-export async function getAdminShopItems() {
+export async function getAdminShopItems(): Promise<AdminShopItem[]> {
     await ensureAdmin();
     try {
         const items = await ShopItem.find({}).sort({ createdAt: -1 }).lean();
         return items.map((item) => ({
-            ...item,
-            _id: item._id.toString(),
+            _id: String(item._id),
+            name: item.name,
+            type: item.type as ShopItemType,
+            imageUrl: item.imageUrl,
+            price: item.price,
+            rarity: item.rarity as ShopItemRarity,
+            renderKey: item.renderKey,
+            isActive: Boolean(item.isActive),
         }));
     } catch (error) {
         console.error("Failed to fetch admin shop items:", error);
@@ -47,14 +54,20 @@ export async function getAdminShopItems() {
     }
 }
 
-export async function getShopItemById(id: string) {
+export async function getShopItemById(id: string): Promise<AdminShopItem | null> {
     await ensureAdmin();
     try {
         const item = await ShopItem.findById(id).lean();
         if (!item) return null;
         return {
-            ...item,
-            _id: item._id.toString(),
+            _id: String(item._id),
+            name: item.name,
+            type: item.type as ShopItemType,
+            imageUrl: item.imageUrl,
+            price: item.price,
+            rarity: item.rarity as ShopItemRarity,
+            renderKey: item.renderKey,
+            isActive: Boolean(item.isActive),
         };
     } catch (error) {
         console.error("Failed to fetch shop item:", error);
@@ -152,7 +165,7 @@ export async function restoreDefaultFrames() {
         let restoredCount = 0;
 
         for (const item of defaults) {
-            // Check if exists by renderKey (Cast item as any or partial matching shop item creation)
+            // Check existing defaults by renderKey before creating new records.
             const exists = await ShopItem.findOne({ renderKey: item.renderKey });
             if (!exists) {
                 await ShopItem.create(item);

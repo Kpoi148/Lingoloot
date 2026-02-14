@@ -1,5 +1,3 @@
-// @ts-nocheck
-import mongoose from "mongoose";
 import ShopItem from "../models/ShopItem";
 import { connectToDatabase } from "../lib/mongodb";
 import fs from "fs";
@@ -21,7 +19,7 @@ try {
             }
         });
     }
-} catch (e) {
+} catch {
     console.log("Could not load .env.local");
 }
 

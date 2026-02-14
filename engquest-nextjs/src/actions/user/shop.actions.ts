@@ -2,18 +2,23 @@
 
 import { getSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
-import ShopItem, { ShopItemDocument } from "@/models/ShopItem";
+import ShopItem from "@/models/ShopItem";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
+import type { ShopCatalogItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";
 
-export async function getShopItems() {
+export async function getShopItems(): Promise<ShopCatalogItem[]> {
     await connectToDatabase();
     try {
         const items = await ShopItem.find({ isActive: true }).lean();
-        // Transform _id to string for client component serialization
         return items.map((item) => ({
-            ...item,
-            _id: item._id.toString(),
+            _id: String(item._id),
+            name: item.name,
+            type: item.type as ShopItemType,
+            imageUrl: item.imageUrl,
+            price: item.price,
+            rarity: item.rarity as ShopItemRarity,
+            renderKey: item.renderKey,
         }));
     } catch (error) {
         console.error("Failed to fetch shop items:", error);

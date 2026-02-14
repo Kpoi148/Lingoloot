@@ -33,6 +33,14 @@ type ApiResponse = {
   message?: string;
 };
 
+type ProgressProofResponse = {
+  data?: {
+    proof?: string | null;
+    category_id?: string;
+  };
+  message?: string;
+};
+
 function Flashcard({
   word,
   meaning,
@@ -241,10 +249,34 @@ export default function FlashcardsPage({
     if (!category?._id) return;
     setSaving(true);
     try {
+      const proofResponse = await fetch("/api/progress/proof", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "vocab", category_id: category._id }),
+      });
+      const proofPayload = (await proofResponse.json()) as ProgressProofResponse;
+      if (!proofResponse.ok) {
+        throw new Error(
+          proofPayload.message ?? "Không thể xác thực tiến trình học."
+        );
+      }
+
+      const proof = proofPayload.data?.proof;
+      const resolvedCategoryId = proofPayload.data?.category_id ?? category._id;
+      if (!proof || typeof proof !== "string") {
+        throw new Error("Không thể xác thực tiến trình học.");
+      }
+      if (!resolvedCategoryId || typeof resolvedCategoryId !== "string") {
+        throw new Error("Danh mục học không hợp lệ.");
+      }
+
       const response = await fetch("/api/progress/vocab", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category_id: category._id }),
+        body: JSON.stringify({
+          category_id: resolvedCategoryId,
+          proof,
+        }),
       });
       const payload = (await response.json()) as {
         data?: { progress?: number };

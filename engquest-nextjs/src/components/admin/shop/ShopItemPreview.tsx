@@ -2,14 +2,10 @@
 
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import Image from "next/image";
+import type { ShopVisualItem } from "@/types/shop-item";
 
 interface ShopItemPreviewProps {
-    item: {
-        type: string;
-        imageUrl: string;
-        renderKey?: string;
-        name: string;
-    };
+    item: ShopVisualItem;
 }
 
 export default function ShopItemPreview({ item }: ShopItemPreviewProps) {

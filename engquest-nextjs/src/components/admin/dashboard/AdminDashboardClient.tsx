@@ -10,7 +10,7 @@ type OverviewData = {
 type AdminDashboardClientProps = {
     // profile: UserProfile | null; // Removed profile prop
     overviewData: OverviewData | null;
-    // shopItems?: any[]; // Removed shopItems prop
+    // shopItems removed
     error?: string | null;
 };
 

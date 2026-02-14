@@ -104,7 +104,7 @@ export async function getUsers(
 
   await connectToDatabase();
 
-  const mongoFilter: any = {};
+  const mongoFilter: Record<string, unknown> = {};
 
   if (searchValue) {
     mongoFilter.$or = [
@@ -274,7 +274,7 @@ export async function updateUserAdmin(userId: string, data: UpdateUserAdminInput
 
   await connectToDatabase();
 
-  const update: Record<string, any> = {};
+  const update: Record<string, string | boolean | number> = {};
   if (data.displayName !== undefined) update.displayName = data.displayName;
   if (data.bio !== undefined) update.bio = data.bio;
   if (data.role !== undefined) update.role = data.role;

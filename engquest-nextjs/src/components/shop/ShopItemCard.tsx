@@ -1,38 +1,40 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, Check } from "lucide-react";
 import { buyItem } from "@/actions/user/shop.actions";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
+import type { ShopCatalogItem } from "@/types/shop-item";
 
 interface ShopItemCardProps {
-    item: {
-        _id: string;
-        name: string;
-        type: string;
-        imageUrl: string;
-        price: number;
-        rarity: string;
-        renderKey?: string;
-    };
+    item: ShopCatalogItem;
     isOwned: boolean;
     canAfford: boolean;
+    onPurchaseSuccess?: (itemId: string, newBalance: number) => void;
 }
 
-export default function ShopItemCard({ item, isOwned, canAfford }: ShopItemCardProps) {
+export default function ShopItemCard({
+    item,
+    isOwned,
+    canAfford,
+    onPurchaseSuccess,
+}: ShopItemCardProps) {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleBuy = async () => {
-        if (loading || isOwned || (!canAfford && !isOwned)) return;
+        if (loading || isOwned || !canAfford) return;
 
         setLoading(true);
         try {
             const result = await buyItem(item._id);
             if (result.success) {
+                onPurchaseSuccess?.(item._id, result.newBalance);
                 toast.success(result.message);
+                router.refresh();
             } else {
                 toast.error(result.message);
             }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition, useOptimistic } from "react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pencil, MoreHorizontal, Gem, Sparkles, Trophy } from "lucide-react";
 import toast from "react-hot-toast";
@@ -15,6 +14,7 @@ import {
   type UserListItem,
   type UsersPageResult,
 } from "@/actions/admin/user.actions";
+import type { ShopVisualItem } from "@/types/shop-item";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -36,7 +36,7 @@ type AdminUsersClientProps = {
   initialFilters: UserFilters;
   initialPage: number;
   currentUserId?: string;
-  shopItems?: any[];
+  shopItems?: ShopVisualItem[];
 };
 
 type OptimisticAction = {

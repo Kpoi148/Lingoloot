@@ -1,13 +1,14 @@
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getShopItems } from "@/actions/user/shop.actions";
 import ProfileClient from "./ProfileClient";
+import type { ShopCatalogItem } from "@/types/shop-item";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
   let profile = null;
   let error: string | null = null;
-  let shopItems: any[] = [];
+  let shopItems: ShopCatalogItem[] = [];
 
   try {
     const [fetchedProfile, fetchedShopItems] = await Promise.all([
