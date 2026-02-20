@@ -1,6 +1,6 @@
 # LingoLoot 🏰💎
 
-**LingoLoot** là ứng dụng học tiếng Anh kết hợp gamification — học từ vựng, chinh phục quiz, duy trì streak, thu thập phần thưởng và tùy biến hồ sơ cá nhân.  
+**LingoLoot** là ứng dụng học tiếng Anh kết hợp gamification - học từ vựng, chinh phục quiz, duy trì streak, thu thập phần thưởng và tùy biến hồ sơ cá nhân.  
 Source code nằm trong thư mục `engquest-nextjs/`.
 
 ## ✨ Tính năng chính
