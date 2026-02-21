@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 type LoginFormProps = {
@@ -105,6 +106,14 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
             className="h-11 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-900 outline-none transition duration-200 focus:border-slate-900/70 focus:ring-4 focus:ring-slate-900/10 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:focus:border-slate-400 dark:focus:ring-slate-500/20"
             placeholder="••••••••"
           />
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="text-xs font-medium text-slate-500 underline-offset-2 hover:text-slate-700 hover:underline dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              Quen mat khau?
+            </Link>
+          </div>
         </div>
       </div>
 

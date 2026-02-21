@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { jwtDecrypt, jwtVerify } from "jose";
 
 const authRoutes = ["/", "/login", "/register"];
-const publicRoutes = ["/", "/about"];
+const publicRoutes = ["/", "/about", "/forgot-password", "/reset-password"];
 
 const SESSION_COOKIE_NAMES = [
   "__Secure-next-auth.session-token",
