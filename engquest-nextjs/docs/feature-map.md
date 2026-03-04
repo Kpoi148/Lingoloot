@@ -6,16 +6,17 @@ Use this map before editing code. Identify impacted features first, then execute
 
 | Feature area | Main user routes | Main APIs / actions | Core components / libs | Data models |
 |---|---|---|---|---|
-| Authentication and account recovery | `/`, `/forgot-password`, `/reset-password` | `/api/auth/[...nextauth]`, `/api/auth/register`, `/api/auth/forgot-password`, `/api/auth/reset-password` | `components/auth/*`, `lib/auth-options.ts`, `lib/auth-utils.ts`, `lib/password-reset.ts`, `lib/email.ts`, `lib/rate-limit.ts` | `User`, `PasswordResetToken` |
+| Authentication and account recovery | `/`, `/forgot-password`, `/reset-password` | `/api/auth/[...nextauth]`, `/api/auth/register`, `/api/auth/forgot-password`, `/api/auth/reset-password` | `components/auth/*`, `lib/auth-options.ts`, `lib/auth-utils.ts`, `lib/api-auth.ts`, `lib/password-reset.ts`, `lib/email.ts`, `lib/rate-limit.ts`, `lib/request-ip.ts` | `User`, `PasswordResetToken` |
 | Topics and vocabulary browsing | `/topics`, `/learning/[slug]`, `/learning/[slug]/flashcards` | `/api/categories`, `/api/vocabularies`, `/api/dictionary/meaning` | `app/(app)/topics/*`, `app/(app)/learning/*`, dictionary helpers in `lib/*` | `Category`, `Vocabulary`, `DictionaryCache` |
 | Practice and quiz gameplay | `/learn/practice`, `/learn/practice/[id]`, `/learning/[slug]/quiz` | `/api/quizzes`, `/api/progress/quiz`, `/api/progress/vocab` | quiz/game UI in `components/game/*`, learning screens under `app/(app)/learn/*` and `app/(app)/learning/*` | `Quiz`, `QuizResult`, `TopicProgress`, `User` |
 | Story Cloze game | `/learn/game/[id]` | `/api/games/[id]`, `/api/progress/proof` | `components/game/StoryClozeGame.tsx`, game helpers under `lib/*` | `Game`, `TopicProgress`, `User` |
 | Gamification (XP, level, streak, rewards) | profile/navbar surfaces across app | `actions/user/gamification.actions.ts` | `components/gamification/*`, `lib/gamification.ts`, `lib/gamification-config.ts` | `User` |
 | Shop and inventory | `/shop`, `/profile` (equip flow) | `actions/user/shop.actions.ts`, admin shop APIs/actions | `components/shop/*`, `components/profile/*`, `actions/admin/shop.actions.ts` | `ShopItem`, `User` |
-| Profile management | `/profile` | `actions/user/profile.actions.ts`, cloud upload signature API | `app/(app)/profile/ProfileClient.tsx`, `components/profile/*`, `components/shop/InventoryModal.tsx`, `api/cloudinary/signature` | `User`, `ShopItem` |
+| Profile management | `/profile` | `actions/user/profile.actions.ts`, `/api/cloudinary/signature` | `app/(app)/profile/ProfileClient.tsx`, `components/profile/*`, `components/shop/InventoryModal.tsx`, `lib/api-auth.ts`, `lib/request-ip.ts`, `lib/rate-limit.ts` | `User`, `ShopItem` |
 | Admin dashboard and user management | `/admin`, `/admin/user-management`, `/admin/profile` | `/api/admin/overview`, `actions/admin/user.actions.ts` | `components/admin/dashboard/*`, `components/admin/users/*`, `lib/cached-queries.ts` | `User`, aggregate reads from multiple models |
 | Admin content management (categories, vocabulary, quizzes, games) | `/admin/category-management`, `/admin/vocabulary-management`, `/admin/quiz-management` | `/api/admin/categories/*`, `/api/admin/vocabularies/*`, `/api/admin/quizzes/*`, `/api/admin/games` | admin management pages + forms in `components/admin/*` | `Category`, `Vocabulary`, `Quiz`, `Game` |
-| AI Hub generation (frames/quizzes/games/vocabulary) | `/admin/ai-hub/*` | `/api/ai/generate`, `/api/admin/games/generate`, `actions/admin/ai-shop.actions.ts` | `components/admin/ai-hub/*`, `lib/ai-prompts.ts` | generated content persists to `Game`, `Quiz`, `ShopItem`, `Vocabulary` |
+| AI Hub generation (frames/quizzes/games/vocabulary) | `/admin/ai-hub/*` | `/api/ai/generate`, `/api/admin/games/generate`, `actions/admin/ai-shop.actions.ts` | `components/admin/ai-hub/*`, `lib/ai-prompts.ts`, `lib/api-auth.ts`, `lib/rate-limit.ts`, `lib/request-ip.ts` | generated content persists to `Game`, `Quiz`, `ShopItem`, `Vocabulary` |
+| API security and error boundaries | (cross-cutting) | protected APIs, especially `/api/admin/*`, `/api/ai/generate`, `/api/cloudinary/signature` | `lib/api-auth.ts`, `lib/api-error.ts`, `lib/rate-limit.ts`, `lib/request-ip.ts` | n/a |
 
 ## Cross-cutting dependencies
 - Navigation/profile chrome:
@@ -25,7 +26,7 @@ Use this map before editing code. Identify impacted features first, then execute
 - DB connectivity:
   - `lib/mongodb.ts`
 - Shared utility behavior:
-  - `lib/utils.ts`, `lib/validations/*`
+  - `lib/utils.ts`, `lib/validations/*`, `lib/api-error.ts`
 
 ## Impact analysis template (fill before coding)
 

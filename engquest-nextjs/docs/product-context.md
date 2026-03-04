@@ -79,14 +79,29 @@ Admins manage core content and can generate content with AI.
 
 ## Security and reliability rules
 - AuthN/AuthZ:
-  - Use `ensureAuthenticated` for protected server actions.
-  - Enforce role checks for admin routes/actions.
+  - Server actions must use session guards:
+    - user scope: `ensureAuthenticated`
+    - admin scope: `ensureAdminSession`
+  - API routes must use `requireUserApiSession` / `requireAdminApiSession` from `lib/api-auth.ts`.
+  - Admin surfaces must return:
+    - `401` for anonymous requests
+    - `403` for authenticated non-admin requests
 - Secrets:
   - Read from env vars only; never hardcode tokens/keys.
 - Input safety:
   - Validate request payloads and sanitize user-provided text where needed.
 - Rate limiting:
-  - Use shared rate limit helpers for abuse-prone endpoints.
+  - Use shared `checkRateLimit` helper (`lib/rate-limit.ts`) for abuse-prone endpoints.
+  - Production target is distributed throttling via Upstash Redis REST (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`).
+  - In-memory fallback is acceptable for local development only.
+  - Prefer composite keys (user id + client IP from `lib/request-ip.ts`) for sensitive routes.
+- API error boundaries:
+  - Use `createApiErrorResponse` (`lib/api-error.ts`) at route boundaries.
+  - Never expose raw stack traces, DB/provider internals, or unfiltered `error.message` to clients.
+- Cloud upload signing:
+  - `/api/cloudinary/signature` requires authenticated session.
+  - Non-admin uploads must stay in user-scoped folder paths.
+  - Admin folder override must be constrained by an allowlist/prefix.
 
 ## Definition of done for every change
 - Impact analysis completed using `docs/feature-map.md`.

@@ -25,6 +25,9 @@ If any command fails or is skipped, record:
 - Forgot password requests token/email path correctly.
 - Reset password updates credentials and allows next login.
 - Protected routes require auth.
+- Anonymous access to `api/admin/*` is rejected with `401`.
+- Authenticated non-admin access to `api/admin/*` is rejected with `403`.
+- Admin session can still perform expected admin CRUD operations.
 
 ### B. Topics, vocabulary, and learning pages
 - `/topics` loads without runtime errors.
@@ -55,6 +58,9 @@ If any command fails or is skipped, record:
 - Profile page loads current user data.
 - Edit profile (display name/bio/avatar) saves correctly.
 - Inventory modal shows owned items and equip state.
+- `/api/cloudinary/signature` rejects anonymous requests.
+- Non-admin upload signature is scoped to user-safe folders.
+- Admin upload signature only accepts configured allowlist/prefix folders.
 
 ### G. Admin portal
 - Admin dashboard stats load.
@@ -68,12 +74,16 @@ If any command fails or is skipped, record:
 - AI generate endpoints return valid JSON payloads.
 - Generated game/quiz/frame can be previewed and saved.
 - AI save-to-shop path persists item and revalidates UI where needed.
+- `/api/ai/generate` and `/api/admin/games/generate` require admin session.
+- AI endpoints return `429` with `Retry-After` when rate-limit is exceeded.
 
 ## 3) API contract checks
 - Response status codes remain correct (`2xx/4xx/5xx`).
 - Response shapes remain backward compatible for existing clients.
 - Input validation still rejects malformed payloads.
 - Auth/role checks still enforced on admin endpoints.
+- Error responses do not leak stack traces or raw internal provider/DB errors.
+- Rate-limited routes return stable `429` contract with `Retry-After` header.
 
 ## 4) Non-functional checks
 - No new ESLint warnings/errors.
@@ -81,6 +91,7 @@ If any command fails or is skipped, record:
   - avoid unnecessary client components
   - avoid redundant data fetch loops
 - No secrets or sensitive data leaked in logs/responses.
+- Production deploy has `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` configured (or fallback risk is explicitly accepted).
 
 ## 5) Completion report template
 
