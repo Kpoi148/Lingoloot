@@ -14,7 +14,6 @@ type CheckRateLimitResult = {
 };
 
 declare global {
-  // eslint-disable-next-line no-var
   var __rateLimitStore: Map<string, Entry> | undefined;
 }
 

@@ -85,7 +85,7 @@ export async function GET(req: Request) {
     let data: { word?: string; meaning?: string };
     try {
       data = JSON.parse(cleanedText) as { word?: string; meaning?: string };
-    } catch (error) {
+    } catch {
       throw new Error("Invalid JSON returned from model.");
     }
 

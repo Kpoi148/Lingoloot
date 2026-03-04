@@ -17,7 +17,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function generateAIFrame(prompt: string, style: string) {
     try {
-        console.log(`Generating AI Frame with Prompt: "${prompt}"`);
+        console.log(`Generating AI Frame with Prompt: "${prompt}" and style: "${style}"`);
 
         if (!process.env.GEMINI_API_KEY) {
             throw new Error("Missing GEMINI_API_KEY environment variable.");
@@ -25,7 +25,7 @@ export async function generateAIFrame(prompt: string, style: string) {
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const systemPrompt = AI_FRAME_SYSTEM_PROMPT.replace("{prompt}", prompt);
+        const systemPrompt = `${AI_FRAME_SYSTEM_PROMPT.replace("{prompt}", prompt)}\nPreferred style: ${style}`;
 
         const result = await model.generateContent(systemPrompt);
         const response = await result.response;
@@ -66,7 +66,7 @@ export async function saveAIFrameToShop(data: {
     rarity: "common" | "rare" | "legendary";
 }) {
     try {
-        const session = await ensureAuthenticated();
+        await ensureAuthenticated();
 
         await connectToDatabase();
 

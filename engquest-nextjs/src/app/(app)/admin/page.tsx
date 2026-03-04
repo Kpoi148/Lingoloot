@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
 
   try {
     overviewData = await getCachedOverviewCounts();
-  } catch (err) {
+  } catch {
     error = "Không thể tải dữ liệu thống kê.";
   }
 

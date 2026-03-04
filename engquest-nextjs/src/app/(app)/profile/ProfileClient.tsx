@@ -31,14 +31,6 @@ type ProfileClientProps = {
   shopItems?: ShopCatalogItem[];
 };
 
-const numberFormatter = new Intl.NumberFormat("en-US");
-
-const normalizeAccuracy = (value: number) => {
-  if (!Number.isFinite(value)) return 0;
-  if (value <= 1) return Math.round(value * 100);
-  return Math.round(value);
-};
-
 const buildFormState = (profile: UserProfile | null): ProfileFormState => ({
   displayName: profile?.displayName ?? profile?.name ?? "",
   bio: profile?.bio ?? "",

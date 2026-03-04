@@ -110,11 +110,6 @@ export default function AdminCategoriesPage() {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setEditingItem(null);
-  };
-
   const refreshItems = async () => {
     const response = await fetch("/api/admin/categories", {
       cache: "no-store",

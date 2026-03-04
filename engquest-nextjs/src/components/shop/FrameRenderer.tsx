@@ -1,3 +1,4 @@
+import Image from "next/image";
 import TechFrame from "@/components/shop/frames/TechFrame";
 import MysticFrame from "@/components/shop/frames/MysticFrame";
 import HexFrame from "@/components/shop/frames/HexFrame";
@@ -42,18 +43,30 @@ export function FrameRenderer({
                 style={{ borderRadius: '50%' }}
             >
                 {avatarUrl && (
-                    <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                    <Image
+                        src={avatarUrl}
+                        alt="Avatar"
+                        fill
+                        sizes="128px"
+                        unoptimized
+                        className="h-full w-full object-cover"
+                    />
                 )}
             </div>
 
             {/* Static Frame Image (Top Layer) */}
             {fallbackImageUrl && (
-                <img
-                    src={fallbackImageUrl}
-                    alt="Frame"
-                    className="relative z-10 h-full w-full object-contain"
-                    style={{ pointerEvents: 'none' }}
-                />
+                <div className="relative z-10 h-full w-full">
+                    <Image
+                        src={fallbackImageUrl}
+                        alt="Frame"
+                        fill
+                        sizes="128px"
+                        unoptimized
+                        className="object-contain"
+                        style={{ pointerEvents: 'none' }}
+                    />
+                </div>
             )}
         </div>
     );

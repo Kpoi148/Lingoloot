@@ -123,11 +123,7 @@ export default function AdminUsersClient({
       if (filters.role) params.set("role", filters.role); else params.delete("role");
       if (filters.status) params.set("status", filters.status); else params.delete("status");
 
-      // Verify if params actually changed to avoid unnecessary replace
-      const currentParams = new URLSearchParams(searchParamsString);
-      // We always reset to page 1 on filter change, unless it's just a page change (handled elsewhere)
-      // But here we are detecting changes in filter state.
-      // If the filter state matches the current URL params, do nothing.
+      // We always reset to page 1 on filter change, unless it's just a page change (handled elsewhere).
 
       const isDifferent =
         (filters.search !== queryParam) ||

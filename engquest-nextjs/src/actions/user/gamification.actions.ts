@@ -1,7 +1,5 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
 import { connectToDatabase } from "@/lib/mongodb";
 import {
   BASE_DAILY_XP,

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import { Sparkles } from "lucide-react";
 
 import ThemeToggle from "@/components/common/ThemeToggle";

@@ -63,7 +63,7 @@ export default function AdminProfileCard({
             } else {
                 throw new Error(result.message || "Cập nhật thất bại");
             }
-        } catch (error) {
+        } catch {
             toast.error("Không thể lưu thay đổi.");
         } finally {
             setIsSaving(false);

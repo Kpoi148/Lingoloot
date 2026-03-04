@@ -44,7 +44,7 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
             onUpdate();
             onClose();
             router.refresh();
-        } catch (error) {
+        } catch {
             toast.error("Lỗi khi cập nhật người dùng.");
         } finally {
             setLoading(false);

@@ -54,7 +54,6 @@ const GameSchema = z.object({
   distractors: z.array(z.string()),
 });
 
-type Game = z.infer<typeof GameSchema>;
 type VocabularyItem = z.infer<typeof InputSchema>["vocabularyList"][number];
 
 const stripMarkdownCodeFence = (text: string) => {
@@ -122,7 +121,7 @@ const parseGameResponse = (rawText: string) => {
 
   try {
     data = JSON.parse(cleanedText);
-  } catch (error) {
+  } catch {
     throw new Error("Invalid JSON returned from model.");
   }
 

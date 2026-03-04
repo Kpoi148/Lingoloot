@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface FrameProps {
@@ -11,9 +12,12 @@ export default function HexFrame({ className, avatarUrl }: FrameProps) {
             {/* Avatar Container - Bottom Layer - Safe Inset */}
             <div className="absolute inset-[10%] z-20 overflow-hidden rounded-full bg-slate-900 border-2 border-slate-800">
                 {avatarUrl && (
-                    <img
+                    <Image
                         src={avatarUrl}
                         alt="Avatar"
+                        fill
+                        sizes="128px"
+                        unoptimized
                         className="h-full w-full object-cover"
                     />
                 )}

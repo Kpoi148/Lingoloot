@@ -1,8 +1,6 @@
-import { getAdminShopItems, deleteShopItem, toggleShopItemStatus } from "@/actions/admin/shop.actions";
+import { getAdminShopItems, toggleShopItemStatus } from "@/actions/admin/shop.actions";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
-import { revalidatePath } from "next/cache";
+import { Plus, Pencil, Eye, EyeOff } from "lucide-react";
 import DeleteShopItemButton from "@/components/admin/shop/DeleteShopItemButton";
 import RestoreDefaultsButton from "@/components/admin/shop/RestoreDefaultsButton";
 import ShopItemPreview from "@/components/admin/shop/ShopItemPreview";

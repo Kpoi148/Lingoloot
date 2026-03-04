@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     let data: unknown;
     try {
       data = JSON.parse(cleanedText);
-    } catch (parseError) {
+    } catch {
       throw new Error("Invalid JSON returned from model.");
     }
 

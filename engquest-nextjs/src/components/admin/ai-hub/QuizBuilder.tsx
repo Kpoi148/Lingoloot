@@ -95,9 +95,7 @@ export default function QuizBuilder() {
                 if (active) {
                     const nextCategories = categoryPayload.data ?? [];
                     setCategories(nextCategories);
-                    if (!topic && nextCategories.length > 0) {
-                        setTopic(nextCategories[0].slug);
-                    }
+                    setTopic((prev) => prev || nextCategories[0]?.slug || "");
                     setVocabularies(vocabPayload.data ?? []);
                 }
             } catch (error) {

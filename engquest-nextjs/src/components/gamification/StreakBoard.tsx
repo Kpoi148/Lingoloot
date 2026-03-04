@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Check, Lock, Gift, Sparkles, Flame } from "lucide-react";
 import confetti from "canvas-confetti";
 import { checkDailyLogin } from "@/actions/user/gamification.actions";

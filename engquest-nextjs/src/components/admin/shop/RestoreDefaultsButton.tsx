@@ -1,7 +1,7 @@
 "use client";
 
 import { restoreDefaultFrames } from "@/actions/admin/shop.actions";
-import { RotateCw, Sparkles } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import { useTransition } from "react";
 import toast from "react-hot-toast";
 

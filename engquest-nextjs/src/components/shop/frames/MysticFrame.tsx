@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface FrameProps {
@@ -11,9 +12,12 @@ export default function MysticFrame({ className, avatarUrl }: FrameProps) {
             {/* Avatar Container - Top Layer - Safe Inset */}
             <div className="absolute inset-[15%] z-20 overflow-hidden rounded-full border-2 border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
                 {avatarUrl && (
-                    <img
+                    <Image
                         src={avatarUrl}
                         alt="Avatar"
+                        fill
+                        sizes="128px"
+                        unoptimized
                         className="h-full w-full object-cover"
                     />
                 )}

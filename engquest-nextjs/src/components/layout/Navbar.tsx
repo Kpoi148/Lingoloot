@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import BrandLogo from "@/components/common/BrandLogo";
@@ -42,7 +41,6 @@ export default function Navbar({
     return getLevelProgress(xp);
   }, [profile?.gamification?.xp]);
   const levelTitle = getLevelTitle(levelProgress.level);
-  const streak = profile?.gamification?.streak ?? 0;
   const gems = profile?.gamification?.currency ?? 0;
   const badges = profile?.gamification?.inventory ?? [];
 
