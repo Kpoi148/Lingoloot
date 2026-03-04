@@ -1,0 +1,101 @@
+# Regression Checklist: LingoLoot
+
+Run this checklist for every non-trivial change.
+
+## 0) Required pre-check
+- Complete impact analysis using `docs/feature-map.md`.
+- Mark impacted sections in this checklist before coding.
+
+## 1) Automated quality gates (required)
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+If any command fails or is skipped, record:
+- failing/skipped command
+- exact error
+- risk introduced
+
+## 2) Core functional regression
+
+### A. Authentication and session
+- Register flow works.
+- Login with valid credentials works.
+- Invalid login is rejected with clear error.
+- Forgot password requests token/email path correctly.
+- Reset password updates credentials and allows next login.
+- Protected routes require auth.
+
+### B. Topics, vocabulary, and learning pages
+- `/topics` loads without runtime errors.
+- `/learning/[slug]` loads topic data correctly.
+- Flashcards page renders and interactions work.
+- Quiz page loads questions and submits answers.
+- Dictionary lookup endpoint returns meaning for valid word.
+
+### C. Practice/game/progress persistence
+- Practice route can load a quiz/game item by ID.
+- Progress submission endpoints (`/api/progress/*`) persist expected updates.
+- No duplicate or inconsistent progress records after repeated submit.
+
+### D. Gamification
+- Daily reward claim logic works:
+  - same-day second claim is blocked
+  - streak updates correctly across day boundaries
+- XP/level/currency values update as expected after progress/reward events.
+- Navbar/profile display updated values correctly.
+
+### E. Shop and inventory
+- Shop list loads active items.
+- Purchase flow updates user inventory/currency correctly.
+- Equip avatar/frame updates profile visuals.
+- Frame rendering works for registry frames and fallback image frames.
+
+### F. Profile
+- Profile page loads current user data.
+- Edit profile (display name/bio/avatar) saves correctly.
+- Inventory modal shows owned items and equip state.
+
+### G. Admin portal
+- Admin dashboard stats load.
+- User management: list, role toggle, ban/unban, edit modal save.
+- Category management CRUD works.
+- Vocabulary management CRUD works.
+- Quiz management CRUD works.
+- Shop management CRUD/toggle active state works.
+
+### H. AI Hub
+- AI generate endpoints return valid JSON payloads.
+- Generated game/quiz/frame can be previewed and saved.
+- AI save-to-shop path persists item and revalidates UI where needed.
+
+## 3) API contract checks
+- Response status codes remain correct (`2xx/4xx/5xx`).
+- Response shapes remain backward compatible for existing clients.
+- Input validation still rejects malformed payloads.
+- Auth/role checks still enforced on admin endpoints.
+
+## 4) Non-functional checks
+- No new ESLint warnings/errors.
+- No obvious performance regressions in critical pages:
+  - avoid unnecessary client components
+  - avoid redundant data fetch loops
+- No secrets or sensitive data leaked in logs/responses.
+
+## 5) Completion report template
+
+Use this in PR/task notes:
+
+```md
+## Regression Report
+- Impacted features:
+- Automated checks:
+  - lint: pass/fail
+  - test: pass/fail
+  - build: pass/fail
+- Manual regression executed:
+  - [x] Sections: ...
+  - [ ] Sections skipped: ... (reason)
+- Known risks:
+- Follow-up tasks:
+```
