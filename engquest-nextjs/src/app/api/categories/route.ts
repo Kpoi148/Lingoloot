@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+import { createApiErrorResponse } from "@/lib/api-error";
 import { authOptions } from "../../../lib/auth-options";
 import {
   getCachedCategorySummaries,
@@ -50,8 +51,10 @@ export async function GET() {
 
     return NextResponse.json({ data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to fetch categories.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/categories",
+      publicMessage: "Unable to fetch categories.",
+    });
   }
 }

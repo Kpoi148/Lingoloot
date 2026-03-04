@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Quiz from "../../../../../models/Quiz";
 import { connectToDatabase } from "../../../../../lib/mongodb";
 
@@ -7,6 +9,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { id } = await params;
     await connectToDatabase();
     const quiz = await Quiz.findById(id).lean();
@@ -26,9 +33,11 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Không thể tải chi tiết quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/quizzes/[id]:GET",
+      publicMessage: "Không thể tải chi tiết quiz.",
+    });
   }
 }
 
@@ -37,6 +46,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { id } = await params;
     await connectToDatabase();
     const deleted = await Quiz.findByIdAndDelete(id).lean();
@@ -47,9 +61,11 @@ export async function DELETE(
 
     return NextResponse.json({ data: { _id: id } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Không thể xóa quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/quizzes/[id]:DELETE",
+      publicMessage: "Không thể xóa quiz.",
+    });
   }
 }
 
@@ -58,6 +74,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { id } = await params;
     const body = await req.json();
     const title = typeof body?.title === "string" ? body.title.trim() : "";
@@ -110,8 +131,10 @@ export async function PATCH(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Không thể cập nhật quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/quizzes/[id]:PATCH",
+      publicMessage: "Không thể cập nhật quiz.",
+    });
   }
 }

@@ -1,6 +1,6 @@
 "use server";
 
-import { ensureAuthenticated } from "@/lib/auth-utils";
+import { ensureAdminSession } from "@/lib/auth-utils";
 import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import ShopItem from "@/models/ShopItem";
 import { connectToDatabase } from "@/lib/mongodb";
@@ -17,6 +17,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function generateAIFrame(prompt: string, style: string) {
     try {
+        await ensureAdminSession();
         console.log(`Generating AI Frame with Prompt: "${prompt}" and style: "${style}"`);
 
         if (!process.env.GEMINI_API_KEY) {
@@ -66,7 +67,7 @@ export async function saveAIFrameToShop(data: {
     rarity: "common" | "rare" | "legendary";
 }) {
     try {
-        await ensureAuthenticated();
+        await ensureAdminSession();
 
         await connectToDatabase();
 

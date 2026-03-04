@@ -3,6 +3,8 @@ import AdminTopbarActions from "@/components/admin/layout/AdminTopbarActions";
 import BrandLogo from "@/components/common/BrandLogo";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
+import { getSession } from "@/lib/auth-utils";
+import { redirect } from "next/navigation";
 import AdminSidebarProfile from "@/components/admin/layout/AdminSidebarProfile";
 import AdminSidebarNav from "@/components/admin/layout/AdminSidebarNav";
 import { adminNavItems } from "@/constants/admin-nav";
@@ -13,6 +15,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+  if (!session?.user?.id) {
+    redirect("/");
+  }
+  if (session.user.role !== "admin") {
+    redirect("/profile");
+  }
+
   const profile = await getUserProfile();
   const shopItems = await getAdminShopItems();
 

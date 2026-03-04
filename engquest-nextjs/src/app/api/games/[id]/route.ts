@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { createApiErrorResponse } from "@/lib/api-error";
 import Game from "@/models/Game";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -32,8 +33,10 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to load game.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/games/[id]",
+      publicMessage: "Unable to load game.",
+    });
   }
 }

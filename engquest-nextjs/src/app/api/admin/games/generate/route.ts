@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { z } from "zod";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-ip";
 
 export const dynamic = "force-dynamic";
 
@@ -174,6 +178,26 @@ const generateGame = async (
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
+    const clientIp = getClientIp(req);
+    const rateLimit = await checkRateLimit(
+      `admin-games-generate:user:${auth.session.user.id}:ip:${clientIp}`,
+      { max: 20, windowMs: 15 * 60 * 1000 }
+    );
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { message: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
+        }
+      );
+    }
+
     const body = await req.json();
     const parsedInput = InputSchema.safeParse(body);
 
@@ -212,8 +236,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json(game);
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to generate game content.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/games/generate",
+      publicMessage: "Failed to generate game content.",
+    });
   }
 }

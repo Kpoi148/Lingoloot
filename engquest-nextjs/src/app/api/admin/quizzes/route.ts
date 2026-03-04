@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Category from "../../../../models/Category";
 import Quiz, { type QuizQuestion } from "../../../../models/Quiz";
 import { connectToDatabase } from "../../../../lib/mongodb";
@@ -7,6 +9,11 @@ const QUIZ_LEVELS = ["Cơ bản", "Trung bình", "Khó"] as const;
 
 export async function GET(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() ?? "";
     const filter = query
@@ -37,14 +44,21 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Không thể tải danh sách quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/quizzes:GET",
+      publicMessage: "Không thể tải danh sách quiz.",
+    });
   }
 }
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const body = await req.json();
     const title = typeof body?.title === "string" ? body.title.trim() : "";
     const category =
@@ -110,8 +124,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ data: { _id: created._id.toString() } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Không thể tạo bài quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/quizzes:POST",
+      publicMessage: "Không thể tạo bài quiz.",
+    });
   }
 }

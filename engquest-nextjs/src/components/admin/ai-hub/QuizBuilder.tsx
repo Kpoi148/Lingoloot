@@ -3,52 +3,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Save, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
-
-const defaultPrompt =
-    "Generate a multiple-choice quiz. Explanation language: Vietnamese.";
-
-const presets = [
-    {
-        label: "Hard Mode",
-        value: "Create difficult questions with tricky distractors.",
-    },
-    { label: "Fun Mode", value: "Use funny and humorous examples." },
-    { label: "Kid Mode", value: "Use simple words for children." },
-];
-
-const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
-
-type CategoryOption = {
-    _id: string;
-    name: string;
-    slug: string;
-};
-
-type VocabularyItem = {
-    _id: string;
-    word: string;
-    meaning: string;
-    example?: string;
-    example_meaning?: string;
-    category_id?: string;
-    category?: {
-        name?: string;
-        slug?: string;
-    };
-};
-
-type EditableQuestion = {
-    id: string;
-    question: string;
-    options: string[];
-    correctIndex: number;
-    explanation: string;
-};
-
-type EditableQuiz = {
-    title: string;
-    questions: EditableQuestion[];
-};
+import {
+    generateQuizWithAi,
+    loadQuizBuilderData,
+    saveGeneratedQuiz,
+} from "@/components/admin/ai-hub/quiz-builder/api";
+import {
+    defaultPrompt,
+    levels,
+    presets,
+    type CategoryOption,
+    type EditableQuiz,
+    type VocabularyItem,
+} from "@/components/admin/ai-hub/quiz-builder/types";
+import {
+    filterVocabulariesByKeyword,
+    getTopicVocabularies,
+    normalizeQuizResult,
+    selectVocabulariesByIds,
+} from "@/components/admin/ai-hub/quiz-builder/utils";
 
 export default function QuizBuilder() {
     const [customPrompt, setCustomPrompt] = useState(defaultPrompt);
@@ -70,33 +43,12 @@ export default function QuizBuilder() {
 
         const loadData = async () => {
             try {
-                const [categoryRes, vocabRes] = await Promise.all([
-                    fetch("/api/categories", { cache: "no-store" }),
-                    fetch("/api/admin/vocabularies", { cache: "no-store" }),
-                ]);
-
-                const categoryPayload = (await categoryRes.json()) as {
-                    data?: CategoryOption[];
-                    message?: string;
-                };
-                const vocabPayload = (await vocabRes.json()) as {
-                    data?: VocabularyItem[];
-                    message?: string;
-                };
-
-                if (!categoryRes.ok) {
-                    throw new Error(categoryPayload.message ?? "Không thể tải chủ đề.");
-                }
-
-                if (!vocabRes.ok) {
-                    throw new Error(vocabPayload.message ?? "Không thể tải từ vựng.");
-                }
-
+                const data = await loadQuizBuilderData();
                 if (active) {
-                    const nextCategories = categoryPayload.data ?? [];
+                    const nextCategories = data.categories;
                     setCategories(nextCategories);
                     setTopic((prev) => prev || nextCategories[0]?.slug || "");
-                    setVocabularies(vocabPayload.data ?? []);
+                    setVocabularies(data.vocabularies);
                 }
             } catch (error) {
                 toast.error(
@@ -112,99 +64,27 @@ export default function QuizBuilder() {
         };
     }, []);
 
-    const selectedCategory = useMemo(
-        () => categories.find((item) => item.slug === topic),
-        [categories, topic]
+    const topicVocabularies = useMemo(
+        () => getTopicVocabularies(topic, categories, vocabularies),
+        [categories, topic, vocabularies]
     );
 
-    const topicVocabularies = useMemo(() => {
-        if (!topic.trim()) return [];
-        const topicSlug = topic.trim();
-        const topicId = selectedCategory?._id;
-        return vocabularies.filter(
-            (item) =>
-                item.category?.slug === topicSlug ||
-                (topicId ? item.category_id === topicId : false)
-        );
-    }, [topic, selectedCategory, vocabularies]);
+    const filteredVocabularies = useMemo(
+        () => filterVocabulariesByKeyword(vocabSearch, topicVocabularies),
+        [topicVocabularies, vocabSearch]
+    );
 
-    const filteredVocabularies = useMemo(() => {
-        const needle = vocabSearch.trim().toLowerCase();
-        if (!needle) return topicVocabularies;
-        return topicVocabularies.filter((item) =>
-            item.word.toLowerCase().includes(needle)
-        );
-    }, [vocabSearch, topicVocabularies]);
-
-    const selectedWords = useMemo(() => {
-        const selected = new Set(selectedWordIds);
-        return vocabularies.filter((item) => selected.has(item._id));
-    }, [selectedWordIds, vocabularies]);
+    const selectedWords = useMemo(
+        () => selectVocabulariesByIds(selectedWordIds, vocabularies),
+        [selectedWordIds, vocabularies]
+    );
 
     useEffect(() => {
         setSelectedWordIds([]);
         setVocabSearch("");
     }, [topic]);
 
-    const normalizedQuiz = useMemo(() => {
-        if (!quizResult || typeof quizResult !== "object") {
-            return null;
-        }
-
-        const raw = quizResult as {
-            title?: string;
-            questions?: Array<{
-                question?: string;
-                question_text?: string;
-                prompt?: string;
-                options?: string[];
-                choices?: string[];
-                correctAnswer?: string;
-                correct_answer?: string;
-                correct_index?: number;
-                explanation?: string;
-            }>;
-        };
-
-        const title =
-            typeof raw.title === "string" && raw.title.trim()
-                ? raw.title.trim()
-                : "Generated Quiz";
-
-        const questions = (raw.questions ?? []).map((question, index) => {
-            const text =
-                question.question ??
-                question.question_text ??
-                question.prompt ??
-                `Question ${index + 1}`;
-            const optionsSource = question.options ?? question.choices ?? [];
-            const options = optionsSource.slice(0, 4).map((option) => option ?? "");
-            while (options.length < 4) {
-                options.push("");
-            }
-
-            let correctIndex = 0;
-            if (Number.isFinite(question.correct_index)) {
-                correctIndex = Math.min(3, Math.max(0, question.correct_index ?? 0));
-            } else if (typeof question.correctAnswer === "string") {
-                const idx = options.findIndex((option) => option === question.correctAnswer);
-                correctIndex = idx >= 0 ? idx : 0;
-            } else if (typeof question.correct_answer === "string") {
-                const idx = options.findIndex((option) => option === question.correct_answer);
-                correctIndex = idx >= 0 ? idx : 0;
-            }
-
-            return {
-                id: `${Date.now()}-${index}`,
-                question: text,
-                options,
-                correctIndex,
-                explanation: question.explanation ?? "",
-            };
-        });
-
-        return { title, questions };
-    }, [quizResult]);
+    const normalizedQuiz = useMemo(() => normalizeQuizResult(quizResult), [quizResult]);
 
     useEffect(() => {
         setEditableQuiz(normalizedQuiz);
@@ -228,42 +108,13 @@ export default function QuizBuilder() {
         try {
             const topicName =
                 categories.find((item) => item.slug === topic)?.name ?? topic;
-            const dataContext = topicWords.map((item) => ({
-                word: item.word,
-                meaning: item.meaning,
-                example: item.example,
-                example_meaning: item.example_meaning,
-            }));
-            const normalizedCount = Math.min(50, Math.max(1, questionCount || 10));
-            const instructionWithCount = [
-                `Topic: ${topicName}.`,
-                customPrompt.trim(),
-                `Question count: ${normalizedCount}. Return exactly ${normalizedCount} questions.`,
-            ]
-                .filter(Boolean)
-                .join("\n");
-
-            const response = await fetch("/api/ai/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    type: "quiz_custom",
-                    userInstruction: instructionWithCount,
-                    dataContext,
-                }),
+            const quizData = await generateQuizWithAi({
+                topicName,
+                customPrompt,
+                questionCount,
+                topicWords,
             });
-
-            const payload = (await response.json()) as {
-                success?: boolean;
-                data?: object;
-                error?: string;
-            };
-
-            if (!response.ok || !payload.success) {
-                throw new Error(payload.error ?? "Không thể tạo quiz.");
-            }
-
-            setQuizResult(payload.data ?? null);
+            setQuizResult(quizData);
             setEditableQuiz(null);
         } catch (error) {
             toast.error(
@@ -345,47 +196,9 @@ export default function QuizBuilder() {
             return;
         }
 
-        const questions = editableQuiz.questions.map((question) => {
-            const options = question.options.map((option) => option.trim());
-            const correct_answer =
-                options[question.correctIndex]?.trim() ?? options[0] ?? "";
-            return {
-                question_text: question.question.trim(),
-                options,
-                correct_answer,
-            };
-        });
-
-        const hasInvalid = questions.some((item) => {
-            if (!item.question_text || item.options.length !== 4) return true;
-            if (item.options.some((option) => !option)) return true;
-            return !item.options.includes(item.correct_answer);
-        });
-
-        if (hasInvalid) {
-            toast.error("Vui lòng kiểm tra lại câu hỏi và đáp án.");
-            return;
-        }
-
         setIsSaving(true);
         try {
-            const response = await fetch("/api/admin/quizzes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    title: editableQuiz.title.trim() || "Generated Quiz",
-                    category: categorySlug,
-                    level,
-                    questions,
-                }),
-            });
-
-            const payload = (await response.json()) as { message?: string };
-
-            if (!response.ok) {
-                throw new Error(payload.message ?? "Không thể lưu quiz.");
-            }
-
+            await saveGeneratedQuiz({ editableQuiz, categorySlug, level });
             toast.success("Đã lưu quiz vào cơ sở dữ liệu.");
         } catch (error) {
             toast.error(

@@ -1,24 +1,18 @@
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
 import { connectToDatabase } from "@/lib/mongodb";
 import {
   hashPasswordResetToken,
   isPasswordResetTokenFormat,
 } from "@/lib/password-reset";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-ip";
 import { resetPasswordSchema } from "@/lib/validations/auth";
 import PasswordResetToken from "@/models/PasswordResetToken";
 import User from "@/models/User";
 
 const INVALID_TOKEN_MESSAGE = "Reset token is invalid or has expired.";
-
-const getClientIp = (request: Request) => {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
-  return request.headers.get("x-real-ip")?.trim() || "unknown";
-};
 
 export async function POST(request: Request) {
   try {
@@ -44,7 +38,7 @@ export async function POST(request: Request) {
     }
 
     const clientIp = getClientIp(request);
-    const rateLimit = checkRateLimit(`reset-password:ip:${clientIp}`, {
+    const rateLimit = await checkRateLimit(`reset-password:ip:${clientIp}`, {
       max: 10,
       windowMs: 15 * 60 * 1000,
     });
@@ -105,8 +99,11 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to reset password.";
-    return NextResponse.json({ message }, { status: 400 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/auth/reset-password",
+      publicMessage: "Unable to reset password.",
+      status: 400,
+    });
   }
 }

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../../lib/auth-options";
 import Category from "../../../../models/Category";
@@ -98,8 +99,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ data: { progress: completed } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to update progress.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/progress/quiz",
+      publicMessage: "Unable to update progress.",
+    });
   }
 }

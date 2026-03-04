@@ -2,6 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import {
+  fetchVocabularies,
+  removeVocabulary,
+  upsertVocabulary,
+} from "./admin-vocabulary/api";
+import {
+  emptyForm,
+  type CategoryOption,
+  type ToastState,
+  type VocabularyItem,
+} from "./admin-vocabulary/types";
+import {
+  filterVocabularies,
+  getPagedItems,
+} from "./admin-vocabulary/utils";
 
 const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
   ssr: false,
@@ -10,43 +25,7 @@ const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"),
   ),
 });
 
-export type CategoryOption = {
-  _id: string;
-  name: string;
-};
-
-export type VocabularyItem = {
-  _id: string;
-  word: string;
-  ipa?: string;
-  meaning: string;
-  example?: string;
-  example_meaning?: string;
-  category_id: string;
-  category?: { name?: string };
-  media?: {
-    image?: string;
-    audio?: string;
-    video?: string;
-  };
-};
-
-type ToastState = {
-  message: string;
-  type: "success" | "error";
-};
-
-const emptyForm = {
-  word: "",
-  ipa: "",
-  meaning: "",
-  example: "",
-  example_meaning: "",
-  category_id: "",
-  image: "",
-  audio: "",
-  video: "",
-};
+export type { CategoryOption, VocabularyItem };
 
 type AdminVocabulariesClientProps = {
   initialItems: VocabularyItem[];
@@ -82,48 +61,15 @@ export default function AdminVocabulariesClient({
     [pageSize]
   );
 
-  const filteredItems = useMemo(() => {
-    const searchValue = search.trim().toLowerCase();
-    const wordFilter = filters.word.trim().toLowerCase();
-    const meaningFilter = filters.meaning.trim().toLowerCase();
-    const exampleFilter = filters.example.trim().toLowerCase();
-    const categoryFilter = filters.categoryId;
+  const filteredItems = useMemo(
+    () => filterVocabularies(items, search, filters),
+    [items, search, filters]
+  );
 
-    return items.filter((item) => {
-      if (searchValue && !item.word.toLowerCase().includes(searchValue)) {
-        return false;
-      }
-      if (wordFilter && !item.word.toLowerCase().includes(wordFilter)) {
-        return false;
-      }
-      if (
-        meaningFilter &&
-        !item.meaning.toLowerCase().includes(meaningFilter)
-      ) {
-        return false;
-      }
-      if (exampleFilter) {
-        const exampleText = `${item.example ?? ""} ${item.example_meaning ?? ""}`
-          .toLowerCase()
-          .trim();
-        if (!exampleText.includes(exampleFilter)) {
-          return false;
-        }
-      }
-      if (categoryFilter && item.category_id !== categoryFilter) {
-        return false;
-      }
-      return true;
-    });
-  }, [items, search, filters]);
-
-  const totalItems = filteredItems.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const currentPage = Math.min(page, totalPages);
-  const pagedItems = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredItems.slice(start, start + pageSize);
-  }, [filteredItems, currentPage, pageSize]);
+  const { totalItems, totalPages, currentPage, pagedItems } = useMemo(
+    () => getPagedItems(filteredItems, page, pageSize),
+    [filteredItems, page, pageSize]
+  );
 
   useEffect(() => {
     setPage(1);
@@ -173,14 +119,8 @@ export default function AdminVocabulariesClient({
   const refreshItems = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/admin/vocabularies", {
-        cache: "no-store",
-      });
-      const payload = (await response.json()) as { data?: VocabularyItem[] };
-      if (!response.ok) {
-        throw new Error("Unable to refresh vocabularies.");
-      }
-      setItems(payload.data ?? []);
+      const latestItems = await fetchVocabularies();
+      setItems(latestItems);
     } catch (error) {
       setToast({
         message:
@@ -215,20 +155,16 @@ export default function AdminVocabulariesClient({
     };
 
     const endpoint = editingItem
-      ? `/api/admin/vocabularies/${editingItem._id}`
-      : "/api/admin/vocabularies";
-    const method = editingItem ? "PUT" : "POST";
+      ? editingItem._id
+      : undefined;
 
-    const response = await fetch(endpoint, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const result = (await response.json()) as { message?: string };
-
-    if (!response.ok) {
-      setToast({ message: result.message ?? "Thao tác thất bại.", type: "error" });
+    try {
+      await upsertVocabulary({ editingId: endpoint, payload });
+    } catch (error) {
+      setToast({
+        message: error instanceof Error ? error.message : "Thao tác thất bại.",
+        type: "error",
+      });
       return;
     }
 
@@ -245,14 +181,13 @@ export default function AdminVocabulariesClient({
       return;
     }
 
-    const response = await fetch(`/api/admin/vocabularies/${item._id}`, {
-      method: "DELETE",
-    });
-
-    const result = (await response.json()) as { message?: string };
-
-    if (!response.ok) {
-      setToast({ message: result.message ?? "Xóa thất bại.", type: "error" });
+    try {
+      await removeVocabulary(item._id);
+    } catch (error) {
+      setToast({
+        message: error instanceof Error ? error.message : "Xóa thất bại.",
+        type: "error",
+      });
       return;
     }
 

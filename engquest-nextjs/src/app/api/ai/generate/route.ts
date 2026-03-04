@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-ip";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +39,29 @@ const stripMarkdownCodeFence = (text: string) => {
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json(
+        { success: false, error: auth.message },
+        { status: auth.status }
+      );
+    }
+
+    const clientIp = getClientIp(req);
+    const rateLimit = await checkRateLimit(
+      `ai-generate:user:${auth.session.user.id}:ip:${clientIp}`,
+      { max: 20, windowMs: 15 * 60 * 1000 }
+    );
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
+        }
+      );
+    }
+
     const body = await req.json();
     const prompt =
       typeof body?.prompt === "string" ? body.prompt.trim() : "";
@@ -95,8 +122,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to generate content.";
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/ai/generate",
+      publicMessage: "Failed to generate content.",
+      field: "error",
+    });
   }
 }

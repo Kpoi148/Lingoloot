@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Vocabulary from "../../../../../models/Vocabulary";
 import { connectToDatabase } from "../../../../../lib/mongodb";
 
@@ -9,6 +11,11 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { id } = await params;
     const body = await req.json();
     const word = typeof body?.word === "string" ? body.word.trim() : "";
@@ -64,9 +71,11 @@ export async function PUT(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to update vocabulary.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/vocabularies/[id]:PUT",
+      publicMessage: "Unable to update vocabulary.",
+    });
   }
 }
 
@@ -75,6 +84,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     await connectToDatabase();
     const { id } = await params;
     const deleted = await Vocabulary.findByIdAndDelete(id)
@@ -87,8 +101,10 @@ export async function DELETE(
 
     return NextResponse.json({ data: { _id: id } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to delete vocabulary.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/vocabularies/[id]:DELETE",
+      publicMessage: "Unable to delete vocabulary.",
+    });
   }
 }

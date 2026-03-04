@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
 import { getCachedCategoryBySlug } from "../../../lib/cached-queries";
 import Vocabulary from "../../../models/Vocabulary";
 import { connectToDatabase } from "../../../lib/mongodb";
@@ -68,8 +69,10 @@ export async function GET(req: Request) {
       data,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to fetch vocabularies.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/vocabularies",
+      publicMessage: "Unable to fetch vocabularies.",
+    });
   }
 }

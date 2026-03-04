@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { createApiErrorResponse } from "@/lib/api-error";
 import DictionaryCache from "@/models/DictionaryCache";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -102,8 +103,10 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ data: { word: cleanedWord, meaning } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to fetch meaning.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/dictionary/meaning",
+      publicMessage: "Unable to fetch meaning.",
+    });
   }
 }

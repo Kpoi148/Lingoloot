@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
 import Quiz from "../../../models/Quiz";
 import { connectToDatabase } from "../../../lib/mongodb";
 
@@ -96,8 +97,10 @@ export async function GET(req: Request) {
       availableLevels,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to load quiz.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/quizzes",
+      publicMessage: "Unable to load quiz.",
+    });
   }
 }

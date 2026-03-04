@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Category from "../../../../models/Category";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
@@ -6,6 +8,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() ?? "";
     const filter = query
@@ -31,14 +38,21 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to load categories.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/categories:GET",
+      publicMessage: "Unable to load categories.",
+    });
   }
 }
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const body = await req.json();
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const slug = typeof body?.slug === "string" ? body.slug.trim() : "";
@@ -73,8 +87,10 @@ export async function POST(req: Request) {
     if (mongoError?.code === 11000) {
       return NextResponse.json({ message: "Slug already exists." }, { status: 400 });
     }
-    const message =
-      error instanceof Error ? error.message : "Unable to create category.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/categories:POST",
+      publicMessage: "Unable to create category.",
+    });
   }
 }

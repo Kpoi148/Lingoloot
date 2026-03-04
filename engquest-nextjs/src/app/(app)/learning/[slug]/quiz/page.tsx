@@ -3,73 +3,15 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-
-type QuizQuestion = {
-  question_text: string;
-  options: string[];
-  correct_answer: string;
-};
-
-type QuizListItem = {
-  _id: string;
-  title: string;
-  level?: string;
-  questionCount: number;
-  createdAt?: string;
-};
-
-type QuizDetailResponse = {
-  data?: {
-    _id?: string;
-    title?: string;
-    category?: string;
-    level?: string;
-    timeLimit?: number;
-    questions?: QuizQuestion[];
-  };
-  message?: string;
-};
-
-type ProgressProofResponse = {
-  data?: {
-    proof?: string | null;
-    category_id?: string;
-  };
-  message?: string;
-};
-
-const DEFAULT_TIME_LIMIT = 120;
-
-const formatTime = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${minutes.toString().padStart(2, "0")}:${secs
-    .toString()
-    .padStart(2, "0")}`;
-};
-
-const formatDate = (value?: string) => {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString("vi-VN");
-};
-
-const getLevelLabel = (level?: string) => {
-  if (level === "Cơ bản") return "Dễ";
-  if (level === "Khó") return "Khó";
-  return "Trung bình";
-};
-
-const getLevelBadgeStyle = (level?: string) => {
-  if (level === "Cơ bản") {
-    return "border-emerald-200 bg-emerald-50 text-emerald-700";
-  }
-  if (level === "Khó") {
-    return "border-red-200 bg-red-50 text-red-700";
-  }
-  return "border-amber-200 bg-amber-50 text-amber-700";
-};
+import { fetchQuizDetail, fetchQuizList, saveQuizProgress } from "./quiz-api";
+import type { QuizListItem, QuizQuestion } from "./quiz-types";
+import {
+  DEFAULT_TIME_LIMIT,
+  formatDate,
+  formatTime,
+  getLevelBadgeStyle,
+  getLevelLabel,
+} from "./quiz-utils";
 
 export default function QuizPage({
   params,
@@ -126,21 +68,9 @@ export default function QuizPage({
       setListLoading(true);
       setListError(null);
       try {
-        const response = await fetch(
-          `/api/quizzes?slug=${slug}&list=1`,
-          { cache: "no-store" }
-        );
-        const payload = (await response.json()) as {
-          data?: QuizListItem[];
-          message?: string;
-        };
-
-        if (!response.ok) {
-          throw new Error(payload.message ?? "Không thể tải danh sách quiz.");
-        }
-
         if (active) {
-          setQuizItems(payload.data ?? []);
+          const list = await fetchQuizList(slug);
+          setQuizItems(list);
         }
       } catch (fetchError) {
         if (active) {
@@ -186,24 +116,12 @@ export default function QuizPage({
       setLoading(true);
       setError(null);
       try {
-        const query = new URLSearchParams({
-          slug,
-          quizId: selectedQuizId,
-        });
-        const response = await fetch(`/api/quizzes?${query.toString()}`, {
-          cache: "no-store",
-        });
-        const payload = (await response.json()) as QuizDetailResponse;
-
-        if (!response.ok) {
-          throw new Error(payload.message ?? "Không thể tải quiz.");
-        }
-
         if (active) {
-          setQuizTitle(payload.data?.title ?? "");
-          setQuizLevel(payload.data?.level ?? "");
-          setTimeLimit(payload.data?.timeLimit ?? DEFAULT_TIME_LIMIT);
-          setQuestions(payload.data?.questions ?? []);
+          const quizData = await fetchQuizDetail(slug, selectedQuizId);
+          setQuizTitle(quizData?.title ?? "");
+          setQuizLevel(quizData?.level ?? "");
+          setTimeLimit(quizData?.timeLimit ?? DEFAULT_TIME_LIMIT);
+          setQuestions(quizData?.questions ?? []);
         }
       } catch (fetchError) {
         if (active) {
@@ -257,48 +175,8 @@ export default function QuizPage({
 
     const saveProgress = async () => {
       try {
-        const proofResponse = await fetch("/api/progress/proof", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "quiz", category_slug: slug }),
-        });
-        const proofPayload = (await proofResponse.json()) as ProgressProofResponse;
-        if (!proofResponse.ok) {
-          throw new Error(
-            proofPayload.message ?? "Không thể xác thực tiến trình học."
-          );
-        }
-
-        const proof = proofPayload.data?.proof;
-        const resolvedCategoryId = proofPayload.data?.category_id;
-        if (!proof || typeof proof !== "string") {
-          throw new Error("Không thể xác thực tiến trình học.");
-        }
-        if (!resolvedCategoryId || typeof resolvedCategoryId !== "string") {
-          throw new Error("Danh mục học không hợp lệ.");
-        }
-
-        const response = await fetch("/api/progress/quiz", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            category_slug: slug,
-            category_id: resolvedCategoryId,
-            proof,
-          }),
-        });
-        const payload = (await response.json()) as {
-          data?: { progress?: number };
-          message?: string;
-        };
-
-        if (!response.ok) {
-          throw new Error(payload.message ?? "Không thể cập nhật tiến độ.");
-        }
-
-        setProgressMessage(
-          `Đã cập nhật tiến độ: ${payload.data?.progress ?? 0}%.`
-        );
+        const progress = await saveQuizProgress(slug);
+        setProgressMessage(`Đã cập nhật tiến độ: ${progress}%.`);
       } catch (saveError) {
         setProgressMessage(
           saveError instanceof Error

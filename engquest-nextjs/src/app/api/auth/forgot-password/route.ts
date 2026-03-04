@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-ip";
 import { connectToDatabase } from "@/lib/mongodb";
 import {
   buildPasswordResetUrl,
@@ -13,14 +15,6 @@ import User from "@/models/User";
 const GENERIC_SUCCESS_MESSAGE =
   "If the email exists, a password reset link has been sent.";
 
-const getClientIp = (request: Request) => {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
-  return request.headers.get("x-real-ip")?.trim() || "unknown";
-};
-
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => ({}))) as { email?: string };
@@ -31,7 +25,7 @@ export async function POST(request: Request) {
     }
 
     const clientIp = getClientIp(request);
-    const ipLimit = checkRateLimit(`forgot-password:ip:${clientIp}`, {
+    const ipLimit = await checkRateLimit(`forgot-password:ip:${clientIp}`, {
       max: 20,
       windowMs: 15 * 60 * 1000,
     });
@@ -45,7 +39,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const accountLimit = checkRateLimit(
+    const accountLimit = await checkRateLimit(
       `forgot-password:ip-email:${clientIp}:${parsed.data.email}`,
       {
         max: 5,
@@ -109,8 +103,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: GENERIC_SUCCESS_MESSAGE }, { status: 200 });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to process request.";
-    return NextResponse.json({ message }, { status: 400 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/auth/forgot-password",
+      publicMessage: "Unable to process request.",
+      status: 400,
+    });
   }
 }

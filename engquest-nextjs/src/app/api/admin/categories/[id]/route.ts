@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Category from "../../../../../models/Category";
 import Vocabulary from "../../../../../models/Vocabulary";
 import { connectToDatabase } from "../../../../../lib/mongodb";
@@ -10,6 +12,11 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { id } = await params;
     const body = await req.json();
     const name = typeof body?.name === "string" ? body.name.trim() : "";
@@ -55,9 +62,11 @@ export async function PUT(
     if (mongoError?.code === 11000) {
       return NextResponse.json({ message: "Slug already exists." }, { status: 400 });
     }
-    const message =
-      error instanceof Error ? error.message : "Unable to update category.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/categories/[id]:PUT",
+      publicMessage: "Unable to update category.",
+    });
   }
 }
 
@@ -66,6 +75,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     await connectToDatabase();
     const { id } = await params;
     const category = await Category.findById(id).select("_id").lean();
@@ -90,8 +104,10 @@ export async function DELETE(
       data: { _id: id, removedVocabularies: vocabDeleteResult.deletedCount },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to delete category.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/categories/[id]:DELETE",
+      publicMessage: "Unable to delete category.",
+    });
   }
 }

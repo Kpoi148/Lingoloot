@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Category from "../../../../models/Category";
 import TopicProgress from "../../../../models/TopicProgress";
 import Vocabulary from "../../../../models/Vocabulary";
@@ -8,6 +10,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() ?? "";
     const filter = query
@@ -44,14 +51,21 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to load vocabularies.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/vocabularies:GET",
+      publicMessage: "Unable to load vocabularies.",
+    });
   }
 }
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const body = await req.json();
     const word = typeof body?.word === "string" ? body.word.trim() : "";
     const ipa = typeof body?.ipa === "string" ? body.ipa.trim() : "";
@@ -105,8 +119,10 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to create vocabulary.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/vocabularies:POST",
+      publicMessage: "Unable to create vocabulary.",
+    });
   }
 }

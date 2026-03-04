@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { createApiErrorResponse } from "@/lib/api-error";
+import { requireAdminApiSession } from "@/lib/api-auth";
 import Game from "@/models/Game";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -28,6 +30,11 @@ const CreateGameSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApiSession();
+    if (!auth.ok) {
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
+    }
+
     const body = await req.json();
     const parsed = CreateGameSchema.safeParse(body);
 
@@ -54,8 +61,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ data: { _id: created._id.toString() } });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to save game.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/admin/games",
+      publicMessage: "Unable to save game.",
+    });
   }
 }

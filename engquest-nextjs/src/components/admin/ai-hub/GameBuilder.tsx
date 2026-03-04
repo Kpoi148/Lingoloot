@@ -2,8 +2,30 @@
 
 import dynamicImport from "next/dynamic";
 import { useActionState, useEffect, useMemo, useState } from "react";
-import { z } from "zod";
 import { Save, Sparkles } from "lucide-react";
+import {
+    generateGameWithAi,
+    loadDictionaryMeaning,
+    loadGameBuilderData,
+    saveGameToDatabase,
+} from "@/components/admin/ai-hub/game-builder/api";
+import { formatIssues, GameSchema } from "@/components/admin/ai-hub/game-builder/schema";
+import type {
+    CategoryOption,
+    Difficulty,
+    Game,
+    SaveState,
+    VocabularyItem,
+} from "@/components/admin/ai-hub/game-builder/types";
+import {
+    filterVocabulariesByKeyword,
+    getAnswerSet,
+    getPreviewWordBank,
+    getTopicVocabularies,
+    sanitizeVocabulary,
+    selectVocabulariesByIds,
+    splitIntoTokens,
+} from "@/components/admin/ai-hub/game-builder/utils";
 
 const MonacoEditor = dynamicImport(() => import("@monaco-editor/react"), {
     ssr: false,
@@ -11,66 +33,6 @@ const MonacoEditor = dynamicImport(() => import("@monaco-editor/react"), {
         <div className="h-[360px] w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-50" />
     ),
 });
-
-type CategoryOption = {
-    _id: string;
-    name: string;
-    slug: string;
-};
-
-type VocabularyItem = {
-    _id: string;
-    word: string;
-    meaning: string;
-    category_id?: string;
-    category?: {
-        name?: string;
-        slug?: string;
-    };
-};
-
-type Difficulty = "easy" | "medium" | "hard";
-
-type ContentItem = {
-    text: string;
-    type: "text" | "gap";
-    answer?: string;
-};
-
-type Game = {
-    title: string;
-    content: ContentItem[];
-    distractors: string[];
-};
-
-type SaveState = {
-    status: "idle" | "success" | "error";
-    message: string;
-};
-
-const ContentItemSchema = z
-    .object({
-        text: z.string(),
-        type: z.enum(["text", "gap"]),
-        answer: z.string().optional(),
-    })
-    .superRefine((value, ctx) => {
-        if (value.type === "gap" && !value.answer) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "answer is required when type is 'gap'",
-            });
-        }
-    });
-
-const GameSchema = z.object({
-    title: z.string(),
-    content: z.array(ContentItemSchema),
-    distractors: z.array(z.string()),
-});
-
-const formatIssues = (issues: z.ZodIssue[]) =>
-    issues.map((issue) => issue.message).join(" | ");
 
 export default function GameBuilder() {
     const [categories, setCategories] = useState<CategoryOption[]>([]);
@@ -109,26 +71,7 @@ export default function GameBuilder() {
         }
 
         try {
-            const response = await fetch("/api/admin/games", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...payload.game,
-                    topicName: payload.topicName.trim(),
-                    status: "active",
-                }),
-            });
-
-            let payloadBody: { message?: string } | null = null;
-            try {
-                payloadBody = (await response.json()) as { message?: string };
-            } catch {
-                payloadBody = null;
-            }
-
-            if (!response.ok) {
-                throw new Error(payloadBody?.message ?? "Unable to save game.");
-            }
+            await saveGameToDatabase(payload.game, payload.topicName);
 
             return {
                 status: "success",
@@ -152,37 +95,13 @@ export default function GameBuilder() {
         const loadData = async () => {
             setDataError(null);
             try {
-                const [categoryRes, vocabRes] = await Promise.all([
-                    fetch("/api/admin/categories", { cache: "no-store" }),
-                    fetch("/api/admin/vocabularies", { cache: "no-store" }),
-                ]);
-
-                const categoryPayload = (await categoryRes.json()) as {
-                    data?: CategoryOption[];
-                    message?: string;
-                };
-                const vocabPayload = (await vocabRes.json()) as {
-                    data?: VocabularyItem[];
-                    message?: string;
-                };
-
-                if (!categoryRes.ok) {
-                    throw new Error(
-                        categoryPayload.message ?? "Unable to load categories."
-                    );
-                }
-
-                if (!vocabRes.ok) {
-                    throw new Error(
-                        vocabPayload.message ?? "Unable to load vocabularies."
-                    );
-                }
+                const data = await loadGameBuilderData();
 
                 if (active) {
-                    const nextCategories = categoryPayload.data ?? [];
+                    const nextCategories = data.categories;
                     setCategories(nextCategories);
                     setTopic((prev) => prev || nextCategories[0]?.slug || "");
-                    setVocabularies(vocabPayload.data ?? []);
+                    setVocabularies(data.vocabularies);
                 }
             } catch (error) {
                 if (active) {
@@ -205,69 +124,34 @@ export default function GameBuilder() {
         [categories, topic]
     );
 
-    const topicVocabularies = useMemo(() => {
-        if (!topic.trim()) return [];
-        const topicSlug = topic.trim();
-        const topicId = selectedCategory?._id;
-        return vocabularies.filter(
-            (item) =>
-                item.category?.slug === topicSlug ||
-                (topicId ? item.category_id === topicId : false)
-        );
-    }, [topic, selectedCategory, vocabularies]);
+    const topicVocabularies = useMemo(
+        () => getTopicVocabularies(topic, selectedCategory, vocabularies),
+        [topic, selectedCategory, vocabularies]
+    );
 
-    const filteredVocabularies = useMemo(() => {
-        const needle = vocabSearch.trim().toLowerCase();
-        if (!needle) return topicVocabularies;
-        return topicVocabularies.filter((item) =>
-            item.word.toLowerCase().includes(needle)
-        );
-    }, [vocabSearch, topicVocabularies]);
+    const filteredVocabularies = useMemo(
+        () => filterVocabulariesByKeyword(vocabSearch, topicVocabularies),
+        [vocabSearch, topicVocabularies]
+    );
 
-    const selectedWords = useMemo(() => {
-        const selected = new Set(selectedWordIds);
-        return vocabularies.filter((item) => selected.has(item._id));
-    }, [selectedWordIds, vocabularies]);
+    const selectedWords = useMemo(
+        () => selectVocabulariesByIds(selectedWordIds, vocabularies),
+        [selectedWordIds, vocabularies]
+    );
 
-    const sanitizedVocabulary = useMemo(() => {
-        const source =
-            selectedWordIds.length > 0 ? selectedWords : topicVocabularies;
-        return source
-            .map((item) => ({
-                word: item.word.trim(),
-                meaning: item.meaning.trim(),
-            }))
-            .filter((item) => item.word && item.meaning);
-    }, [selectedWordIds, selectedWords, topicVocabularies]);
+    const sanitizedVocabulary = useMemo(
+        () => sanitizeVocabulary(selectedWordIds, selectedWords, topicVocabularies),
+        [selectedWordIds, selectedWords, topicVocabularies]
+    );
 
     useEffect(() => {
         setSelectedWordIds([]);
         setVocabSearch("");
     }, [topic]);
 
-    const previewWordBank = useMemo(() => {
-        if (!game) return [];
-        const answers = game.content
-            .map((item) =>
-                item.type === "gap" ? item.answer ?? item.text ?? "" : ""
-            )
-            .filter(Boolean);
-        return [...answers, ...game.distractors];
-    }, [game]);
+    const previewWordBank = useMemo(() => getPreviewWordBank(game), [game]);
 
-    const answerSet = useMemo(() => {
-        const set = new Set<string>();
-        if (!game) return set;
-        game.content.forEach((item) => {
-            if (item.type === "gap") {
-                const answer = item.answer ?? item.text ?? "";
-                if (answer) {
-                    set.add(answer.toLowerCase());
-                }
-            }
-        });
-        return set;
-    }, [game]);
+    const answerSet = useMemo(() => getAnswerSet(game), [game]);
 
     const loadMeaning = async (word: string) => {
         const normalized = word.toLowerCase();
@@ -277,23 +161,7 @@ export default function GameBuilder() {
         }
 
         try {
-            const response = await fetch(
-                `/api/dictionary/meaning?word=${encodeURIComponent(word)}`,
-                { cache: "no-store" }
-            );
-            const payload = (await response.json()) as {
-                data?: { word?: string; meaning?: string };
-                message?: string;
-            };
-
-            if (!response.ok) {
-                throw new Error(payload.message ?? "Unable to fetch meaning.");
-            }
-
-            const meaning = payload.data?.meaning?.trim() ?? "";
-            if (!meaning) {
-                throw new Error("Meaning not found.");
-            }
+            const meaning = await loadDictionaryMeaning(word);
 
             setMeaningCache((prev) => ({ ...prev, [normalized]: meaning }));
             setSelectedMeaning({ word, meaning });
@@ -302,27 +170,6 @@ export default function GameBuilder() {
         }
     };
 
-    const splitIntoTokens = (text: string) => {
-        const tokens: Array<{ value: string; isWord: boolean }> = [];
-        const pattern = /[A-Za-z]+(?:['-][A-Za-z]+)*/g;
-        let lastIndex = 0;
-        let match = pattern.exec(text);
-        while (match) {
-            if (match.index > lastIndex) {
-                tokens.push({
-                    value: text.slice(lastIndex, match.index),
-                    isWord: false,
-                });
-            }
-            tokens.push({ value: match[0], isWord: true });
-            lastIndex = match.index + match[0].length;
-            match = pattern.exec(text);
-        }
-        if (lastIndex < text.length) {
-            tokens.push({ value: text.slice(lastIndex), isWord: false });
-        }
-        return tokens;
-    };
     const parseJson = (value: string) => {
         if (!value.trim()) {
             setGame(null);
@@ -367,23 +214,11 @@ export default function GameBuilder() {
 
         setGenerating(true);
         try {
-            const response = await fetch("/api/admin/games/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    topicName: selectedCategory?.name ?? topic.trim(),
-                    difficulty,
-                    vocabularyList: sanitizedVocabulary,
-                }),
+            const gamePayload = await generateGameWithAi({
+                topicName: selectedCategory?.name ?? topic.trim(),
+                difficulty,
+                vocabularyList: sanitizedVocabulary,
             });
-
-            const payload = (await response.json()) as { message?: string; data?: Game };
-
-            if (!response.ok) {
-                throw new Error(payload.message ?? "Unable to generate game.");
-            }
-
-            const gamePayload = payload.data ?? (payload as unknown as Game);
             const validated = GameSchema.safeParse(gamePayload);
             if (!validated.success) {
                 throw new Error(formatIssues(validated.error.issues));
