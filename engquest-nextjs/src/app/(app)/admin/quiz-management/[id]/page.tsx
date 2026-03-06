@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Quiz from "@/models/Quiz";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 type QuizDetailPageProps = {
   params: Promise<{ id: string }>;

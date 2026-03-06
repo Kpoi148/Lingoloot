@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import {
   getCachedCategoryBySlug,
   getCachedVocabCountByCategory,
-} from "@/lib/cached-queries";
+} from "@/lib/db/cached-queries";
 
 export const dynamic = "force-dynamic";
 

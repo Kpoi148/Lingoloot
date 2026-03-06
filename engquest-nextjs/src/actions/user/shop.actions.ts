@@ -1,8 +1,8 @@
 "use server";
 
 import mongoose from "mongoose";
-import { getSession } from "@/lib/auth-utils";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getSession } from "@/lib/auth/auth-utils";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import ShopItem from "@/models/ShopItem";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";

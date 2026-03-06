@@ -4,7 +4,7 @@ import { useState } from "react";
 import { equipItem } from "@/actions/user/shop.actions";
 import toast from "react-hot-toast";
 import { Shirt, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useRouter } from "next/navigation";
 import InventoryItem, { InventoryItemType } from "./InventoryItem";
 

@@ -1,5 +1,5 @@
 import AdminVocabulariesClient from "./AdminVocabulariesClient";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import Category from "@/models/Category";
 import Vocabulary from "@/models/Vocabulary";
 import type {

@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { authOptions } from "@/lib/auth/auth-options";
 import { redirect } from "next/navigation";
 import FrameGenerator from "@/components/admin/ai-hub/FrameGenerator";
 import { getUserProfile } from "@/actions/user/profile.actions";

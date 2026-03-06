@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ShopItemCard from "./ShopItemCard";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { LayoutGrid, User } from "lucide-react";
 import type { ShopCatalogItem } from "@/types/shop-item";
 

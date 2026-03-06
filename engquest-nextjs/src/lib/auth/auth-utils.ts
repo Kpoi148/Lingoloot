@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
-import { connectToDatabase } from "@/lib/mongodb";
+import { authOptions } from "@/lib/auth/auth-options";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export async function getSession() {
     return await getServerSession(authOptions);

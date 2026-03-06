@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { requireAdminApiSession } from "@/lib/api-auth";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
 import Game from "@/models/Game";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 const ContentItemSchema = z
   .object({

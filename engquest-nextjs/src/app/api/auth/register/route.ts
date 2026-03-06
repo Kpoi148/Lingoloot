@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/request-ip";
-import User from "../../../../models/User";
-import { connectToDatabase } from "../../../../lib/mongodb";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/request-ip";
+import User from "@/models/User";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export async function POST(req: Request) {
   try {

@@ -1,9 +1,9 @@
 /** @jest-environment node */
 
 import { POST } from "./route";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
-jest.mock("@/lib/rate-limit", () => ({
+jest.mock("@/lib/security/rate-limit", () => ({
   checkRateLimit: jest.fn(),
 }));
 

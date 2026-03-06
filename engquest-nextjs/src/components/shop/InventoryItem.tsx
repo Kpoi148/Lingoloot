@@ -1,5 +1,5 @@
 import { Check, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import type { ShopVisualItem } from "@/types/shop-item";
 

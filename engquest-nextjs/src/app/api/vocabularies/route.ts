@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { getCachedCategoryBySlug } from "../../../lib/cached-queries";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { getCachedCategoryBySlug } from "@/lib/db/cached-queries";
 import Vocabulary from "../../../models/Vocabulary";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export const dynamic = "force-dynamic";
 

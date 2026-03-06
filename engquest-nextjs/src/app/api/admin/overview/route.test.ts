@@ -1,14 +1,14 @@
 /** @jest-environment node */
 
 import { GET } from "./route";
-import { getCachedOverviewCounts } from "@/lib/cached-queries";
-import { requireAdminApiSession } from "@/lib/api-auth";
+import { getCachedOverviewCounts } from "@/lib/db/cached-queries";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
 
-jest.mock("@/lib/api-auth", () => ({
+jest.mock("@/lib/auth/api-auth", () => ({
   requireAdminApiSession: jest.fn(),
 }));
 
-jest.mock("@/lib/cached-queries", () => ({
+jest.mock("@/lib/db/cached-queries", () => ({
   getCachedOverviewCounts: jest.fn(),
 }));
 

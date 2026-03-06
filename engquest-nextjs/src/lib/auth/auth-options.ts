@@ -3,8 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
-import User from "../models/User";
-import { connectToDatabase } from "./mongodb";
+import User from "@/models/User";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 const MONGODB_URI = process.env.MONGODB_URI ?? "";
 

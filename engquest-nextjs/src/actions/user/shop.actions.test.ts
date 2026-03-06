@@ -1,17 +1,17 @@
 /** @jest-environment node */
 
 import { buyItem } from "./shop.actions";
-import { getSession } from "@/lib/auth-utils";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getSession } from "@/lib/auth/auth-utils";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import ShopItem from "@/models/ShopItem";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 
-jest.mock("@/lib/auth-utils", () => ({
+jest.mock("@/lib/auth/auth-utils", () => ({
   getSession: jest.fn(),
 }));
 
-jest.mock("@/lib/mongodb", () => ({
+jest.mock("@/lib/db/mongodb", () => ({
   connectToDatabase: jest.fn(),
 }));
 

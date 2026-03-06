@@ -3,7 +3,7 @@ import AdminTopbarActions from "@/components/admin/layout/AdminTopbarActions";
 import BrandLogo from "@/components/common/BrandLogo";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
-import { getSession } from "@/lib/auth-utils";
+import { getSession } from "@/lib/auth/auth-utils";
 import { redirect } from "next/navigation";
 import AdminSidebarProfile from "@/components/admin/layout/AdminSidebarProfile";
 import AdminSidebarNav from "@/components/admin/layout/AdminSidebarNav";

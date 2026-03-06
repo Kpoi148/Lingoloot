@@ -1,7 +1,7 @@
 "use server";
 
-import { getSession } from "@/lib/auth-utils";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getSession } from "@/lib/auth/auth-utils";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import User from "@/models/User";
 import ShopItem from "@/models/ShopItem"; // Import ShopItem model
 import { ActionResponse } from "@/types/action-response";

@@ -9,13 +9,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth-options";
+import { authOptions } from "@/lib/auth/auth-options";
 import {
   getCachedCategories,
   getCachedTopicProgress,
   getCachedVocabCounts,
-} from "@/lib/cached-queries";
-import { isRecent } from "@/lib/utils";
+} from "@/lib/db/cached-queries";
+import { isRecent } from "@/lib/shared/utils";
 
 type Category = {
   _id: string;

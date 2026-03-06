@@ -7,7 +7,7 @@ import BrandLogo from "@/components/common/BrandLogo";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { getUserProfile, type UserProfile } from "@/actions/user/profile.actions";
-import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
+import { getLevelProgress, getLevelTitle } from "@/lib/gamification/gamification";
 import StreakNavbarItem from "@/components/gamification/StreakNavbarItem";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import NavbarUserMenu from "@/components/layout/NavbarUserMenu";

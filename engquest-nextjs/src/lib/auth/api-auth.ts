@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { authOptions } from "@/lib/auth/auth-options";
 
 type SessionUser = {
   id: string;

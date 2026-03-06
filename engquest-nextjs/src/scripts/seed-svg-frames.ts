@@ -1,5 +1,5 @@
 import ShopItem from "../models/ShopItem";
-import { connectToDatabase } from "../lib/mongodb";
+import { connectToDatabase } from "../lib/db/mongodb";
 
 const SVG_FRAMES = [
     {

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/request-ip";
-import { connectToDatabase } from "@/lib/mongodb";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/request-ip";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import {
   buildPasswordResetUrl,
   createPasswordResetToken,
-} from "@/lib/password-reset";
+} from "@/lib/auth/password-reset";
 import { forgotPasswordSchema } from "@/lib/validations/auth";
-import { sendPasswordResetEmail } from "@/lib/email";
+import { sendPasswordResetEmail } from "@/lib/auth/email";
 import PasswordResetToken from "@/models/PasswordResetToken";
 import User from "@/models/User";
 

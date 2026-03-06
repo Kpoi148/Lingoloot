@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
+import { createApiErrorResponse } from "@/lib/security/api-error";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../../lib/auth-options";
+import { authOptions } from "@/lib/auth/auth-options";
 import Category from "../../../../models/Category";
 import TopicProgress from "../../../../models/TopicProgress";
-import { connectToDatabase } from "../../../../lib/mongodb";
-import { verifyProgressProof } from "../../../../lib/progress-proof";
+import { connectToDatabase } from "@/lib/db/mongodb";
+import { verifyProgressProof } from "@/lib/security/progress-proof";
 
 export async function POST(req: Request) {
   try {

@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { requireUserApiSession } from "@/lib/api-auth";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/request-ip";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { requireUserApiSession } from "@/lib/auth/api-auth";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/request-ip";
 
 export const dynamic = "force-dynamic";
 

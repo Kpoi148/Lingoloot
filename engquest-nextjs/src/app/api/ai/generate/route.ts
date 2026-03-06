@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { requireAdminApiSession } from "@/lib/api-auth";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/request-ip";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/request-ip";
 
 export const dynamic = "force-dynamic";
 

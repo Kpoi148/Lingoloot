@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
+import { createApiErrorResponse } from "@/lib/security/api-error";
 import Quiz from "../../../models/Quiz";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export const dynamic = "force-dynamic";
 

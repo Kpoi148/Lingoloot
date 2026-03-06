@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { requireAdminApiSession } from "@/lib/api-auth";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
 import Quiz from "../../../../../models/Quiz";
-import { connectToDatabase } from "../../../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export async function GET(
   _: Request,

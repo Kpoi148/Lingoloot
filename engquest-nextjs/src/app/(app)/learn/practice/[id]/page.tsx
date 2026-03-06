@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import mongoose from "mongoose";
 import StoryClozeGame from "@/components/game/StoryClozeGame";
 import Game from "@/models/Game";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 type GameData = {
   id: string;

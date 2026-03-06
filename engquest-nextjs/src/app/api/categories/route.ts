@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { authOptions } from "../../../lib/auth-options";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { authOptions } from "@/lib/auth/auth-options";
 import {
   getCachedCategorySummaries,
   getCachedTopicProgress,
   getCachedVocabCounts,
-} from "../../../lib/cached-queries";
+} from "@/lib/db/cached-queries";
 
 export const dynamic = "force-dynamic";
 

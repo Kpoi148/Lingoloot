@@ -1,4 +1,4 @@
-import { getCachedOverviewCounts } from "@/lib/cached-queries";
+import { getCachedOverviewCounts } from "@/lib/db/cached-queries";
 import AdminDashboardClient from "@/components/admin/dashboard/AdminDashboardClient";
 
 export const dynamic = "force-dynamic";

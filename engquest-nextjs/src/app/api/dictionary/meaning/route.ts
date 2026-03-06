@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { createApiErrorResponse } from "@/lib/api-error";
+import { createApiErrorResponse } from "@/lib/security/api-error";
 import DictionaryCache from "@/models/DictionaryCache";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export const dynamic = "force-dynamic";
 

@@ -1,14 +1,14 @@
 /** @jest-environment node */
 
 import { POST } from "./route";
-import { requireAdminApiSession } from "@/lib/api-auth";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
-jest.mock("@/lib/api-auth", () => ({
+jest.mock("@/lib/auth/api-auth", () => ({
   requireAdminApiSession: jest.fn(),
 }));
 
-jest.mock("@/lib/rate-limit", () => ({
+jest.mock("@/lib/security/rate-limit", () => ({
   checkRateLimit: jest.fn(),
 }));
 

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { UserProfile, updateUserProfile } from "@/actions/user/profile.actions";
-import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
+import { getLevelProgress, getLevelTitle } from "@/lib/gamification/gamification";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import dynamic from "next/dynamic";
 import InventoryModal from "@/components/shop/InventoryModal";

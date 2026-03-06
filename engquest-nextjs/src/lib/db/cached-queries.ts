@@ -5,7 +5,7 @@ import Quiz from "@/models/Quiz";
 import TopicProgress from "@/models/TopicProgress";
 import User from "@/models/User";
 import Vocabulary from "@/models/Vocabulary";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export const getCachedCategories = unstable_cache(
   async () => {

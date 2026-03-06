@@ -1,7 +1,7 @@
 "use server";
 
-import { ensureAdminSession } from "@/lib/auth-utils";
-import { connectToDatabase } from "@/lib/mongodb";
+import { ensureAdminSession } from "@/lib/auth/auth-utils";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import ShopItem from "@/models/ShopItem";
 import { revalidatePath } from "next/cache";
 import type { AdminShopItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";

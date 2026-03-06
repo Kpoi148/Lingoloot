@@ -1,9 +1,9 @@
 "use server";
 
-import { ensureAdminSession } from "@/lib/auth-utils";
-import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { ensureAdminSession } from "@/lib/auth/auth-utils";
+import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai/ai-prompts";
 import ShopItem from "@/models/ShopItem";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 

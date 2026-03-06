@@ -41,6 +41,20 @@ Admins manage core content and can generate content with AI.
 - `lib/*` should be framework-light and reusable; avoid page-specific logic here.
 - Do not import UI components into `lib/*`, `models/*`, `actions/*`, or API routes.
 
+## Library structure rules (hard rule)
+- `src/lib` is organized by domain folders, not as a flat file list:
+  - `lib/auth/*`: auth/session helpers (`auth-options`, `auth-utils`, `api-auth`, `password-reset`, `email`).
+  - `lib/security/*`: boundary safety (`api-error`, `rate-limit`, `request-ip`, `progress-proof`).
+  - `lib/db/*`: database connectivity and cached query helpers (`mongodb`, `cached-queries`).
+  - `lib/ai/*`: AI prompts and generation helpers.
+  - `lib/gamification/*`: XP/level/streak calculations and config.
+  - `lib/shared/*`: generic utilities (`utils`).
+  - `lib/validations/*`: shared validation schemas.
+- New reusable helper modules must be added to the correct domain folder above.
+- Avoid adding new top-level `.ts` files directly under `src/lib`.
+- Prefer alias imports (`@/lib/<domain>/<module>`) for cross-folder usage.
+- Keep tests near the module they verify (for example `lib/auth/password-reset.test.ts`).
+
 ## SOLID guardrails (must follow)
 1. Single Responsibility:
 - One module/function should have one reason to change.
@@ -82,8 +96,8 @@ Admins manage core content and can generate content with AI.
   - Server actions must use session guards:
     - user scope: `ensureAuthenticated`
     - admin scope: `ensureAdminSession`
-  - Reuse guard helpers from `lib/auth-utils.ts`; avoid duplicating custom role/session guard logic inside feature actions.
-  - API routes must use `requireUserApiSession` / `requireAdminApiSession` from `lib/api-auth.ts`.
+  - Reuse guard helpers from `lib/auth/auth-utils.ts`; avoid duplicating custom role/session guard logic inside feature actions.
+  - API routes must use `requireUserApiSession` / `requireAdminApiSession` from `lib/auth/api-auth.ts`.
   - Admin surfaces must return:
     - `401` for anonymous requests
     - `403` for authenticated non-admin requests
@@ -92,12 +106,12 @@ Admins manage core content and can generate content with AI.
 - Input safety:
   - Validate request payloads and sanitize user-provided text where needed.
 - Rate limiting:
-  - Use shared `checkRateLimit` helper (`lib/rate-limit.ts`) for abuse-prone endpoints.
+  - Use shared `checkRateLimit` helper (`lib/security/rate-limit.ts`) for abuse-prone endpoints.
   - Production target is distributed throttling via Upstash Redis REST (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`).
   - In-memory fallback is acceptable for local development only.
-  - Prefer composite keys (user id + client IP from `lib/request-ip.ts`) for sensitive routes.
+  - Prefer composite keys (user id + client IP from `lib/security/request-ip.ts`) for sensitive routes.
 - API error boundaries:
-  - Use `createApiErrorResponse` (`lib/api-error.ts`) at route boundaries.
+  - Use `createApiErrorResponse` (`lib/security/api-error.ts`) at route boundaries.
   - Never expose raw stack traces, DB/provider internals, or unfiltered `error.message` to clients.
 - Cloud upload signing:
   - `/api/cloudinary/signature` requires authenticated session.

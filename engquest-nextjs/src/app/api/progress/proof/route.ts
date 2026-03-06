@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth-options";
+import { authOptions } from "@/lib/auth/auth-options";
 import Category from "@/models/Category";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import {
   createProgressProof,
   type ProgressProofKind,
-} from "@/lib/progress-proof";
+} from "@/lib/security/progress-proof";
 
 type ProofRequestBody = {
   type?: ProgressProofKind;

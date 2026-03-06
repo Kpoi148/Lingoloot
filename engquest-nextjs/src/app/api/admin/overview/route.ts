@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { requireAdminApiSession } from "@/lib/api-auth";
-import { getCachedOverviewCounts } from "@/lib/cached-queries";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { requireAdminApiSession } from "@/lib/auth/api-auth";
+import { getCachedOverviewCounts } from "@/lib/db/cached-queries";
 
 export const dynamic = "force-dynamic";
 

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Flame } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import StreakBoard from "@/components/gamification/StreakBoard";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 // Define a compatible type locally or import if available
 interface GamificationData {

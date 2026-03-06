@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Check } from "lucide-react";
 import { buyItem } from "@/actions/user/shop.actions";
 import toast from "react-hot-toast";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import type { ShopCatalogItem } from "@/types/shop-item";
 

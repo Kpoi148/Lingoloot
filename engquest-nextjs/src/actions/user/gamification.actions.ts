@@ -1,6 +1,6 @@
 "use server";
 
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import {
   BASE_DAILY_XP,
   STREAK_BONUS_PER_DAY,
@@ -10,7 +10,7 @@ import {
   getUtcDayDiff,
   isSameUtcDay,
   startOfUtcDay,
-} from "@/lib/gamification";
+} from "@/lib/gamification/gamification";
 import User from "@/models/User";
 
 export type DailyLoginReward = {
@@ -31,7 +31,7 @@ export type DailyLoginResult =
     newCurrency: number;
   };
 
-import { ensureAuthenticated } from "@/lib/auth-utils";
+import { ensureAuthenticated } from "@/lib/auth/auth-utils";
 
 export async function checkDailyLogin(userId?: string): Promise<DailyLoginResult> {
   const session = await ensureAuthenticated();

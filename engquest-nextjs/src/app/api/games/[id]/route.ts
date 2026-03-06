@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { createApiErrorResponse } from "@/lib/api-error";
+import { createApiErrorResponse } from "@/lib/security/api-error";
 import Game from "@/models/Game";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 
 export async function GET(
   _: Request,

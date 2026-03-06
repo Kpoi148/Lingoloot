@@ -10,7 +10,7 @@ import {
   checkDailyLogin,
   type DailyLoginReward,
 } from "@/actions/user/gamification.actions";
-import { getLevelTitle } from "@/lib/gamification";
+import { getLevelTitle } from "@/lib/gamification/gamification";
 
 type RewardState = DailyLoginReward & {
   levelUp: boolean;

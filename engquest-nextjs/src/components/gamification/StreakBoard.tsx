@@ -5,7 +5,7 @@ import { Check, Lock, Gift, Sparkles, Flame } from "lucide-react";
 import confetti from "canvas-confetti";
 import { checkDailyLogin } from "@/actions/user/gamification.actions";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 // Define the type for user.gamification based on what we saw in gamification.actions.ts
 // We might need to adjust this if the actual prop structure is different, but this matches the server action.

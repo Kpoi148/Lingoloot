@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Activity, BookOpen, Target, type LucideIcon } from "lucide-react";
-import { getLevelProgress, getLevelTitle } from "@/lib/gamification";
+import { getLevelProgress, getLevelTitle } from "@/lib/gamification/gamification";
 
 type UserStats = {
     totalVocabAdded: number;

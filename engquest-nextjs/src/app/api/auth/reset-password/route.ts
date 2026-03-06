@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
-import { createApiErrorResponse } from "@/lib/api-error";
-import { connectToDatabase } from "@/lib/mongodb";
+import { createApiErrorResponse } from "@/lib/security/api-error";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import {
   hashPasswordResetToken,
   isPasswordResetTokenFormat,
-} from "@/lib/password-reset";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/request-ip";
+} from "@/lib/auth/password-reset";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/request-ip";
 import { resetPasswordSchema } from "@/lib/validations/auth";
 import PasswordResetToken from "@/models/PasswordResetToken";
 import User from "@/models/User";

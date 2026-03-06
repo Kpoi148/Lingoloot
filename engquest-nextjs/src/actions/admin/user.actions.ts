@@ -1,7 +1,7 @@
 "use server";
 
 import mongoose from "mongoose";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/db/mongodb";
 import User, { type UserRole } from "@/models/User";
 
 const PAGE_SIZE = 10;
@@ -34,7 +34,7 @@ export type UsersPageResult = {
   pageSize: number;
 };
 
-import { ensureAdminSession } from "@/lib/auth-utils";
+import { ensureAdminSession } from "@/lib/auth/auth-utils";
 
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
