@@ -1,16 +1,9 @@
-import type { VocabularyItem } from "./types";
-
-type Filters = {
-  word: string;
-  meaning: string;
-  example: string;
-  categoryId: string;
-};
+import type { VocabularyFilters, VocabularyItem } from "./types";
 
 export const filterVocabularies = (
   items: VocabularyItem[],
   search: string,
-  filters: Filters
+  filters: VocabularyFilters
 ) => {
   const searchValue = search.trim().toLowerCase();
   const wordFilter = filters.word.trim().toLowerCase();

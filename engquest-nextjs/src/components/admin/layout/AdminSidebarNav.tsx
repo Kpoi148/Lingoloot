@@ -12,10 +12,6 @@ export default function AdminSidebarNav() {
         <nav className="flex flex-1 flex-col gap-2">
             {adminNavItems.map((item) => {
                 const Icon = item.icon;
-                // Check exact match for root "/admin", or startWith for others (but handle "/admin" vs "/admin/abc" correctly)
-                // Actually for /admin root we want exact match, for others like /admin/shop we might want sub-paths?
-                // Let's stick to exact logic or simple logic first.
-                // Good logic: active if pathname === item.href OR pathname startsWith item.href + "/"
                 const isActive =
                     pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
 

@@ -5,12 +5,6 @@ import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import ShopItem from "@/models/ShopItem";
 import { connectToDatabase } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
-
-/* 
-  Mock AI Generation Function
-  In a real app, this would call OpenAI DALL-E 3 or Stability AI API.
-  For now, it returns a placeholder image based on the style.
-*/
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
@@ -57,9 +51,6 @@ export async function generateAIFrame(prompt: string, style: string) {
     }
 }
 
-/*
-    Save the Generated Frame to the Shop
-*/
 export async function saveAIFrameToShop(data: {
     name: string;
     imageUrl: string;

@@ -1,29 +1,30 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
 import {
   fetchVocabularies,
   removeVocabulary,
   upsertVocabulary,
 } from "./admin-vocabulary/api";
 import {
+  emptyFilters,
   emptyForm,
   type CategoryOption,
+  type VocabularyFilters,
+  type VocabularyFormState,
   type ToastState,
   type VocabularyItem,
 } from "./admin-vocabulary/types";
 import {
+  buildVocabularyPayload,
+  isVocabularyFormValid,
+  mapVocabularyToFormState,
+} from "./admin-vocabulary/form-utils";
+import {
   filterVocabularies,
   getPagedItems,
 } from "./admin-vocabulary/utils";
-
-const MediaUploader = dynamic(() => import("@/components/common/MediaUploader"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-48 w-full animate-pulse rounded-2xl border border-dashed border-slate-200 bg-slate-50" />
-  ),
-});
+import VocabularyEditorModal from "./admin-vocabulary/VocabularyEditorModal";
 
 export type { CategoryOption, VocabularyItem };
 
@@ -42,19 +43,16 @@ export default function AdminVocabulariesClient({
   const [categories] = useState<CategoryOption[]>(initialCategories);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState({
-    word: "",
-    meaning: "",
-    example: "",
-    categoryId: "",
-  });
+  const [filters, setFilters] = useState<VocabularyFilters>({ ...emptyFilters });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [toast, setToast] = useState<ToastState | null>(() =>
     initialError ? { message: initialError, type: "error" } : null
   );
   const [modalOpen, setModalOpen] = useState(false);
-  const [formState, setFormState] = useState({ ...emptyForm });
+  const [formState, setFormState] = useState<VocabularyFormState>({
+    ...emptyForm,
+  });
   const [editingItem, setEditingItem] = useState<VocabularyItem | null>(null);
   const skeletonRows = useMemo(
     () => Array.from({ length: Math.min(pageSize, 10) }),
@@ -102,17 +100,7 @@ export default function AdminVocabulariesClient({
 
   const openEditModal = (item: VocabularyItem) => {
     setEditingItem(item);
-    setFormState({
-      word: item.word,
-      ipa: item.ipa ?? "",
-      meaning: item.meaning,
-      example: item.example ?? "",
-      example_meaning: item.example_meaning ?? "",
-      category_id: item.category_id,
-      image: item.media?.image ?? "",
-      audio: item.media?.audio ?? "",
-      video: item.media?.video ?? "",
-    });
+    setFormState(mapVocabularyToFormState(item));
     setModalOpen(true);
   };
 
@@ -135,24 +123,12 @@ export default function AdminVocabulariesClient({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!formState.word.trim() || !formState.meaning.trim() || !formState.category_id) {
+    if (!isVocabularyFormValid(formState)) {
       setToast({ message: "Vui lòng nhập đầy đủ thông tin.", type: "error" });
       return;
     }
 
-    const payload = {
-      word: formState.word.trim(),
-      ipa: formState.ipa.trim(),
-      meaning: formState.meaning.trim(),
-      example: formState.example.trim(),
-      example_meaning: formState.example_meaning.trim(),
-      category_id: formState.category_id,
-      media: {
-        image: formState.image.trim(),
-        audio: formState.audio.trim(),
-        video: formState.video.trim(),
-      },
-    };
+    const payload = buildVocabularyPayload(formState);
 
     const endpoint = editingItem
       ? editingItem._id
@@ -337,14 +313,7 @@ export default function AdminVocabulariesClient({
                 <th className="px-3 py-3 text-right">
                   <button
                     type="button"
-                    onClick={() =>
-                      setFilters({
-                        word: "",
-                        meaning: "",
-                        example: "",
-                        categoryId: "",
-                      })
-                    }
+                    onClick={() => setFilters({ ...emptyFilters })}
                     className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
                   >
                     Xóa lọc
@@ -451,197 +420,14 @@ export default function AdminVocabulariesClient({
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-950">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {editingItem ? "Sửa từ vựng" : "Thêm từ mới"}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:text-slate-400"
-              >
-                Đóng
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Word
-                  </label>
-                  <input
-                    value={formState.word}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        word: event.target.value,
-                      }))
-                    }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                    placeholder="Bicycle"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    IPA
-                  </label>
-                  <input
-                    value={formState.ipa}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        ipa: event.target.value,
-                      }))
-                    }
-                    className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                    placeholder="/ˈbaɪ.sɪ.kəl/"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                  Meaning
-                </label>
-                <textarea
-                  value={formState.meaning}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      meaning: event.target.value,
-                    }))
-                  }
-                  rows={3}
-                  className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                  placeholder="Xe đạp"
-                />
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Example
-                  </label>
-                  <textarea
-                    value={formState.example}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        example: event.target.value,
-                      }))
-                    }
-                    rows={3}
-                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                    placeholder="I ride a bicycle to work."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Example Meaning
-                  </label>
-                  <textarea
-                    value={formState.example_meaning}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        example_meaning: event.target.value,
-                      }))
-                    }
-                    rows={3}
-                    className="min-h-[90px] w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                    placeholder="Tôi đi làm bằng xe đạp."
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                  Category
-                </label>
-                <select
-                  value={formState.category_id}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      category_id: event.target.value,
-                    }))
-                  }
-                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                >
-                  <option value="">Chọn chủ đề</option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Image
-                  </label>
-                  <MediaUploader
-                    mediaType="image"
-                    initialValue={formState.image}
-                    onUploadComplete={(url) =>
-                      setFormState((prev) => ({ ...prev, image: url }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Video
-                  </label>
-                  <MediaUploader
-                    mediaType="video"
-                    initialValue={formState.video}
-                    onUploadComplete={(url) =>
-                      setFormState((prev) => ({ ...prev, video: url }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                  Audio URL
-                </label>
-                <input
-                  value={formState.audio}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      audio: event.target.value,
-                    }))
-                  }
-                  className="h-11 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900"
-                >
-                  {editingItem ? "Lưu thay đổi" : "Thêm từ"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <VocabularyEditorModal
+          categories={categories}
+          editingItem={editingItem}
+          formState={formState}
+          setFormState={setFormState}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleSubmit}
+        />
       )}
 
       {toast && (

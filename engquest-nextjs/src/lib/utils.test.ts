@@ -15,8 +15,6 @@ describe('utils', () => {
         });
     });
 
-    // We might need to mock Date.now() for robust testing of isRecent, 
-    // but for now let's do a simple check.
     describe('isRecent', () => {
         it('should return true for recent dates', () => {
             const now = new Date();
