@@ -82,7 +82,7 @@ export async function saveAIFrameToShop(data: {
         });
 
         revalidatePath("/shop");
-        revalidatePath("/admin/shop");
+        revalidatePath("/admin/shop-management");
 
         return {
             success: true,

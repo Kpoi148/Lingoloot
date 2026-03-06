@@ -18,7 +18,7 @@ export default async function AdminShopPage() {
                 <div className="flex gap-2">
                     <RestoreDefaultsButton />
                     <Link
-                        href="/admin/shop/create"
+                        href="/admin/shop-management/create"
                         className="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600 hover:-translate-y-0.5"
                     >
                         <Plus className="h-4 w-4" />
@@ -87,7 +87,7 @@ export default async function AdminShopPage() {
                                             </form>
 
                                             <Link
-                                                href={`/admin/shop/${item._id}`}
+                                                href={`/admin/shop-management/${item._id}`}
                                                 className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
                                                 title="Chỉnh sửa"
                                             >
