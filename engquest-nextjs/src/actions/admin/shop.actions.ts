@@ -1,10 +1,8 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-options";
+import { ensureAdminSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
 import ShopItem from "@/models/ShopItem";
-import User from "@/models/User"; // We might need this to check admin role
 import { revalidatePath } from "next/cache";
 import type { AdminShopItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";
 
@@ -19,23 +17,13 @@ export type ShopItemFormData = {
     isActive: boolean;
 };
 
-// Ensure user is admin
-async function ensureAdmin() {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-        throw new Error("Unauthorized");
-    }
-
+async function ensureAdminAndConnect() {
+    await ensureAdminSession();
     await connectToDatabase();
-    const user = await User.findById(session.user.id).select("role").lean();
-
-    if (!user || user.role !== "admin") {
-        throw new Error("Forbidden: Admin access required");
-    }
 }
 
 export async function getAdminShopItems(): Promise<AdminShopItem[]> {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         const items = await ShopItem.find({}).sort({ createdAt: -1 }).lean();
         return items.map((item) => ({
@@ -55,7 +43,7 @@ export async function getAdminShopItems(): Promise<AdminShopItem[]> {
 }
 
 export async function getShopItemById(id: string): Promise<AdminShopItem | null> {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         const item = await ShopItem.findById(id).lean();
         if (!item) return null;
@@ -76,7 +64,7 @@ export async function getShopItemById(id: string): Promise<AdminShopItem | null>
 }
 
 export async function createShopItem(data: ShopItemFormData) {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         const newItem = await ShopItem.create(data);
         revalidatePath("/admin/shop-management");
@@ -89,7 +77,7 @@ export async function createShopItem(data: ShopItemFormData) {
 }
 
 export async function updateShopItem(id: string, data: Partial<ShopItemFormData>) {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         await ShopItem.findByIdAndUpdate(id, { $set: data });
         revalidatePath("/admin/shop-management");
@@ -102,7 +90,7 @@ export async function updateShopItem(id: string, data: Partial<ShopItemFormData>
 }
 
 export async function deleteShopItem(id: string) {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         // Ideally we might want 'soft delete' logic, but for now strict delete is requested in plan implies management choice.
         // Or we can just set isActive: false if preferred, but let's support delete.
@@ -117,7 +105,7 @@ export async function deleteShopItem(id: string) {
 }
 
 export async function toggleShopItemStatus(id: string, isActive: boolean) {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         await ShopItem.findByIdAndUpdate(id, { $set: { isActive } });
         revalidatePath("/admin/shop-management");
@@ -130,7 +118,7 @@ export async function toggleShopItemStatus(id: string, isActive: boolean) {
 }
 
 export async function restoreDefaultFrames() {
-    await ensureAdmin();
+    await ensureAdminAndConnect();
     try {
         const defaults = [
             {

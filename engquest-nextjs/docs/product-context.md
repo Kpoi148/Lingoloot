@@ -82,6 +82,7 @@ Admins manage core content and can generate content with AI.
   - Server actions must use session guards:
     - user scope: `ensureAuthenticated`
     - admin scope: `ensureAdminSession`
+  - Reuse guard helpers from `lib/auth-utils.ts`; avoid duplicating custom role/session guard logic inside feature actions.
   - API routes must use `requireUserApiSession` / `requireAdminApiSession` from `lib/api-auth.ts`.
   - Admin surfaces must return:
     - `401` for anonymous requests
@@ -102,6 +103,14 @@ Admins manage core content and can generate content with AI.
   - `/api/cloudinary/signature` requires authenticated session.
   - Non-admin uploads must stay in user-scoped folder paths.
   - Admin folder override must be constrained by an allowlist/prefix.
+
+## Data consistency rules
+- Shop purchase logic must keep eligibility + write in one conditional DB update:
+  - item is active
+  - user has sufficient currency
+  - user does not already own item
+- Inventory ownership arrays must avoid duplicates (for example, `$addToSet` for item ownership).
+- Shop mutations should revalidate affected routes explicitly (`/shop`, `/profile`, `/admin/shop-management` as applicable).
 
 ## Definition of done for every change
 - Impact analysis completed using `docs/feature-map.md`.

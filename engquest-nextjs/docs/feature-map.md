@@ -11,7 +11,7 @@ Use this map before editing code. Identify impacted features first, then execute
 | Practice and quiz gameplay | `/learn/practice`, `/learn/practice/[id]`, `/learning/[slug]/quiz` | `/api/quizzes`, `/api/progress/quiz`, `/api/progress/vocab` | quiz/game UI in `components/game/*`, learning screens under `app/(app)/learn/*` and `app/(app)/learning/*` | `Quiz`, `QuizResult`, `TopicProgress`, `User` |
 | Story Cloze game | `/learn/game/[id]` | `/api/games/[id]`, `/api/progress/proof` | `components/game/StoryClozeGame.tsx`, game helpers under `lib/*` | `Game`, `TopicProgress`, `User` |
 | Gamification (XP, level, streak, rewards) | profile/navbar surfaces across app | `actions/user/gamification.actions.ts` | `components/gamification/*`, `lib/gamification.ts`, `lib/gamification-config.ts` | `User` |
-| Shop and inventory | `/shop`, `/profile` (equip flow) | `actions/user/shop.actions.ts`, admin shop APIs/actions | `components/shop/*`, `components/profile/*`, `actions/admin/shop.actions.ts` | `ShopItem`, `User` |
+| Shop and inventory | `/shop`, `/profile` (equip flow), `/admin/shop-management` | `actions/user/shop.actions.ts`, `actions/admin/shop.actions.ts`, `actions/admin/ai-shop.actions.ts` | `components/shop/*`, `components/profile/*`, `components/admin/shop/*`, `app/(app)/admin/shop-management/*` | `ShopItem`, `User` |
 | Profile management | `/profile` | `actions/user/profile.actions.ts`, `/api/cloudinary/signature` | `app/(app)/profile/ProfileClient.tsx`, `components/profile/*`, `components/shop/InventoryModal.tsx`, `lib/api-auth.ts`, `lib/request-ip.ts`, `lib/rate-limit.ts` | `User`, `ShopItem` |
 | Admin dashboard and user management | `/admin`, `/admin/user-management`, `/admin/profile` | `/api/admin/overview`, `actions/admin/user.actions.ts` | `components/admin/dashboard/*`, `components/admin/users/*`, `lib/cached-queries.ts` | `User`, aggregate reads from multiple models |
 | Admin content management (categories, vocabulary, quizzes, games) | `/admin/category-management`, `/admin/vocabulary-management`, `/admin/quiz-management` | `/api/admin/categories/*`, `/api/admin/vocabularies/*`, `/api/admin/quizzes/*`, `/api/admin/games` | admin management pages + forms in `components/admin/*` | `Category`, `Vocabulary`, `Quiz`, `Game` |
@@ -46,6 +46,7 @@ Copy and fill this block in task notes/PR description:
 ## Change scoping rules
 - Prefer smallest possible change set for requested behavior.
 - If touching shared modules (`lib/*`, layout/nav, auth), assume multi-feature impact and run broader regression.
+- For shop currency/inventory flows, preserve atomic purchase invariants in `actions/user/shop.actions.ts` (single conditional write for balance + ownership).
 - Any schema or contract change requires:
   - migration/backward-compatibility note
   - API contract verification for all consumers

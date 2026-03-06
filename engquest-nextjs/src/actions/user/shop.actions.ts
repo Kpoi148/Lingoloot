@@ -1,5 +1,6 @@
 "use server";
 
+import mongoose from "mongoose";
 import { getSession } from "@/lib/auth-utils";
 import { connectToDatabase } from "@/lib/mongodb";
 import ShopItem from "@/models/ShopItem";
@@ -36,49 +37,62 @@ export async function buyItem(itemId: string): Promise<BuyItemResult> {
         return { success: false, message: "Bạn cần đăng nhập để mua hàng." };
     }
 
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+        return { success: false, message: "Vật phẩm không tồn tại hoặc đã ngừng bán." };
+    }
+
     await connectToDatabase();
 
-    const user = await User.findById(session.user.id).select("gamification").lean();
-    if (!user) {
-        return { success: false, message: "Không tìm thấy người dùng." };
-    }
-
-    const item = await ShopItem.findById(itemId).lean();
+    const item = await ShopItem.findOne({ _id: itemId, isActive: true })
+        .select("name price")
+        .lean();
     if (!item) {
-        return { success: false, message: "Vật phẩm không tồn tại." };
+        return { success: false, message: "Vật phẩm không tồn tại hoặc đã ngừng bán." };
     }
 
-    const currentCurrency = user.gamification?.currency ?? 0;
-    const price = item.price;
-
-    if (currentCurrency < price) {
-        return { success: false, message: "Bạn không đủ LingoGems." };
-    }
-
-    // Check ownership
-    const inventory = user.gamification?.inventory ?? [];
-    if (inventory.includes(itemId)) {
-        return { success: false, message: "Bạn đã sở hữu vật phẩm này." };
-    }
-
-    // Deduct currency and add to inventory
-    const newCurrency = currentCurrency - price;
-
-    await User.findByIdAndUpdate(
-        session.user.id,
+    const updatedUser = await User.findOneAndUpdate(
         {
-            $set: { "gamification.currency": newCurrency },
-            $push: { "gamification.inventory": itemId },
+            _id: session.user.id,
+            "gamification.currency": { $gte: item.price },
+            "gamification.inventory": { $ne: itemId },
         },
-        { new: true }
-    );
+        {
+            $inc: { "gamification.currency": -item.price },
+            $addToSet: { "gamification.inventory": itemId },
+        },
+        {
+            new: true,
+            projection: { "gamification.currency": 1 },
+        }
+    ).lean();
+
+    if (!updatedUser) {
+        const user = await User.findById(session.user.id).select("gamification").lean();
+        if (!user) {
+            return { success: false, message: "Không tìm thấy người dùng." };
+        }
+
+        const inventory = user.gamification?.inventory ?? [];
+        if (inventory.includes(itemId)) {
+            return { success: false, message: "Bạn đã sở hữu vật phẩm này." };
+        }
+
+        const currentCurrency = user.gamification?.currency ?? 0;
+        if (currentCurrency < item.price) {
+            return { success: false, message: "Bạn không đủ LingoGems." };
+        }
+
+        return { success: false, message: "Không thể hoàn tất giao dịch. Vui lòng thử lại." };
+    }
+
+    const newBalance = updatedUser.gamification?.currency ?? 0;
 
     revalidatePath("/shop");
     revalidatePath("/profile");
 
     return {
         success: true,
-        newBalance: newCurrency,
+        newBalance,
         message: `Đã mua ${item.name} thành công!`
     };
 }

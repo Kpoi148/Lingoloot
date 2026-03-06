@@ -51,6 +51,9 @@ If any command fails or is skipped, record:
 ### E. Shop and inventory
 - Shop list loads active items.
 - Purchase flow updates user inventory/currency correctly.
+- Inactive or missing shop items are rejected by purchase flow.
+- Repeated fast purchase attempts do not double-charge currency or duplicate inventory.
+- Purchase failures for already-owned/insufficient-funds return clear messages.
 - Equip avatar/frame updates profile visuals.
 - Frame rendering works for registry frames and fallback image frames.
 
@@ -69,11 +72,13 @@ If any command fails or is skipped, record:
 - Vocabulary management CRUD works.
 - Quiz management CRUD works.
 - Shop management CRUD/toggle active state works.
+- Shop management create/edit navigation resolves to `/admin/shop-management/*`.
 
 ### H. AI Hub
 - AI generate endpoints return valid JSON payloads.
 - Generated game/quiz/frame can be previewed and saved.
 - AI save-to-shop path persists item and revalidates UI where needed.
+- AI save-to-shop revalidates both `/shop` and `/admin/shop-management`.
 - `/api/ai/generate` and `/api/admin/games/generate` require admin session.
 - AI endpoints return `429` with `Retry-After` when rate-limit is exceeded.
 
