@@ -17,7 +17,6 @@ The public landing page should market learner capabilities only, not admin tooli
 - `Category`
 - `Vocabulary`
 - `Quiz`
-- `QuizResult`
 - `Game`
 - `TopicProgress`
 - `ShopItem`
