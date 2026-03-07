@@ -1,4 +1,5 @@
 "use client";
+// Admin AI page for generating vocabulary sets and related practice data.
 
 import VocabularyGenerator from "@/components/admin/ai-hub/VocabularyGenerator";
 

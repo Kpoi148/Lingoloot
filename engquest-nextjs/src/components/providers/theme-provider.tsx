@@ -1,4 +1,5 @@
 "use client";
+// Theme provider wiring for dark mode and persisted UI preference.
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { ComponentProps } from "react";

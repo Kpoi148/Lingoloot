@@ -1,3 +1,4 @@
+// Shared utility helpers used across multiple UI and server modules.
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 

@@ -1,4 +1,5 @@
 "use client";
+// Credential login form used on the landing page and auth entry surfaces.
 
 import Link from "next/link";
 import { useState } from "react";

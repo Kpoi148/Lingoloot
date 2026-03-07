@@ -1,3 +1,4 @@
+// Landing footer with final navigation and auth entry links.
 import BrandLogo from "@/components/common/BrandLogo";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
 

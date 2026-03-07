@@ -1,4 +1,5 @@
 "use client";
+// Controller hook that coordinates admin user list state, filters, and mutations.
 
 import { useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";

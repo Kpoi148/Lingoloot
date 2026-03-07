@@ -1,4 +1,5 @@
 "use client";
+// Admin table that renders the current page of learner accounts.
 
 import { useMemo } from "react";
 import type { Dispatch, SetStateAction } from "react";

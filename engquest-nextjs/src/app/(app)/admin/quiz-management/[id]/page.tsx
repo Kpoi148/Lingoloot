@@ -1,3 +1,4 @@
+// Admin page for editing a specific quiz.
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Quiz from "@/models/Quiz";

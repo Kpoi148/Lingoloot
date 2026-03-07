@@ -1,3 +1,4 @@
+// Source module for the src feature.
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtDecrypt, jwtVerify } from "jose";
 

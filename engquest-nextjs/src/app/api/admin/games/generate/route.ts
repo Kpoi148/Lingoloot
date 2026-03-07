@@ -1,3 +1,4 @@
+// Admin AI API for generating game drafts before saving them.
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { z } from "zod";

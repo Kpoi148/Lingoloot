@@ -1,3 +1,4 @@
+// Shared TypeScript types for shop items, inventory state, and cosmetic metadata.
 export type ShopItemType = "frame" | "avatar";
 export type ShopItemRarity = "common" | "rare" | "legendary";
 

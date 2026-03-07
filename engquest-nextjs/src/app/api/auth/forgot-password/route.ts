@@ -1,3 +1,4 @@
+// Password reset request API that validates email flow and sends reset mail.
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";
 import { checkRateLimit } from "@/lib/security/rate-limit";

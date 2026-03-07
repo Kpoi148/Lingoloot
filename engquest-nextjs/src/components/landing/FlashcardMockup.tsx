@@ -1,4 +1,5 @@
 "use client";
+// Landing showcase block that previews the flashcard-style study experience.
 
 import {
     ArrowUpRight,

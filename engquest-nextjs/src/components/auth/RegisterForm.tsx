@@ -1,4 +1,5 @@
 "use client";
+// Registration form for creating a new learner account.
 
 import { useState } from "react";
 

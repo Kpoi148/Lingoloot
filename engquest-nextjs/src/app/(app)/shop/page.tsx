@@ -1,3 +1,4 @@
+// Learner shop page for spending Gems on profile cosmetics and rewards.
 import { getShopItems } from "@/actions/user/shop.actions";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import ShopClient from "@/components/shop/ShopClient";

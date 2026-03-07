@@ -1,3 +1,4 @@
+// Admin dashboard landing page with overview metrics and quick actions.
 import { getCachedOverviewCounts } from "@/lib/db/cached-queries";
 import AdminDashboardClient from "@/components/admin/dashboard/AdminDashboardClient";
 

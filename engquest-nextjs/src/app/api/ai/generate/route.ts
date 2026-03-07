@@ -1,3 +1,4 @@
+// Shared admin AI generation API for vocabulary, quizzes, and structured JSON content.
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createApiErrorResponse } from "@/lib/security/api-error";

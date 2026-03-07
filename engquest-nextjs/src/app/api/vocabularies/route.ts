@@ -1,3 +1,4 @@
+// Public API for fetching vocabulary data used by learner flows.
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";

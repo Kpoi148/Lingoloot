@@ -1,4 +1,5 @@
 "use client";
+// Profile stats panel that summarizes learner progress, streaks, and rewards.
 
 import { useMemo } from "react";
 import { Activity, BookOpen, Target, type LucideIcon } from "lucide-react";

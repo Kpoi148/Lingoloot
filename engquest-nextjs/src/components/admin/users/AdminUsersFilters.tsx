@@ -1,4 +1,5 @@
 "use client";
+// Filter controls for narrowing the admin user list by search and status.
 
 import type { Dispatch, SetStateAction } from "react";
 import type { UserFilters } from "@/actions/admin/user.actions";

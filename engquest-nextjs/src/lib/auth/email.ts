@@ -1,3 +1,4 @@
+// Email helper for sending password reset and other auth-related messages.
 import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./password-reset";
 
 type SendPasswordResetEmailInput = {

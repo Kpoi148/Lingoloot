@@ -1,3 +1,4 @@
+// Formatting helpers for transforming Story Cloze builder data.
 import type { CategoryOption, Game, VocabularyItem } from "./types";
 
 export const getTopicVocabularies = (
@@ -34,6 +35,7 @@ export const selectVocabulariesByIds = (
   return vocabularies.filter((item) => selected.has(item._id));
 };
 
+// This function chooses selected words when present, otherwise it falls back to the full topic vocabulary.
 export const sanitizeVocabulary = (
   selectedWordIds: string[],
   selectedWords: VocabularyItem[],
@@ -70,6 +72,7 @@ export const splitIntoTokens = (text: string) => {
   return tokens;
 };
 
+// This function builds the preview bank from generated answers plus distractors.
 export const getPreviewWordBank = (game: Game | null) => {
   if (!game) return [];
   const answers = game.content
@@ -78,6 +81,7 @@ export const getPreviewWordBank = (game: Game | null) => {
   return [...answers, ...game.distractors];
 };
 
+// This function normalizes answers into a lowercase set for case-insensitive preview matching.
 export const getAnswerSet = (game: Game | null) => {
   const set = new Set<string>();
   if (!game) return set;

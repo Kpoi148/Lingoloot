@@ -1,3 +1,4 @@
+// Source module for the constants feature.
 import {
     BookOpen,
     LayoutDashboard,

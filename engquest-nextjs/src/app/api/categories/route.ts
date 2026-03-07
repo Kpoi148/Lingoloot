@@ -1,3 +1,4 @@
+// Public API for listing learning categories and topics.
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { createApiErrorResponse } from "@/lib/security/api-error";

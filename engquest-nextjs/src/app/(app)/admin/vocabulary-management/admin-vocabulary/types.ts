@@ -1,3 +1,4 @@
+// Shared TypeScript types for admin vocabulary management.
 export type CategoryOption = {
   _id: string;
   name: string;

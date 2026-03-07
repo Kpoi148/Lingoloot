@@ -1,4 +1,5 @@
 "use server";
+// Server actions for admin user management and moderation controls.
 
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/db/mongodb";

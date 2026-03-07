@@ -1,3 +1,4 @@
+// NextAuth configuration for credential login, session shaping, and callbacks.
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";

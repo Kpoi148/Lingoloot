@@ -1,4 +1,5 @@
 "use client";
+// Decorative particle background used to add motion to selected screens.
 
 import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";

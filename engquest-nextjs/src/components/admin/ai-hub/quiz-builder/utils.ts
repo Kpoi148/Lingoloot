@@ -1,3 +1,4 @@
+// Normalization helpers for converting raw AI quiz output into editable state.
 import type { CategoryOption, EditableQuiz, VocabularyItem } from "./types";
 
 export const getTopicVocabularies = (

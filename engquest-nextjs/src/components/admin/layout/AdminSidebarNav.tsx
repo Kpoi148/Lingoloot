@@ -1,4 +1,5 @@
 "use client";
+// Admin sidebar navigation for moving between dashboard management areas.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -1,3 +1,4 @@
+// Authenticated API for marking vocabulary study progress.
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";

@@ -1,3 +1,4 @@
+// Validation schema and defaults for the admin AI game builder.
 import { z } from "zod";
 
 export const ContentItemSchema = z
@@ -7,6 +8,7 @@ export const ContentItemSchema = z
     answer: z.string().optional(),
   })
   .superRefine((value, ctx) => {
+    // Gap entries must carry the expected answer because preview and gameplay both depend on it.
     if (value.type === "gap" && !value.answer) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

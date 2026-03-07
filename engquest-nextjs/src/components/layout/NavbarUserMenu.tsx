@@ -1,4 +1,5 @@
 "use client";
+// User menu dropdown for profile actions and sign-out in the authenticated navbar.
 
 import Link from "next/link";
 import { type UserProfile } from "@/actions/user/profile.actions";

@@ -1,4 +1,5 @@
 "use client";
+// Admin modal for editing learner account fields and moderation state.
 
 import { useState } from "react";
 import { UserListItem, updateUserAdmin } from "@/actions/admin/user.actions";

@@ -1,4 +1,5 @@
 "use client";
+// Authenticated app shell that provides shared layout structure for learner pages.
 
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";

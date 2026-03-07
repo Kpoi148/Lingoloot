@@ -1,4 +1,5 @@
 "use client";
+// Shared upload component for sending media through the signed Cloudinary flow.
 
 import {
   useCallback,

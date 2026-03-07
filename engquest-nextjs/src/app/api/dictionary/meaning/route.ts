@@ -1,3 +1,4 @@
+// Dictionary lookup API for fetching or caching word meanings.
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createApiErrorResponse } from "@/lib/security/api-error";

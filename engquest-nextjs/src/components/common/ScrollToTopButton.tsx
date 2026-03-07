@@ -1,4 +1,5 @@
 "use client";
+// Utility button that returns the user to the top of long pages.
 
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";

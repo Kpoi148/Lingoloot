@@ -1,3 +1,4 @@
+// Root layout that wires global providers, metadata, and base app chrome.
 import "./globals.css";
 import { Manrope } from "next/font/google";
 import ThemeProvider from "@/components/providers/theme-provider";

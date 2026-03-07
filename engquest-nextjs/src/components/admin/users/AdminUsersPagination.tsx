@@ -1,4 +1,5 @@
 "use client";
+// Pagination controls for moving through the admin user list.
 
 type AdminUsersPaginationProps = {
   currentPage: number;

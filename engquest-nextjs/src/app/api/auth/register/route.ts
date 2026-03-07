@@ -1,3 +1,4 @@
+// Registration API that creates a new learner account with rate limiting.
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";

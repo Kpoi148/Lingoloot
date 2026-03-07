@@ -1,9 +1,10 @@
 "use server";
+// Server actions for loading and updating learner profile data.
 
 import { getSession } from "@/lib/auth/auth-utils";
 import { connectToDatabase } from "@/lib/db/mongodb";
 import User from "@/models/User";
-import ShopItem from "@/models/ShopItem"; // Import ShopItem model
+import ShopItem from "@/models/ShopItem";
 import { ActionResponse } from "@/types/action-response";
 import { userProfileSchema } from "@/lib/validations/user";
 
@@ -39,6 +40,7 @@ export type UserProfile = {
   gamification: UserGamification;
 };
 
+// This function converts a raw user document into the normalized profile shape expected by the UI.
 const toUserProfile = (user: {
   _id: unknown;
   name: string;
@@ -93,6 +95,7 @@ const toUserProfile = (user: {
   },
 });
 
+// This function loads the current user profile and enriches it with cosmetic data needed by the client.
 export async function getUserProfile() {
   const session = await getSession();
   if (!session?.user?.id) {
@@ -101,19 +104,17 @@ export async function getUserProfile() {
 
   await connectToDatabase();
   const user = await User.findById(session.user.id)
-    .select("name email avatarUrl displayName bio stats image gamification role") // Select role
+    .select("name email avatarUrl displayName bio stats image gamification role")
     .lean();
 
   if (user && user.role === "admin") {
     const allShopItems = await ShopItem.find({ isActive: true }).select("_id").lean();
     const allItemIds = allShopItems.map(item => String(item._id));
 
-    // Ensure user.gamification exists
     if (!user.gamification) {
       user.gamification = { inventory: [], xp: 0, level: 1, streak: 0, currency: 0, lastLoginDate: null };
     }
 
-    // Merge existing inventory with all shop items (using Set to avoid duplicates)
     const existingInventory = user.gamification.inventory || [];
     user.gamification.inventory = Array.from(new Set([...existingInventory, ...allItemIds]));
   }
@@ -122,7 +123,6 @@ export async function getUserProfile() {
     return null;
   }
 
-  // Populate frame details manually if needed or simply fetch item
   let equippedFrameDetails = undefined;
   if (user.gamification?.equippedFrame) {
     const frameItem = await ShopItem.findById(user.gamification.equippedFrame).select("renderKey imageUrl").lean();
@@ -145,6 +145,7 @@ export async function getUserProfile() {
 
 
 
+// This function validates and updates learner-editable profile fields before returning the normalized payload.
 export async function updateUserProfile(formData: FormData): Promise<ActionResponse<UserProfile>> {
   const session = await getSession();
   if (!session?.user?.id) {
@@ -201,7 +202,6 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
       return { success: false, message: "Không tìm thấy người dùng." };
     }
 
-    // Ensure gamification structure for consistent formatting
     if (!updated.gamification) {
       updated.gamification = {
         inventory: [],

@@ -1,4 +1,5 @@
 "use server";
+// Server actions for saving AI-generated assets into the shop catalog.
 
 import { ensureAdminSession } from "@/lib/auth/auth-utils";
 import { AI_FRAME_SYSTEM_PROMPT } from "@/lib/ai/ai-prompts";

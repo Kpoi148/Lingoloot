@@ -1,4 +1,5 @@
 "use client";
+// Admin AI page for generating quiz drafts.
 
 import QuizBuilder from "@/components/admin/ai-hub/QuizBuilder";
 

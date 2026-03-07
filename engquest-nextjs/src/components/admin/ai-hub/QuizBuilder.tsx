@@ -1,4 +1,5 @@
 "use client";
+// Admin AI builder for generating, reviewing, and exporting quiz drafts.
 
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Save, Sparkles } from "lucide-react";
@@ -41,6 +42,7 @@ export default function QuizBuilder() {
     useEffect(() => {
         let active = true;
 
+        // This function loads categories and vocabulary once so the quiz builder can filter locally afterward.
         const loadData = async () => {
             try {
                 const data = await loadQuizBuilderData();
@@ -90,6 +92,7 @@ export default function QuizBuilder() {
         setEditableQuiz(normalizedQuiz);
     }, [normalizedQuiz]);
 
+    // This function generates a quiz from either the selected words or the full topic vocabulary.
     const handleGenerate = async () => {
         if (!topic.trim()) {
             toast.error("Vui lòng chọn chủ đề trước khi tạo quiz.");
@@ -125,6 +128,7 @@ export default function QuizBuilder() {
         }
     };
 
+    // This function updates the editable quiz title without mutating the raw AI payload.
     const handleTitleChange = (value: string) => {
         setEditableQuiz((prev) => (prev ? { ...prev, title: value } : prev));
     };
@@ -172,11 +176,13 @@ export default function QuizBuilder() {
         });
     };
 
+    // This function clears both the raw result and editable state so the preview resets completely.
     const handleDiscard = () => {
         setQuizResult(null);
         setEditableQuiz(null);
     };
 
+    // This function saves only the normalized editable quiz so invalid AI output never reaches storage.
     const handleSave = async () => {
         if (!editableQuiz || editableQuiz.questions.length === 0) {
             toast.error("Chưa có dữ liệu quiz để lưu.");
@@ -209,6 +215,7 @@ export default function QuizBuilder() {
         }
     };
 
+    // This function toggles a vocabulary item in the local selection set for the next generation run.
     const handleToggleWord = (id: string) => {
         setSelectedWordIds((prev) =>
             prev.includes(id) ? prev.filter((wordId) => wordId !== id) : [...prev, id]

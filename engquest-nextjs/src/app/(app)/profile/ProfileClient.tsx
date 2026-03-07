@@ -1,4 +1,5 @@
 "use client";
+// Client-side profile surface for editing learner info and managing equipped cosmetics.
 
 import { useState, type FormEvent } from "react";
 

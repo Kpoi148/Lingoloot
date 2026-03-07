@@ -1,3 +1,4 @@
+// MongoDB connection helper with caching for the Next.js server runtime.
 import mongoose from "mongoose";
 
 /**

@@ -1,3 +1,4 @@
+// Admin page for browsing and maintaining shop inventory.
 import { getAdminShopItems, toggleShopItemStatus } from "@/actions/admin/shop.actions";
 import Link from "next/link";
 import { Plus, Pencil, Eye, EyeOff } from "lucide-react";

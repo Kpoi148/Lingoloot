@@ -1,4 +1,5 @@
 "use client";
+// Story Cloze gameplay page for completing a specific game session.
 
 import { motion } from "framer-motion";
 import Link from "next/link";

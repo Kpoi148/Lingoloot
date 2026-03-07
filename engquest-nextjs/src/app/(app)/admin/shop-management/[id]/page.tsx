@@ -1,3 +1,4 @@
+// Admin page for editing a specific shop item.
 import ShopItemForm from "@/components/admin/shop/ShopItemForm";
 import { getShopItemById } from "@/actions/admin/shop.actions";
 import { notFound } from "next/navigation";

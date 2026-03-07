@@ -1,4 +1,5 @@
 "use client";
+// Admin dashboard client that renders overview cards, charts, and shortcut actions.
 
 type OverviewData = {
     vocabularyCount: number;

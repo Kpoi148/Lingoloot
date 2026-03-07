@@ -1,4 +1,5 @@
 "use client";
+// Configuration panel for shaping Story Cloze generation parameters.
 
 import type { Dispatch, SetStateAction } from "react";
 import { Sparkles } from "lucide-react";

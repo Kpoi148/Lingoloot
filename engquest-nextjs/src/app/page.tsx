@@ -1,4 +1,5 @@
 "use client";
+// Public landing page that introduces the learner flow and provides auth entry points.
 
 import { useCallback, useEffect, useState } from "react";
 import { Manrope, Space_Grotesk } from "next/font/google";

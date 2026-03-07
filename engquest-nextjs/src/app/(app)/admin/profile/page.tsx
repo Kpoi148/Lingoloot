@@ -1,3 +1,4 @@
+// Admin profile page for the currently signed-in administrator.
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getAdminShopItems } from "@/actions/admin/shop.actions";
 import AdminProfileCard from "@/components/admin/users/AdminProfileCard";

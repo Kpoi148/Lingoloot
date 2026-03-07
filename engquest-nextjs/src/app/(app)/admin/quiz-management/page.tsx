@@ -1,4 +1,5 @@
 "use client";
+// Admin page for browsing and managing quiz content.
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";

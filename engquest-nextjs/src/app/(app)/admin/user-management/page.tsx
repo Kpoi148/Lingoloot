@@ -1,3 +1,4 @@
+// Admin page for searching, filtering, and managing learner accounts.
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { getUsers } from "@/actions/admin/user.actions";

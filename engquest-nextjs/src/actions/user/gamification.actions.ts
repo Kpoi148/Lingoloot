@@ -1,4 +1,5 @@
 "use server";
+// Server actions for daily rewards, streak updates, and learner gamification state.
 
 import { connectToDatabase } from "@/lib/db/mongodb";
 import {
@@ -33,6 +34,7 @@ export type DailyLoginResult =
 
 import { ensureAuthenticated } from "@/lib/auth/auth-utils";
 
+// This function claims the daily reward using UTC-based streak rules so timing stays consistent across time zones.
 export async function checkDailyLogin(userId?: string): Promise<DailyLoginResult> {
   const session = await ensureAuthenticated();
   const sessionUserId = session.user.id;

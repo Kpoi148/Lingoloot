@@ -1,3 +1,4 @@
+// Request helper for extracting a stable client IP across hosting environments.
 export const getClientIp = (request: Request) => {
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {

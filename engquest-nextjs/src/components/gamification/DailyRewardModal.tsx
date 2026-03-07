@@ -1,4 +1,5 @@
 "use client";
+// Modal for claiming or explaining the learner daily reward flow.
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";

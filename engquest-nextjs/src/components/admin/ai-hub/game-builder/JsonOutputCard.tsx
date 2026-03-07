@@ -1,4 +1,5 @@
 "use client";
+// Debug/output panel for inspecting generated Story Cloze JSON.
 
 import dynamicImport from "next/dynamic";
 import { Save } from "lucide-react";

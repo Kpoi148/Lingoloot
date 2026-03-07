@@ -1,4 +1,5 @@
 "use client";
+// Learner flashcard page for reviewing vocabulary inside one topic.
 
 import Link from "next/link";
 import Image from "next/image";

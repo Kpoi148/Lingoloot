@@ -1,3 +1,4 @@
+// Form helpers for normalizing admin vocabulary editor input and defaults.
 import type {
   VocabularyFormState,
   VocabularyItem,

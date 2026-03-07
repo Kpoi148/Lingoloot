@@ -1,3 +1,4 @@
+// Shared API auth guards for learner and admin protected route handlers.
 import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";

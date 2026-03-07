@@ -1,4 +1,5 @@
 "use client";
+// Admin modal for creating or editing vocabulary entries in place.
 
 import dynamic from "next/dynamic";
 import type { FormEvent, Dispatch, SetStateAction } from "react";

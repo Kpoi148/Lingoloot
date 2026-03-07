@@ -1,4 +1,5 @@
 "use client";
+// Admin action button for deleting an existing shop item.
 
 import { deleteShopItem } from "@/actions/admin/shop.actions";
 import { Trash2 } from "lucide-react";

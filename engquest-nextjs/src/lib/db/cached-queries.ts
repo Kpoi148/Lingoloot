@@ -1,3 +1,4 @@
+// Cached query helpers used by admin dashboards and repeated reads.
 import mongoose from "mongoose";
 import { unstable_cache } from "next/cache";
 import Category from "@/models/Category";

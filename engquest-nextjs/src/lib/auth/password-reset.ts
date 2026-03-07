@@ -1,3 +1,4 @@
+// Password reset helper for issuing, validating, and consuming reset tokens.
 import { createHash, randomBytes } from "crypto";
 
 export const PASSWORD_RESET_TOKEN_TTL_MINUTES = 15;

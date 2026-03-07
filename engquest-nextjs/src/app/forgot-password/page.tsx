@@ -1,3 +1,4 @@
+// Guest page for requesting a password reset email.
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 
 export default function ForgotPasswordPage() {

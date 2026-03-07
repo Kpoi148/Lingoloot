@@ -1,3 +1,4 @@
+// Client-side API helpers for fetching and shaping learner quiz data.
 import type {
   ProgressProofResponse,
   QuizDetailResponse,

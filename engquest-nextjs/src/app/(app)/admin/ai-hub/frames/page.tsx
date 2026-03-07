@@ -1,3 +1,4 @@
+// Admin AI page for generating cosmetic frames for the shop or profile.
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";
 import { redirect } from "next/navigation";

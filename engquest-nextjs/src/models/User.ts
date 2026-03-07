@@ -1,3 +1,4 @@
+// Mongoose model that defines learners, admins, and gamification-related user fields.
 import mongoose from "mongoose";
 
 export type UserRole = "admin" | "user";

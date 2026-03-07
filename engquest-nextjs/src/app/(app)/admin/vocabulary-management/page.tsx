@@ -1,3 +1,4 @@
+// Admin page for managing vocabulary records and learning metadata.
 import AdminVocabulariesClient from "./AdminVocabulariesClient";
 import { connectToDatabase } from "@/lib/db/mongodb";
 import Category from "@/models/Category";

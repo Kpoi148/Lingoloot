@@ -1,3 +1,4 @@
+// Loading placeholder shown while the shop page fetches inventory and catalog data.
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ShoppingBag } from "lucide-react";
 

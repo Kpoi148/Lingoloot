@@ -1,4 +1,5 @@
 "use client";
+// Admin AI tool for generating cosmetic frame assets for the shop.
 
 import { useState, useTransition, useEffect } from "react";
 // Image removed as it is unused

@@ -1,4 +1,5 @@
 "use client";
+// Preview card for checking how a shop item will appear before saving.
 
 import { FrameRenderer } from "@/components/shop/FrameRenderer";
 import Image from "next/image";

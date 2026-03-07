@@ -1,3 +1,4 @@
+// Shared LingoLoot brand mark component used in navigation and marketing surfaces.
 import Image from "next/image";
 
 type BrandLogoProps = {

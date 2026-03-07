@@ -1,3 +1,4 @@
+// Apple touch icon renderer used by iOS home screen installation.
 
 import { ImageResponse } from "next/og";
 

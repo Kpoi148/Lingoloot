@@ -1,3 +1,4 @@
+// Learner page that summarizes a topic and routes into flashcards or quiz practice.
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {

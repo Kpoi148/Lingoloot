@@ -1,3 +1,4 @@
+// Learner API for loading a specific Story Cloze game by id.
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { createApiErrorResponse } from "@/lib/security/api-error";

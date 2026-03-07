@@ -1,3 +1,4 @@
+// Source module for the scripts feature.
 import ShopItem from "../models/ShopItem";
 import { connectToDatabase } from "../lib/db/mongodb";
 import fs from "fs";

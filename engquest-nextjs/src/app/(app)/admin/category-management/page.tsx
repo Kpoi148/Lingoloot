@@ -1,4 +1,5 @@
 "use client";
+// Admin page for managing learning categories and topic structure.
 
 import { useEffect, useMemo, useState } from "react";
 

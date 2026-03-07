@@ -1,3 +1,4 @@
+// Authenticated API that signs safe Cloudinary uploads for learners and admins.
 import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";

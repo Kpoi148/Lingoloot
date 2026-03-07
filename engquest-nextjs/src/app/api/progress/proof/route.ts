@@ -1,3 +1,4 @@
+// Authenticated API that mints a proof token before progress can be written.
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";

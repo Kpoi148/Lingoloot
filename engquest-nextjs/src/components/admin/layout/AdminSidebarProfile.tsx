@@ -1,4 +1,5 @@
 "use client";
+// Admin sidebar profile block for showing the signed-in administrator.
 
 import { useMemo } from "react";
 import Link from "next/link";

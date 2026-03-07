@@ -1,4 +1,5 @@
 "use client";
+// Navbar widget that surfaces the learner streak inside authenticated app chrome.
 
 import { useState, useRef, useEffect } from "react";
 import { Flame } from "lucide-react";

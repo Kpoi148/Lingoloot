@@ -1,4 +1,5 @@
 "use client";
+// Admin profile summary card shown in the user-management area.
 
 import { useMemo, useState } from "react";
 import { UserProfile, updateUserProfile } from "@/actions/user/profile.actions";

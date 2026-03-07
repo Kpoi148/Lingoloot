@@ -1,4 +1,5 @@
 "use client";
+// Source module for the user management feature.
 
 import EditUserModal from "@/components/admin/users/EditUserModal";
 import AdminUsersFilters from "@/components/admin/users/AdminUsersFilters";

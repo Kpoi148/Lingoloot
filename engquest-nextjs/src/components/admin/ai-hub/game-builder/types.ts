@@ -1,3 +1,4 @@
+// Shared TypeScript types for the admin AI game builder.
 export type CategoryOption = {
   _id: string;
   name: string;

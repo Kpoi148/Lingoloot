@@ -1,4 +1,5 @@
 "use client";
+// Shop card that previews one item and handles learner purchase actions.
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";

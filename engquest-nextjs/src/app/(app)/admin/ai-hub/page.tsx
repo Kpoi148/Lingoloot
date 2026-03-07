@@ -1,3 +1,4 @@
+// Admin landing page for AI-assisted content generation tools.
 import Link from "next/link";
 import { BookA, BrainCircuit, Gamepad2, Wand2 } from "lucide-react";
 

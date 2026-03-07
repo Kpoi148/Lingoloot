@@ -1,3 +1,4 @@
+// Inventory tile that shows ownership and equip state for one cosmetic item.
 import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 import { FrameRenderer } from "@/components/shop/FrameRenderer";

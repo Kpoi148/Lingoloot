@@ -1,3 +1,4 @@
+// Shared validation schema for auth-related form and API payloads.
 import { z } from "zod";
 
 export const forgotPasswordSchema = z.object({

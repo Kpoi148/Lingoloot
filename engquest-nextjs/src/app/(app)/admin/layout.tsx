@@ -1,3 +1,4 @@
+// Admin-only layout that applies protected admin navigation and chrome.
 import Link from "next/link";
 import AdminTopbarActions from "@/components/admin/layout/AdminTopbarActions";
 import BrandLogo from "@/components/common/BrandLogo";

@@ -1,3 +1,4 @@
+// Hero block that explains the learner promise and routes guests into the study flow.
 import {
     ArrowRight,
     BookOpenText,

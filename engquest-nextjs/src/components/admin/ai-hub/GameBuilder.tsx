@@ -1,4 +1,5 @@
 "use client";
+// Admin AI builder for generating Story Cloze content from structured inputs.
 
 import BuilderConfigCard from "@/components/admin/ai-hub/game-builder/BuilderConfigCard";
 import JsonOutputCard from "@/components/admin/ai-hub/game-builder/JsonOutputCard";

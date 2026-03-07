@@ -1,3 +1,4 @@
+// Cosmetic frame component for rendering the Mystic frame variant around avatars.
 import Image from "next/image";
 import { cn } from "@/lib/shared/utils";
 

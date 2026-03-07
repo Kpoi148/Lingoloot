@@ -1,4 +1,5 @@
 "use client";
+// Reusable theme switcher used across public and authenticated surfaces.
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";

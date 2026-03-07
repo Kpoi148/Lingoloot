@@ -1,3 +1,4 @@
+// Admin API for listing and creating learning categories.
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";
 import { requireAdminApiSession } from "@/lib/auth/api-auth";

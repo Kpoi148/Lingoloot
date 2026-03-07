@@ -1,3 +1,4 @@
+// Utility helpers for formatting and mapping admin vocabulary data.
 import type { VocabularyFilters, VocabularyItem } from "./types";
 
 export const filterVocabularies = (

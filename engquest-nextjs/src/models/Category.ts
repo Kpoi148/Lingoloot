@@ -1,3 +1,4 @@
+// Mongoose model that defines topic categories for the learner study flow.
 import mongoose from "mongoose";
 
 export interface CategoryDocument {

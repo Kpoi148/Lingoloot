@@ -1,3 +1,4 @@
+// Mongoose model that stores learner completion state across topic activities.
 import mongoose from "mongoose";
 
 export interface TopicProgressDocument {

@@ -1,4 +1,5 @@
 "use client";
+// Learner quiz page for checking recall after studying a topic.
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

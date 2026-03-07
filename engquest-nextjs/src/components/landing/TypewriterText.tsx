@@ -1,4 +1,5 @@
 "use client";
+// Reusable typewriter effect used to animate short landing slogans.
 
 import { useEffect, useMemo, useState } from "react";
 

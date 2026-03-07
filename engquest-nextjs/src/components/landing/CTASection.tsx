@@ -1,3 +1,4 @@
+// Landing closeout section that pushes guests into login or registration.
 import { AnimatedSection } from "@/components/common/AnimatedSection";
 
 type CTASectionProps = {

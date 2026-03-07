@@ -1,3 +1,4 @@
+// Shared prompt templates and AI instruction builders for generation features.
 export const AI_FRAME_SYSTEM_PROMPT = `
 You are an expert SVG Generative Artist & Animator.
 Your task is to generate a HIGH-END, ANIMATED avatar frame based on the user's description.

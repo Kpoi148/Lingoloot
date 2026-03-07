@@ -1,4 +1,5 @@
 "use client";
+// Admin topbar actions for quick navigation and utility controls.
 
 import Link from "next/link";
 import { Sparkles } from "lucide-react";

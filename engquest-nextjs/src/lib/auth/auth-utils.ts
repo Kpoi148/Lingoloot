@@ -1,3 +1,4 @@
+// Shared server-side auth helpers for validating learner and admin sessions.
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";
 import { connectToDatabase } from "@/lib/db/mongodb";

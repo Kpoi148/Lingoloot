@@ -1,3 +1,4 @@
+// Landing section that explains the step-by-step learner study loop.
 import {
     BookOpenText,
     BrainCircuit,

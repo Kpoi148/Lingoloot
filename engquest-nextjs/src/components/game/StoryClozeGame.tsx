@@ -1,4 +1,5 @@
 "use client";
+// Interactive Story Cloze component that turns saved game data into a playable session.
 
 import {
   DndContext,

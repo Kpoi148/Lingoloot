@@ -1,3 +1,4 @@
+// Mongoose model that caches dictionary lookup responses for repeated words.
 import mongoose from "mongoose";
 
 export interface DictionaryCacheDocument {

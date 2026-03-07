@@ -1,4 +1,5 @@
 "use client";
+// Root provider composition for app-wide client context and third-party providers.
 
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";

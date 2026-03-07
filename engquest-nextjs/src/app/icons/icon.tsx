@@ -1,3 +1,4 @@
+// App icon renderer used by Next.js metadata and browser surfaces.
 
 import { ImageResponse } from "next/og";
 

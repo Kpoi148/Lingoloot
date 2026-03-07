@@ -1,3 +1,4 @@
+// Mongoose model that stores quiz content linked to learning categories.
 import mongoose from "mongoose";
 
 export interface QuizQuestion {

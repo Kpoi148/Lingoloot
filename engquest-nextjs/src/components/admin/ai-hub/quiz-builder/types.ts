@@ -1,3 +1,4 @@
+// Shared TypeScript types for the admin AI quiz builder.
 export const defaultPrompt =
   "Generate a multiple-choice quiz. Explanation language: Vietnamese.";
 

@@ -1,4 +1,5 @@
 "use client";
+// Admin client surface for browsing, editing, and filtering vocabulary entries.
 
 import { useEffect, useMemo, useState } from "react";
 import {

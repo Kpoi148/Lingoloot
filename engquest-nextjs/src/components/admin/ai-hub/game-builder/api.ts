@@ -1,3 +1,4 @@
+// Client-side API helpers for requesting or saving AI-generated game drafts.
 import type { CategoryOption, Difficulty, Game, VocabularyItem } from "./types";
 
 export const loadGameBuilderData = async () => {

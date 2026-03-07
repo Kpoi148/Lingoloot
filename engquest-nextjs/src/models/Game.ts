@@ -1,3 +1,4 @@
+// Mongoose model that stores Story Cloze game content and metadata.
 import mongoose from "mongoose";
 
 export type GameContentItem = {

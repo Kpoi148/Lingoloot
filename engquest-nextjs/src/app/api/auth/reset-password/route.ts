@@ -1,3 +1,4 @@
+// Password reset API that validates the token and stores a new password.
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";

@@ -1,3 +1,4 @@
+// Shared rate limiting helper for abuse-prone public and admin APIs.
 type Entry = {
   count: number;
   resetAt: number;

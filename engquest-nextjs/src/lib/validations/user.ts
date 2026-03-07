@@ -1,3 +1,4 @@
+// Shared validation schema for learner profile and user payloads.
 import { z } from "zod";
 
 export const userProfileSchema = z.object({

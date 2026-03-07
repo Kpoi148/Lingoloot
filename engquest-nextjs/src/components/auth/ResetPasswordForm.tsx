@@ -1,4 +1,5 @@
 "use client";
+// Password reset form for applying a valid token and saving a new password.
 
 import Link from "next/link";
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// Shared TypeScript types for the learner quiz page.
 export type QuizQuestion = {
   question_text: string;
   options: string[];

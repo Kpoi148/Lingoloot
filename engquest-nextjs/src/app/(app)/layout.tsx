@@ -1,3 +1,4 @@
+// Authenticated app layout that wraps learner and admin routes with shared shell.
 import AppShell from "@/components/layout/AppShell";
 import Providers from "@/components/providers/Providers";
 

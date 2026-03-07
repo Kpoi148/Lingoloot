@@ -1,3 +1,4 @@
+// Client-side API helpers for requesting AI-generated quiz drafts.
 import type {
   CategoryOption,
   EditableQuiz,

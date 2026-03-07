@@ -1,3 +1,4 @@
+// Loading placeholder shown while the topics page fetches learner content.
 export default function TopicsLoading() {
   const skeletonCards = Array.from({ length: 6 });
 

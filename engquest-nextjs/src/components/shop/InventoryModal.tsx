@@ -1,4 +1,5 @@
 "use client";
+// Inventory modal for browsing owned cosmetics and equipping them from the profile.
 
 import { useState } from "react";
 import { equipItem } from "@/actions/user/shop.actions";

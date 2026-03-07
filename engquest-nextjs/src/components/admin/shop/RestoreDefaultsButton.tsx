@@ -1,4 +1,5 @@
 "use client";
+// Admin shortcut for restoring default values in the shop item editor.
 
 import { restoreDefaultFrames } from "@/actions/admin/shop.actions";
 import { RotateCw } from "lucide-react";

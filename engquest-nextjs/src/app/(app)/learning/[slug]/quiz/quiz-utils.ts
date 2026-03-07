@@ -1,3 +1,4 @@
+// Utility helpers for quiz scoring, shaping, and client-side flow control.
 export const DEFAULT_TIME_LIMIT = 120;
 
 export const formatTime = (seconds: number) => {

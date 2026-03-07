@@ -1,3 +1,4 @@
+// Module augmentation for custom NextAuth session and user fields.
 import { type DefaultSession } from "next-auth";
 
 declare module "next-auth" {

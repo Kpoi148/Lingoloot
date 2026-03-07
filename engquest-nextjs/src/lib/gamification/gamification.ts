@@ -1,3 +1,4 @@
+// Core gamification math for XP, levels, streaks, and learner rewards.
 import { GAMIFICATION_CONFIG, LEVEL_SYSTEM } from "./gamification-config";
 
 // Re-export constants for backward compatibility

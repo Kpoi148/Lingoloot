@@ -1,3 +1,4 @@
+// Mongoose model that stores cosmetic reward items available in the shop.
 import mongoose from "mongoose";
 
 export type ShopItemType = "frame" | "avatar";

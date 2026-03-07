@@ -1,3 +1,4 @@
+// Public API for serving quiz content to learner pages.
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "@/lib/security/api-error";
 import Quiz from "../../../models/Quiz";

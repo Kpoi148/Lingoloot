@@ -1,3 +1,4 @@
+// Admin API for managing Story Cloze game records.
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createApiErrorResponse } from "@/lib/security/api-error";

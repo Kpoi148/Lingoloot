@@ -1,3 +1,4 @@
+// Reusable skeleton placeholder component for loading states.
 import { cn } from "@/lib/shared/utils";
 
 function Skeleton({

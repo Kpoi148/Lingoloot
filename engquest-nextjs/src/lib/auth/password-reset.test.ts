@@ -1,3 +1,4 @@
+// Tests for password reset token lifecycle and validation rules.
 import {
   PASSWORD_RESET_TOKEN_TTL_MINUTES,
   createPasswordResetToken,

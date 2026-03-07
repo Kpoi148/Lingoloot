@@ -1,3 +1,4 @@
+// Learner page for browsing available topics before starting a study flow.
 import Link from "next/link";
 import {
   BookOpen,

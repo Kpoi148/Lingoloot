@@ -1,3 +1,4 @@
+// Mongoose model that stores one-time password reset tokens and expiry data.
 import mongoose from "mongoose";
 
 export type PasswordResetTokenDocument = {

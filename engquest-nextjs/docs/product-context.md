@@ -92,6 +92,9 @@ The public landing page should market learner capabilities only, not admin tooli
   - Remove copy-paste logic by extracting shared utilities.
 - Comments:
   - Add comments only when code intent is non-obvious.
+  - Prefer one short comment directly above an important function, callback, or exported helper.
+  - Comment format should briefly state purpose, for example `// This function validates ...`.
+  - Avoid inline comments inside function bodies unless they explain a non-obvious edge case or invariant.
 
 ## Security and reliability rules
 - AuthN/AuthZ:

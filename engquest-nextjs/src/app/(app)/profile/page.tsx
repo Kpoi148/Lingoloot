@@ -1,3 +1,4 @@
+// Learner profile page for personal data, rewards, and equipped cosmetics.
 import { getUserProfile } from "@/actions/user/profile.actions";
 import { getShopItems } from "@/actions/user/shop.actions";
 import ProfileClient from "./ProfileClient";

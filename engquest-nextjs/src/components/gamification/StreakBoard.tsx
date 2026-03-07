@@ -1,4 +1,5 @@
 "use client";
+// Gamification board that visualizes streak progress and daily reward rhythm.
 
 import { useState, useMemo } from "react";
 import { Check, Lock, Gift, Sparkles, Flame } from "lucide-react";

@@ -1,4 +1,5 @@
 "use server";
+// Server actions for admin-managed shop CRUD operations.
 
 import { ensureAdminSession } from "@/lib/auth/auth-utils";
 import { connectToDatabase } from "@/lib/db/mongodb";

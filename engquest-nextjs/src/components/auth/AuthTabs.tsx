@@ -1,4 +1,5 @@
 "use client";
+// Auth card switcher that keeps login and registration in one landing surface.
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";

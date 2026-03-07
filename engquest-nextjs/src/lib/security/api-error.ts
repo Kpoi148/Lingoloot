@@ -1,3 +1,4 @@
+// Shared API error formatter that hides internals behind stable client responses.
 import { NextResponse } from "next/server";
 
 type ErrorResponseOptions = {

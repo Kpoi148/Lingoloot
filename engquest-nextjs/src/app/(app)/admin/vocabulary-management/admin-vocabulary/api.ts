@@ -1,3 +1,4 @@
+// Client-side API helpers for admin vocabulary management screens.
 import type { VocabularyItem } from "./types";
 
 type VocabularyPayload = { data?: VocabularyItem[]; message?: string };

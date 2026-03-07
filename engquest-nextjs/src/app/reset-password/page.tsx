@@ -1,3 +1,4 @@
+// Guest page for applying a reset token and choosing a new password.
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
 type ResetPasswordPageProps = {

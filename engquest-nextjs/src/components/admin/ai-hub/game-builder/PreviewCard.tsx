@@ -1,4 +1,5 @@
 "use client";
+// Preview panel for reviewing a generated Story Cloze game before saving.
 
 import { splitIntoTokens } from "./utils";
 import type { Game } from "./types";

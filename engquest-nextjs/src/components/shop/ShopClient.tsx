@@ -1,4 +1,5 @@
 "use client";
+// Main shop surface for browsing, filtering, and purchasing reward items.
 
 import { useEffect, useState } from "react";
 import ShopItemCard from "./ShopItemCard";
@@ -25,6 +26,7 @@ export default function ShopClient({ items, inventory, currency }: ShopClientPro
         setCurrentCurrency(currency);
     }, [currency]);
 
+    // This function applies purchase results locally so the shop updates before the next refresh.
     const handlePurchaseSuccess = (itemId: string, newBalance: number) => {
         setOwnedItemIds((prev) =>
             prev.includes(itemId) ? prev : [...prev, itemId]

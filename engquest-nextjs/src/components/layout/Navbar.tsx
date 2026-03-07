@@ -1,4 +1,5 @@
 "use client";
+// Main authenticated navbar that surfaces navigation, user context, and rewards.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

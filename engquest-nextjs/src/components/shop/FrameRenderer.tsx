@@ -1,3 +1,4 @@
+// Avatar frame renderer that applies equipped cosmetic frames with fallbacks.
 import Image from "next/image";
 import TechFrame from "@/components/shop/frames/TechFrame";
 import MysticFrame from "@/components/shop/frames/MysticFrame";

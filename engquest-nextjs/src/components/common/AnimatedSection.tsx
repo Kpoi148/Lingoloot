@@ -1,4 +1,5 @@
 "use client";
+// Shared section wrapper that adds reveal-on-scroll animation behavior.
 
 import { useEffect, useRef, useState } from "react";
 

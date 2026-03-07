@@ -1,3 +1,4 @@
+// Tests for shared utility helpers.
 import { cn, isRecent } from './utils';
 
 describe('utils', () => {

@@ -1,4 +1,5 @@
 "use client";
+// Admin form for creating or editing a shop item and its reward metadata.
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";

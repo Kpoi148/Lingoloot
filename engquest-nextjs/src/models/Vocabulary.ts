@@ -1,3 +1,4 @@
+// Mongoose model that stores vocabulary entries and study metadata.
 import mongoose from "mongoose";
 
 export interface VocabularyMedia {

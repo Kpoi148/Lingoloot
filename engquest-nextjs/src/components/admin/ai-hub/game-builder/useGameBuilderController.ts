@@ -1,4 +1,5 @@
 "use client";
+// Controller hook that manages AI game builder state, generation, and save actions.
 
 import { useActionState, useEffect, useMemo, useState } from "react";
 import {
@@ -88,6 +89,7 @@ export function useGameBuilderController() {
   useEffect(() => {
     let active = true;
 
+    // This function loads categories and vocabulary once so the builder can derive filtered state locally.
     const loadData = async () => {
       setDataError(null);
       try {
@@ -148,6 +150,7 @@ export function useGameBuilderController() {
   const previewWordBank = useMemo(() => getPreviewWordBank(game), [game]);
   const answerSet = useMemo(() => getAnswerSet(game), [game]);
 
+  // This function parses and validates the editable JSON before enabling preview or save.
   const parseJson = (value: string) => {
     if (!value.trim()) {
       setGame(null);
@@ -178,6 +181,7 @@ export function useGameBuilderController() {
     parseJson(nextValue);
   };
 
+  // This function caches dictionary meanings so repeated preview clicks do not refetch the same word.
   const loadMeaning = async (word: string) => {
     const normalized = word.toLowerCase();
     if (meaningCache[normalized]) {
@@ -189,11 +193,10 @@ export function useGameBuilderController() {
       const meaning = await loadDictionaryMeaning(word);
       setMeaningCache((prev) => ({ ...prev, [normalized]: meaning }));
       setSelectedMeaning({ word, meaning });
-    } catch {
-      // Ignore lookup errors in preview UI.
-    }
+    } catch {}
   };
 
+  // This function asks AI for a game and validates the result before preview or save.
   const handleGenerate = async () => {
     setGenerateError(null);
     if (!topic.trim()) {
@@ -230,6 +233,7 @@ export function useGameBuilderController() {
     }
   };
 
+  // This function saves the last validated game payload together with the active topic label.
   const handleSave = () => {
     void saveAction({ game, topicName: selectedCategory?.name ?? topic.trim() });
   };

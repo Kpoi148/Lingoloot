@@ -1,4 +1,5 @@
 "use client";
+// Landing navigation that jumps guests into learner sections or auth entry points.
 
 import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";

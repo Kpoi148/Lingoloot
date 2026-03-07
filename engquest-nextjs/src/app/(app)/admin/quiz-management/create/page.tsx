@@ -1,4 +1,5 @@
 "use client";
+// Admin page for manually creating a new quiz.
 
 import { useEffect, useState } from "react";
 

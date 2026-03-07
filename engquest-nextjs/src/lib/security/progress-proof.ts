@@ -1,3 +1,4 @@
+// Helpers for minting and verifying proof tokens before progress is persisted.
 import { SignJWT, jwtVerify } from "jose";
 
 export type ProgressProofKind = "vocab" | "quiz";

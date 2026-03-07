@@ -1,3 +1,4 @@
+// Landing section that surfaces streaks, XP, Gems, and profile rewards.
 import type { ReactNode } from "react";
 import { Flame, Gem, Gift, Sparkles, Trophy } from "lucide-react";
 import { AnimatedSection } from "@/components/common/AnimatedSection";

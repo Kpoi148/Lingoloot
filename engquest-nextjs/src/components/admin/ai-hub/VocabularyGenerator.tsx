@@ -1,4 +1,5 @@
 "use client";
+// Admin AI tool for generating vocabulary sets and quiz-ready word data.
 
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, RefreshCcw, Save } from "lucide-react";
@@ -32,6 +33,7 @@ type QuizResult = {
 
 const levels = ["Cơ bản", "Trung bình", "Khó"] as const;
 
+// This function extracts an optional item count from the prompt while keeping AI requests capped.
 const getRequestedCount = (input: string) => {
     const match = input.match(/(\d+)/);
     if (!match) return null;
@@ -40,6 +42,7 @@ const getRequestedCount = (input: string) => {
     return Math.min(value, 50);
 };
 
+// This function checks whether the AI payload matches the vocabulary card shape.
 const isWordResult = (value: unknown): value is WordResult => {
     return Boolean(
         value &&
@@ -49,6 +52,7 @@ const isWordResult = (value: unknown): value is WordResult => {
     );
 };
 
+// This function checks whether the AI payload matches the quiz preview shape.
 const isQuizResult = (value: unknown): value is QuizResult => {
     return Boolean(
         value &&
@@ -70,6 +74,7 @@ export default function VocabularyGenerator() {
     useEffect(() => {
         let active = true;
 
+        // This function loads categories first because saving generated words requires a target topic.
         const loadCategories = async () => {
             try {
                 const response = await fetch("/api/admin/categories", {
@@ -104,6 +109,7 @@ export default function VocabularyGenerator() {
         };
     }, []);
 
+    // This memo normalizes AI output into a vocabulary list for card preview and save flow.
     const wordItems = useMemo(() => {
         if (!resultData) return null;
         if (Array.isArray(resultData)) {
@@ -116,6 +122,7 @@ export default function VocabularyGenerator() {
         return null;
     }, [resultData]);
 
+    // This memo unwraps quiz-shaped AI responses so the preview can render both direct and nested payloads.
     const quizData = useMemo(() => {
         if (!resultData) return null;
         if (isQuizResult(resultData)) {
@@ -134,6 +141,7 @@ export default function VocabularyGenerator() {
     const hasWordItems = Boolean(wordItems?.length);
     const hasQuizData = Boolean(quizData);
 
+    // This function builds the final AI request from the current prompt, level, and optional count hint.
     const handleGenerate = async () => {
         const trimmedPrompt = prompt.trim();
         if (!trimmedPrompt) {
@@ -184,6 +192,7 @@ export default function VocabularyGenerator() {
         }
     };
 
+    // This function saves each generated vocabulary item into the selected admin category.
     const handleSave = async () => {
         if (!wordItems || wordItems.length === 0) {
             toast.error("Không có dữ liệu từ vựng để lưu.");

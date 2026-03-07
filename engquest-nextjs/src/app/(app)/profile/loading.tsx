@@ -1,3 +1,4 @@
+// Loading placeholder shown while the learner profile page resolves data.
 const SkeletonBlock = ({ className }: { className: string }) => (
   <div className={`animate-pulse rounded-2xl bg-surface-muted ${className}`} />
 );

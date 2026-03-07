@@ -1,4 +1,5 @@
 "use client";
+// Password reset request form for sending a recovery email.
 
 import Link from "next/link";
 import { useState } from "react";

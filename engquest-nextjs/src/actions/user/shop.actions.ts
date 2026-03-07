@@ -1,4 +1,5 @@
 "use server";
+// Server actions for learner shop purchases, inventory ownership, and equipment changes.
 
 import mongoose from "mongoose";
 import { getSession } from "@/lib/auth/auth-utils";
@@ -8,6 +9,7 @@ import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import type { ShopCatalogItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";
 
+// This function returns only active shop items and narrows them to the learner UI contract.
 export async function getShopItems(): Promise<ShopCatalogItem[]> {
     await connectToDatabase();
     try {
@@ -31,6 +33,7 @@ export type BuyItemResult =
     | { success: true; newBalance: number; message: string }
     | { success: false; message: string };
 
+// This function performs the learner purchase flow with one conditional update for balance and inventory.
 export async function buyItem(itemId: string): Promise<BuyItemResult> {
     const session = await getSession();
     if (!session?.user?.id) {
@@ -97,6 +100,7 @@ export async function buyItem(itemId: string): Promise<BuyItemResult> {
     };
 }
 
+// This function equips a frame or avatar for the current user while enforcing ownership rules.
 export async function equipItem(type: "frame" | "avatar", itemId: string) {
     const session = await getSession();
     if (!session?.user?.id) {
@@ -107,10 +111,8 @@ export async function equipItem(type: "frame" | "avatar", itemId: string) {
 
     const updateField = type === "frame" ? "gamification.equippedFrame" : "gamification.equippedAvatar";
 
-    // Validate ownership
     const user = await User.findById(session.user.id).select("gamification.inventory role").lean();
 
-    // Allow admins to equip any item regardless of inventory
     const isAdmin = user?.role === "admin";
 
     if (!user || (!isAdmin && !user.gamification?.inventory.includes(itemId))) {

@@ -1,3 +1,4 @@
+// Static configuration values for gamification thresholds and rewards.
 export const GAMIFICATION_CONFIG = {
     XP_PER_LEVEL: 100,
     BASE_DAILY_XP: 50,
