@@ -1,42 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
-type Tab = "login" | "register";
+export type AuthTab = "login" | "register";
 
 type AuthTabsProps = {
-    defaultTab?: Tab;
+    defaultTab?: AuthTab;
+    activeTab?: AuthTab;
 };
 
-export default function AuthTabs({ defaultTab = "login" }: AuthTabsProps) {
-    const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
+export default function AuthTabs({
+    defaultTab = "login",
+    activeTab: preferredTab,
+}: AuthTabsProps) {
+    const [activeTab, setActiveTab] = useState<AuthTab>(preferredTab ?? defaultTab);
 
-    const tabs: { id: Tab; label: string }[] = [
+    useEffect(() => {
+        if (preferredTab) {
+            setActiveTab(preferredTab);
+        }
+    }, [preferredTab]);
+
+    const tabs: { id: AuthTab; label: string }[] = [
         { id: "login", label: "Đăng nhập" },
         { id: "register", label: "Tạo tài khoản" },
     ];
 
     return (
-        <div id="auth-section" className="w-full max-w-md scroll-mt-28">
+        <div id="auth-section" className="mx-auto w-full max-w-md scroll-mt-32">
             {/* Tab Buttons */}
-            <div className="mb-4 flex rounded-2xl border border-slate-200/70 bg-white/60 p-1.5 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/60">
+            <div className="mb-4 flex rounded-[1.35rem] border border-black/10 bg-black/[0.03] p-1.5 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${activeTab === tab.id
-                                ? "text-slate-900 dark:text-slate-100"
+                        className={`relative flex-1 rounded-[1rem] px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
+                            activeTab === tab.id
+                                ? "text-slate-950 dark:text-white"
                                 : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-                            }`}
+                        }`}
                     >
                         {activeTab === tab.id && (
                             <motion.div
                                 layoutId="activeTab"
-                                className="absolute inset-0 rounded-xl bg-white shadow-lg shadow-slate-200/60 dark:bg-slate-800 dark:shadow-slate-950/40"
+                                className="absolute inset-0 rounded-[1rem] bg-white shadow-[0_18px_35px_-24px_rgba(15,23,42,0.45)] dark:bg-slate-900 dark:shadow-[0_18px_35px_-24px_rgba(2,6,23,0.9)]"
                                 transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
                             />
                         )}
@@ -46,7 +57,7 @@ export default function AuthTabs({ defaultTab = "login" }: AuthTabsProps) {
             </div>
 
             {/* Tab Content */}
-            <div id="register" className="scroll-mt-28">
+            <div className="scroll-mt-32">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
