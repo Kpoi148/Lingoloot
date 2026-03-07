@@ -6,6 +6,7 @@ Use this map before editing code. Identify impacted features first, then execute
 
 | Feature area | Main user routes | Main APIs / actions | Core components / libs | Data models |
 |---|---|---|---|---|
+| Guest landing and learner entry | `/` | client-side section navigation only; auth entry delegates to auth APIs below | `src/app/page.tsx`, `components/landing/*`, `components/common/AnimatedSection.tsx`, `components/auth/AuthTabs.tsx` | none |
 | Authentication and account recovery | `/`, `/forgot-password`, `/reset-password` | `/api/auth/[...nextauth]`, `/api/auth/register`, `/api/auth/forgot-password`, `/api/auth/reset-password` | `components/auth/*`, `lib/auth/auth-options.ts`, `lib/auth/auth-utils.ts`, `lib/auth/api-auth.ts`, `lib/auth/password-reset.ts`, `lib/auth/email.ts`, `lib/security/rate-limit.ts`, `lib/security/request-ip.ts` | `User`, `PasswordResetToken` |
 | Topics and vocabulary browsing | `/topics`, `/learning/[slug]`, `/learning/[slug]/flashcards` | `/api/categories`, `/api/vocabularies`, `/api/dictionary/meaning` | `app/(app)/topics/*`, `app/(app)/learning/*`, dictionary helpers in `lib/*` | `Category`, `Vocabulary`, `DictionaryCache` |
 | Practice and quiz gameplay | `/learn/practice`, `/learn/practice/[id]`, `/learning/[slug]/quiz` | `/api/quizzes`, `/api/progress/quiz`, `/api/progress/vocab` | quiz/game UI in `components/game/*`, learning screens under `app/(app)/learn/*` and `app/(app)/learning/*` | `Quiz`, `QuizResult`, `TopicProgress`, `User` |
@@ -45,6 +46,7 @@ Copy and fill this block in task notes/PR description:
 
 ## Change scoping rules
 - Prefer smallest possible change set for requested behavior.
+- Changes to `src/app/page.tsx`, `components/landing/*`, or the landing-facing behavior of `components/auth/AuthTabs.tsx` impact both guest landing and authentication entry; run regression for both surfaces.
 - If touching shared modules (`lib/*`, layout/nav, auth), assume multi-feature impact and run broader regression.
 - For shop currency/inventory flows, preserve atomic purchase invariants in `actions/user/shop.actions.ts` (single conditional write for balance + ownership).
 - Any schema or contract change requires:

@@ -2,11 +2,13 @@
 
 ## Product summary
 LingoLoot is an English learning platform with gamification.
+Guests enter through a learner-first landing page that points to real study flows such as topics, flashcards, quizzes, Story Cloze, rewards, and profile customization.
 Users learn vocabulary and quizzes, gain XP/Gems, keep login streaks, and customize profile visuals from a shop.
 Admins manage core content and can generate content with AI.
+The public landing page should market learner capabilities only, not admin tooling.
 
 ## Primary user roles
-- Guest: can access landing and auth pages.
+- Guest: can access the learner-first landing page, section navigation, and auth entry points.
 - Learner (authenticated user): learns, plays, tracks progress, uses profile/shop/inventory.
 - Admin: full content and user management from admin portal.
 
@@ -33,6 +35,7 @@ Admins manage core content and can generate content with AI.
 - UI:
   - Routes/pages: `src/app/**/page.tsx`
   - Components: `src/components/**`
+  - Public landing composition lives in `src/app/page.tsx` and `src/components/landing/*`, with auth entry embedded through `src/components/auth/AuthTabs.tsx`
 
 ## Layering and dependency rules
 - `components/*` can depend on `lib/*`, `types/*`, and actions (for UI-triggered operations).

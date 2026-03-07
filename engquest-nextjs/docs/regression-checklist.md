@@ -18,6 +18,13 @@ If any command fails or is skipped, record:
 
 ## 2) Core functional regression
 
+### Landing and guest entry surface
+- `/` loads without runtime errors.
+- Hero, navbar, section anchors, and auth quick access render without nested scroll containers or broken overflow.
+- Navbar and CTA buttons navigate to the intended landing section.
+- Login entry points open the auth card with the login tab active.
+- Register entry points open the auth card with the register tab active.
+
 ### A. Authentication and session
 - Register flow works.
 - Login with valid credentials works.
