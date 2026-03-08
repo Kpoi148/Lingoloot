@@ -11,12 +11,15 @@
   - `docs/product-context.md`
   - `docs/feature-map.md`
   - `docs/regression-checklist.md`
+  - `docs/frontend-feature-pattern.md`
 - No code edits are allowed until this pre-read step is completed.
 
 ## Mandatory Workflow (Hard Gate)
 - Before editing:
   - Fill Impact Analysis block from `docs/feature-map.md`
   - Identify impacted feature areas and risk level
+- During frontend refactors or new complex client feature work:
+  - Follow `docs/frontend-feature-pattern.md`
 - During implementation:
   - Keep changes scoped to requested feature
   - Preserve backward compatibility unless user explicitly requests breaking change

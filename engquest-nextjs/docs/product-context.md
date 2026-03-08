@@ -43,6 +43,12 @@ The public landing page should market learner capabilities only, not admin tooli
 - `lib/*` should be framework-light and reusable; avoid page-specific logic here.
 - Do not import UI components into `lib/*`, `models/*`, `actions/*`, or API routes.
 
+## Frontend feature pattern (hard rule)
+- Complex client-side features must follow `docs/frontend-feature-pattern.md`.
+- Keep entry components compositional; move state orchestration into a dedicated controller hook.
+- Put feature-local fetch/action wrappers in `api.ts`, pure helpers in `utils.ts`, and local contracts in `types.ts`.
+- Prefer feature folders for builders, generators, editors, and gameplay surfaces that have multiple stateful workflows.
+
 ## Library structure rules (hard rule)
 - `src/lib` is organized by domain folders, not as a flat file list:
   - `lib/auth/*`: auth/session helpers (`auth-options`, `auth-utils`, `api-auth`, `password-reset`, `email`).
