@@ -5,16 +5,14 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import BrandLogo from "@/components/common/BrandLogo";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import {
+  landingActions,
+  landingNavItems,
+} from "@/components/landing/content";
 
 type NavbarProps = {
     onNavigate: (id: string) => void;
 };
-
-const navItems = [
-    { label: "Sản phẩm", id: "product" },
-    { label: "Lộ trình", id: "flow" },
-    { label: "Phần thưởng", id: "rewards" },
-];
 
 export default function Navbar({ onNavigate }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -68,7 +66,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
                     </button>
 
                     <div className="hidden items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300 lg:flex">
-                        {navItems.map((item) => (
+                        {landingNavItems.map((item) => (
                             <button
                                 key={item.id}
                                 type="button"
@@ -84,14 +82,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
                         <ThemeToggle />
                         <button
                             type="button"
-                            onClick={() => handleNavClick("login")}
-                            className="hidden rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 transition duration-300 hover:-translate-y-0.5 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:text-white sm:block"
-                        >
-                            Đăng nhập
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => handleNavClick("register")}
+                            onClick={() => handleNavClick(landingActions.primary.id)}
                             className="hidden items-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-[0_18px_40px_-24px_rgba(15,23,42,0.75)] transition duration-300 hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:shadow-[0_18px_40px_-24px_rgba(255,255,255,0.4)] dark:hover:bg-slate-100 sm:inline-flex"
                         >
                             Bắt đầu ngay
@@ -115,7 +106,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
                 {isMobileMenuOpen && (
                     <div className="animate-fade-in-down mt-2 overflow-hidden rounded-[1.75rem] border border-black/10 bg-white/90 p-4 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.55)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 dark:shadow-[0_24px_60px_-32px_rgba(2,6,23,0.95)] lg:hidden">
                         <div className="flex flex-col gap-2">
-                            {navItems.map((item) => (
+                            {landingNavItems.map((item) => (
                                 <button
                                     key={item.id}
                                     type="button"
@@ -128,14 +119,9 @@ export default function Navbar({ onNavigate }: NavbarProps) {
                             <div className="my-2 h-px bg-black/10 dark:bg-white/10" />
                             <button
                                 type="button"
-                                onClick={() => handleNavClick("login")}
-                                className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
-                            >
-                                Đăng nhập
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => handleNavClick("register")}
+                                onClick={() =>
+                                    handleNavClick(landingActions.primary.id)
+                                }
                                 className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white shadow-[0_18px_40px_-28px_rgba(15,23,42,0.8)] transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:shadow-[0_18px_40px_-28px_rgba(255,255,255,0.35)] dark:hover:bg-slate-100"
                             >
                                 Bắt đầu ngay

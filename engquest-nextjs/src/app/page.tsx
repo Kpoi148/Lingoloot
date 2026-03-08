@@ -11,6 +11,7 @@ import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import GamificationSection from "@/components/landing/GamificationSection";
 import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
+import { landingQuickAccessBullets } from "@/components/landing/content";
 
 // Font configurations
 const manrope = Manrope({
@@ -113,25 +114,23 @@ export default function HomePage() {
                   Quick access
                 </p>
                 <h2 className="font-[var(--font-display)] text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  Bắt đầu phiên học đầu tiên hoặc tiếp tục streak hiện tại.
+                  Vào learner workspace mà không phải đọc lại toàn bộ landing.
                 </h2>
                 <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  Landing này dẫn thẳng vào khu vực learner: topics,
-                  flashcards, quiz, Story Cloze, rewards và shop hồ sơ.
+                  Nếu bạn mới bắt đầu, hãy tạo tài khoản. Nếu bạn đã có tiến
+                  độ, chỉ cần đăng nhập để quay lại đúng nhịp học hiện tại.
                 </p>
               </div>
 
-              <div className="mb-5 flex flex-wrap gap-2">
-                {["Topics", "Flashcards", "Quiz", "Story Cloze", "Shop"].map(
-                  (item) => (
-                    <span
-                      key={item}
-                      className="inline-flex rounded-full border border-black/10 bg-white/65 px-3 py-1 text-xs font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300"
-                    >
-                      {item}
-                    </span>
-                  )
-                )}
+              <div className="mb-5 space-y-2">
+                {landingQuickAccessBullets.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-black/10 bg-white/65 px-4 py-3 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300"
+                  >
+                    {item}
+                  </div>
+                ))}
               </div>
 
               <AuthTabs activeTab={authTab} />

@@ -35,6 +35,7 @@ The public landing page should market learner capabilities only, not admin tooli
   - Routes/pages: `src/app/**/page.tsx`
   - Components: `src/components/**`
   - Public landing composition lives in `src/app/page.tsx` and `src/components/landing/*`, with auth entry embedded through `src/components/auth/AuthTabs.tsx`
+  - Shared landing copy, navigation labels, and CTA metadata should be centralized in `src/components/landing/content.ts`
 
 ## Layering and dependency rules
 - `components/*` can depend on `lib/*`, `types/*`, and actions (for UI-triggered operations).
@@ -96,6 +97,7 @@ The public landing page should market learner capabilities only, not admin tooli
   - Keep DB writes, cache invalidation, and external API calls explicit and near orchestration code.
 - Duplication:
   - Remove copy-paste logic by extracting shared utilities.
+  - For landing/marketing surfaces, avoid repeating CTA labels, section nav items, or learner-flow copy across multiple section files; centralize them in a shared content module.
 - Comments:
   - Add comments only when code intent is non-obvious.
   - Prefer one short comment directly above an important function, callback, or exported helper.

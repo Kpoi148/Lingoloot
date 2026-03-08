@@ -1,41 +1,33 @@
 "use client";
-// Landing showcase block that previews the flashcard-style study experience.
+// Landing showcase block that previews one learner session without repeating the whole marketing stack.
 
 import {
     ArrowUpRight,
-    Gem,
-    ShieldCheck,
-    Sparkles,
-    Trophy,
+    CheckCircle2,
+    Clock3,
+    ListChecks,
     Volume2,
 } from "lucide-react";
 
-const practiceCards = [
+const sessionSignals = [
     {
-        label: "Quiz accuracy",
-        value: "8/10 đúng",
+        label: "Next checkpoint",
+        value: "Quiz ngắn trên cùng bộ từ",
         tone:
             "border-sky-200/60 bg-sky-50/80 text-sky-700 dark:border-sky-400/20 dark:bg-sky-500/10 dark:text-sky-300",
     },
     {
-        label: "Story Cloze",
-        value: "Kéo thả theo ngữ cảnh",
+        label: "Recall mode",
+        value: "Story Cloze khóa lại ngữ cảnh",
         tone:
             "border-emerald-200/60 bg-emerald-50/80 text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-300",
     },
     {
         label: "Progress sync",
-        value: "Lưu tiến độ theo topic",
+        value: "Lưu để quay lại đúng topic",
         tone:
             "border-amber-200/60 bg-amber-50/80 text-amber-700 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300",
     },
-];
-
-const todayLoop = [
-    "Mở topic Travel Essentials",
-    "Lật 12 flashcards và nghe phát âm",
-    "Làm 1 quiz ngắn",
-    "Khóa phiên học bằng Story Cloze",
 ];
 
 export default function FlashcardMockup() {
@@ -67,11 +59,11 @@ export default function FlashcardMockup() {
                     <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-slate-500 dark:text-slate-400">
-                                Product preview
+                                Study session preview
                             </p>
                             <h2 className="mt-2 font-[var(--font-display)] text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-                                Một phiên học đi từ input tới reward trong cùng
-                                một màn hình.
+                                Nhìn một phiên học thật trông như thế nào,
+                                thay vì đọc thêm một danh sách tính năng.
                             </h2>
                         </div>
                         <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/75 px-3 py-1.5 text-xs font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300">
@@ -80,7 +72,7 @@ export default function FlashcardMockup() {
                         </div>
                     </div>
 
-                    <div className="grid gap-4 xl:grid-cols-[minmax(0,1.18fr)_minmax(280px,0.82fr)]">
+                    <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
                         <div className="grid gap-4">
                             <article className="landing-subtle-panel rounded-[1.75rem] p-5">
                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -92,9 +84,10 @@ export default function FlashcardMockup() {
                                             Travel Essentials
                                         </p>
                                         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                                            Bộ từ đang học sẽ đi xuyên suốt từ
-                                            flashcards sang quiz và bài Story
-                                            Cloze.
+                                            Flashcard là điểm vào của phiên học.
+                                            Sau phần ghi nhớ ban đầu, người học
+                                            đi tiếp sang quiz rồi mới khóa lại ở
+                                            Story Cloze.
                                         </p>
                                     </div>
                                     <div className="flex flex-wrap gap-2 lg:max-w-[220px] lg:justify-end">
@@ -193,16 +186,17 @@ export default function FlashcardMockup() {
                                         <div className="rounded-[1.4rem] border border-black/10 bg-slate-950 px-4 py-4 text-white dark:border-white/10 dark:bg-white dark:text-slate-950">
                                             <div className="flex items-center justify-between">
                                                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.26em] text-white/60 dark:text-slate-500">
-                                                    Session output
+                                                    Session status
                                                 </p>
-                                                <Trophy className="h-4 w-4" />
+                                                <CheckCircle2 className="h-4 w-4" />
                                             </div>
                                             <p className="mt-4 text-2xl font-semibold tracking-tight">
-                                                +24 XP
+                                                12 cards reviewed
                                             </p>
                                             <p className="mt-1 text-sm text-white/70 dark:text-slate-600">
-                                                Giữ streak, mở quiz tiếp theo và
-                                                tích thêm Gem.
+                                                Từ bộ từ này, người học đi tiếp
+                                                sang quiz ngắn trước khi progress
+                                                được lưu lại.
                                             </p>
                                         </div>
                                     </div>
@@ -210,7 +204,7 @@ export default function FlashcardMockup() {
                             </article>
 
                             <div className="grid gap-4 md:grid-cols-3">
-                                {practiceCards.map((card) => (
+                                {sessionSignals.map((card) => (
                                     <div
                                         key={card.label}
                                         className={`rounded-[1.4rem] border p-4 ${card.tone}`}
@@ -229,79 +223,44 @@ export default function FlashcardMockup() {
                         <div className="grid gap-4">
                             <article className="landing-subtle-panel rounded-[1.6rem] p-5">
                                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                                    Today&apos;s loop
+                                    Session rhythm
                                 </p>
                                 <div className="mt-4 space-y-3">
-                                    {todayLoop.map((item, index) => (
-                                        <div
-                                            key={item}
-                                            className="flex gap-3 rounded-2xl border border-black/10 bg-white/70 px-3 py-3 text-sm text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
-                                        >
-                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-950 text-xs font-semibold text-white dark:bg-white dark:text-slate-950">
-                                                {index + 1}
-                                            </span>
-                                            <span>{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </article>
+                                    {[
+                                        {
+                                            icon: ListChecks,
+                                            title: "Một topic đang hoạt động",
+                                            description:
+                                                "Người học luôn biết mình đang ở bộ từ nào và bước kế tiếp là gì.",
+                                        },
+                                        {
+                                            icon: Clock3,
+                                            title: "Một lượt học ngắn nhưng trọn vòng",
+                                            description:
+                                                "Landing chỉ cần cho thấy phiên học đi tới đâu, không cần lặp mọi tính năng ở từng section.",
+                                        },
+                                    ].map((item) => {
+                                        const Icon = item.icon;
 
-                            <article className="landing-subtle-panel rounded-[1.6rem] p-5">
-                                <div className="flex items-center justify-between">
-                                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                                        Rewards
-                                    </p>
-                                    <Gem className="h-4 w-4 text-amber-500" />
-                                </div>
-                                <div className="mt-4 grid grid-cols-2 gap-3">
-                                    <div className="rounded-2xl border border-black/10 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                                            Daily reward
-                                        </p>
-                                        <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-white">
-                                            +5 Gems
-                                        </p>
-                                    </div>
-                                    <div className="rounded-2xl border border-black/10 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                                            Current streak
-                                        </p>
-                                        <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-white">
-                                            Day 07
-                                        </p>
-                                    </div>
-                                </div>
-                            </article>
-
-                            <article className="rounded-[1.6rem] border border-black/10 bg-[linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92))] p-5 text-white shadow-[0_28px_60px_-38px_rgba(15,23,42,0.8)] dark:border-white/10 dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-white/60 dark:text-slate-400">
-                                            Profile loadout
-                                        </p>
-                                        <p className="mt-2 text-lg font-semibold">
-                                            Avatar + frame từ shop learner
-                                        </p>
-                                    </div>
-                                    <Sparkles className="h-5 w-5 text-emerald-300" />
-                                </div>
-
-                                <div className="mt-5 flex items-center gap-4">
-                                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.45),rgba(255,255,255,0.08))]">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-950/40 text-sm font-semibold">
-                                            LL
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2 text-sm text-white/70 dark:text-slate-300">
-                                        <div className="flex items-center gap-2">
-                                            <ShieldCheck className="h-4 w-4 text-emerald-300" />
-                                            Equipped frame synced to profile
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Gem className="h-4 w-4 text-amber-300" />
-                                            Inventory mở rộng theo phần thưởng
-                                        </div>
-                                    </div>
+                                        return (
+                                            <div
+                                                key={item.title}
+                                                className="flex gap-3 rounded-2xl border border-black/10 bg-white/70 px-3 py-3 text-sm text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
+                                            >
+                                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-black/10 bg-white/80 text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-100">
+                                                    <Icon className="h-4 w-4" />
+                                                </span>
+                                                <div>
+                                                    <p className="font-semibold text-slate-900 dark:text-white">
+                                                        {item.title}
+                                                    </p>
+                                                    <p className="mt-1 leading-6 text-slate-600 dark:text-slate-300">
+                                                        {item.description}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </article>
                         </div>

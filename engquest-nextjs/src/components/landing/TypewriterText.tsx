@@ -28,15 +28,6 @@ export default function TypewriterText({
         [phrases]
     );
 
-    const longestPhraseLength = useMemo(
-        () =>
-            safePhrases.reduce(
-                (maxLength, phrase) => Math.max(maxLength, phrase.length),
-                0
-            ),
-        [safePhrases]
-    );
-
     useEffect(() => {
         if (typeof window === "undefined") {
             return;
@@ -106,8 +97,7 @@ export default function TypewriterText({
     return (
         <span
             aria-live="polite"
-            className={`inline-flex min-h-[1.1em] items-center ${className}`}
-            style={{ minWidth: `${Math.max(longestPhraseLength, 12)}ch` }}
+            className={`block min-h-[2.2em] max-w-full whitespace-normal break-words ${className}`}
         >
             <span>{displayedText}</span>
             <span

@@ -84,6 +84,15 @@ Refactor into this pattern when any of the following are true:
 - Shared reusable logic belongs in `lib/*` only when it is cross-feature, not just because a file feels large.
 - Do not move page-specific JSX into `lib/*`.
 
+## Landing and marketing surfaces
+- Public landing sections may stay as presentational components under `src/components/landing/*`; they do not need controller hooks unless they become stateful workflows.
+- Shared landing copy, CTA labels, nav items, and learner-flow bullets should live in a single `content.ts` module instead of being duplicated across hero, navbar, CTA, footer, or preview sections.
+- Keep the landing focused on learner-facing flows only; avoid repeating the same feature list in multiple sections.
+- Prefer a small number of conversion surfaces:
+  - primary CTA in hero/navigation
+  - embedded auth entry surface
+  - final CTA near the end of the page
+
 ## Migration strategy
 - Refactor one feature at a time.
 - Preserve existing public imports when possible.

@@ -29,9 +29,9 @@ export default function GamificationSection() {
                         đều có giá trị.
                     </h2>
                     <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
-                        Streak, daily reward, XP, Gems và shop profile xuất hiện
-                        như một lớp giữ nhịp, không phải nội dung phụ. Đây là
-                        các feature learner có thật trong dự án.
+                        Phần này chỉ tập trung vào động lực quay lại: streak,
+                        daily reward, XP, Gems và các nâng cấp nhìn thấy được ở
+                        profile.
                     </p>
 
                     <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -113,7 +113,7 @@ export default function GamificationSection() {
 
                     <article className="landing-subtle-panel rounded-[1.7rem] p-5">
                         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                            Shop loop
+                            Cosmetics
                         </p>
                         <p className="mt-3 text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
                             Gems đổi thành avatar và frame cho hồ sơ cá nhân.
@@ -131,8 +131,8 @@ export default function GamificationSection() {
                             )}
                         </div>
                         <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                            Phần thưởng không nằm riêng lẻ, nó quay lại tác động
-                            trực tiếp lên profile learner.
+                            Reward loop kết thúc ở nơi người học nhìn thấy hằng
+                            ngày: profile của chính họ.
                         </p>
                     </article>
 
@@ -143,8 +143,8 @@ export default function GamificationSection() {
                                     Profile personalization
                                 </p>
                                 <p className="mt-3 text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                                    Hồ sơ learner mang cảm giác tiến bộ chứ
-                                    không chỉ là nơi đặt avatar.
+                                    Hồ sơ learner phản chiếu tiến bộ, không chỉ
+                                    là nơi đặt avatar.
                                 </p>
                             </div>
                             <Sparkles className="h-5 w-5 text-emerald-500" />

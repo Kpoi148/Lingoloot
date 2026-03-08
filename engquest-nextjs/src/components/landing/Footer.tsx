@@ -1,6 +1,7 @@
-// Landing footer with final navigation and auth entry links.
+// Landing footer with compact navigation and source links.
 import BrandLogo from "@/components/common/BrandLogo";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
+import { landingNavItems } from "@/components/landing/content";
 
 type FooterProps = {
     onNavigate: (id: string) => void;
@@ -45,8 +46,8 @@ export default function Footer({ onNavigate }: FooterProps) {
                         </div>
                         <p className="max-w-sm text-sm leading-6 text-slate-300">
                             Landing tập trung hoàn toàn vào hành trình của
-                            learner: học từ, luyện quiz, giữ streak và cá nhân
-                            hóa hồ sơ.
+                            learner: flow học rõ ràng, phần thưởng nhìn thấy
+                            được và một điểm bắt đầu đủ gọn.
                         </p>
                     </div>
 
@@ -55,49 +56,24 @@ export default function Footer({ onNavigate }: FooterProps) {
                             Khám phá
                         </p>
                         <div className="mt-4 flex flex-col gap-2 text-sm text-slate-200">
-                            <button
-                                type="button"
-                                onClick={() => onNavigate("product")}
-                                className="text-left transition hover:text-white"
-                            >
-                                Product preview
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => onNavigate("flow")}
-                                className="text-left transition hover:text-white"
-                            >
-                                Learning flow
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => onNavigate("rewards")}
-                                className="text-left transition hover:text-white"
-                            >
-                                Rewards
-                            </button>
+                            {landingNavItems.map((item) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => onNavigate(item.id)}
+                                    className="text-left transition hover:text-white"
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                            Truy cập
+                            Liên hệ
                         </p>
                         <div className="mt-4 flex flex-col gap-2 text-sm text-slate-200">
-                            <button
-                                type="button"
-                                onClick={() => onNavigate("login")}
-                                className="text-left transition hover:text-white"
-                            >
-                                Đăng nhập
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => onNavigate("register")}
-                                className="text-left transition hover:text-white"
-                            >
-                                Tạo tài khoản
-                            </button>
                             <a
                                 href="https://github.com/Kpoi148"
                                 target="_blank"
