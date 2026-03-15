@@ -57,5 +57,11 @@ export default async function PracticeGamePage({
     notFound();
   }
 
-  return <StoryClozeGame initialGame={game} />;
+  return (
+    <StoryClozeGame
+      initialGame={game}
+      exitHref="/learn/practice"
+      exitLabel="Về khu trò chơi"
+    />
+  );
 }
