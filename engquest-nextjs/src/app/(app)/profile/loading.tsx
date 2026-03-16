@@ -1,53 +1,69 @@
 // Loading placeholder shown while the learner profile page resolves data.
 const SkeletonBlock = ({ className }: { className: string }) => (
-  <div className={`animate-pulse rounded-2xl bg-surface-muted ${className}`} />
+  <div
+    className={`animate-pulse rounded-[24px] bg-slate-200/80 dark:bg-slate-800/80 ${className}`}
+  />
 );
 
 export default function ProfileLoading() {
   return (
-    <main className="min-h-screen bg-surface-page px-4 py-10 text-content">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:flex-row">
-        <section className="w-full rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme lg:w-[38%]">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-2">
-              <SkeletonBlock className="h-3 w-32" />
-              <SkeletonBlock className="h-7 w-48" />
-              <SkeletonBlock className="h-4 w-56" />
-            </div>
-            <SkeletonBlock className="h-9 w-28" />
-          </div>
+    <main className="relative min-h-screen overflow-hidden bg-surface-page px-4 py-10 text-content">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.18),transparent_38%),radial-gradient(circle_at_top_right,rgba(56,189,248,0.16),transparent_34%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_30%)]" />
 
-          <div className="mt-6 space-y-4">
-            <div className="flex items-center gap-4">
-              <SkeletonBlock className="h-20 w-20 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <SkeletonBlock className="h-4 w-40" />
-                <SkeletonBlock className="h-4 w-56" />
+      <div className="relative mx-auto w-full max-w-5xl">
+        <section className="rounded-[32px] border border-slate-900/10 bg-white/82 p-6 shadow-[0_35px_120px_-64px_rgba(15,23,42,0.55)] backdrop-blur dark:border-white/10 dark:bg-slate-950/82 md:p-8">
+          <div className="grid gap-8 xl:grid-cols-[280px_minmax(0,1fr)]">
+            <div className="space-y-5">
+              <div className="rounded-[28px] bg-white/70 p-5 dark:bg-slate-950/60">
+                <SkeletonBlock className="mx-auto h-36 w-36 rounded-[32px]" />
+                <div className="mt-5 flex flex-col items-center gap-3">
+                  <SkeletonBlock className="h-3 w-20" />
+                  <SkeletonBlock className="h-8 w-40" />
+                  <SkeletonBlock className="h-4 w-48" />
+                  <div className="flex gap-2">
+                    <SkeletonBlock className="h-8 w-16" />
+                    <SkeletonBlock className="h-8 w-24" />
+                  </div>
+                </div>
+              </div>
+
+              <SkeletonBlock className="h-40 w-full" />
+              <SkeletonBlock className="h-52 w-full" />
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <SkeletonBlock className="h-3 w-28" />
+                <SkeletonBlock className="h-10 w-72" />
+                <SkeletonBlock className="h-4 w-full max-w-2xl" />
+              </div>
+
+              <SkeletonBlock className="h-32 w-full" />
+
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <SkeletonBlock
+                    key={`profile-stat-${index}`}
+                    className="h-32 w-full"
+                  />
+                ))}
+              </div>
+
+              <div className="grid gap-5 lg:grid-cols-2">
+                <SkeletonBlock className="h-20 w-full" />
+                <SkeletonBlock className="h-20 w-full" />
+              </div>
+
+              <SkeletonBlock className="h-40 w-full" />
+
+              <div className="flex justify-between gap-3">
+                <SkeletonBlock className="h-10 w-32" />
+                <div className="flex gap-3">
+                  <SkeletonBlock className="h-10 w-28" />
+                  <SkeletonBlock className="h-10 w-32" />
+                </div>
               </div>
             </div>
-            <SkeletonBlock className="h-20 w-full" />
-            <SkeletonBlock className="h-10 w-32" />
-          </div>
-        </section>
-
-        <section className="flex w-full flex-1 flex-col rounded-3xl border border-edge bg-surface-card p-6 shadow-lg shadow-shadow-theme">
-          <div className="space-y-2">
-            <SkeletonBlock className="h-3 w-40" />
-            <SkeletonBlock className="h-7 w-52" />
-            <SkeletonBlock className="h-4 w-64" />
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={`stat-skeleton-${index}`}
-                className="rounded-2xl border border-edge bg-surface-card p-5 shadow-sm"
-              >
-                <SkeletonBlock className="h-10 w-10 rounded-2xl" />
-                <SkeletonBlock className="mt-4 h-6 w-24" />
-                <SkeletonBlock className="mt-2 h-4 w-32" />
-              </div>
-            ))}
           </div>
         </section>
       </div>
