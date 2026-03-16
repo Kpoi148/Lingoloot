@@ -219,36 +219,36 @@ export function ProfileUnifiedForm({
               );
             })}
           </div>
+        </div>
+      </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-900/8 pt-4 dark:border-white/8">
-            <button
-              type="button"
-              onClick={onSignOut}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/80 px-4 py-2.5 text-sm font-semibold text-content-secondary transition hover:-translate-y-0.5 hover:text-content dark:border-white/10 dark:bg-slate-950/70"
-            >
-              <LogOut className="h-4 w-4" />
-              Đăng xuất
-            </button>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-900/8 pt-6 dark:border-white/8">
+        <button
+          type="button"
+          onClick={onSignOut}
+          className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/80 px-4 py-2.5 text-sm font-semibold text-content-secondary transition hover:-translate-y-0.5 hover:text-content dark:border-white/10 dark:bg-slate-950/70"
+        >
+          <LogOut className="h-4 w-4" />
+          Đăng xuất
+        </button>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={onReset}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/80 px-4 py-2.5 text-sm font-semibold text-content-secondary transition hover:-translate-y-0.5 hover:text-content dark:border-white/10 dark:bg-slate-950/70"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Đặt lại
-              </button>
-              <button
-                type="submit"
-                disabled={isSaving}
-                className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_22px_55px_-32px_rgba(15,23,42,0.95)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-slate-900"
-              >
-                <Save className="h-4 w-4" />
-                {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
-              </button>
-            </div>
-          </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/80 px-4 py-2.5 text-sm font-semibold text-content-secondary transition hover:-translate-y-0.5 hover:text-content dark:border-white/10 dark:bg-slate-950/70"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Đặt lại
+          </button>
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_22px_55px_-32px_rgba(15,23,42,0.95)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-slate-900"
+          >
+            <Save className="h-4 w-4" />
+            {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
+          </button>
         </div>
       </div>
     </form>
