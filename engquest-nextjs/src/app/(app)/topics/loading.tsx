@@ -1,25 +1,25 @@
 // Loading placeholder shown while the topics page fetches learner content.
 export default function TopicsLoading() {
   const skeletonCards = Array.from({ length: 4 });
-  const stats = Array.from({ length: 4 });
+  const stats = Array.from({ length: 3 });
 
   return (
     <main className="min-h-screen px-4 pb-16 pt-8 text-content sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
         <section className="overflow-hidden rounded-[36px] border border-black/[0.08] bg-white/78 px-6 py-7 shadow-[0_40px_120px_-56px_rgba(15,23,42,0.45)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70 dark:shadow-[0_40px_120px_-56px_rgba(2,6,23,0.9)] sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-            <div className="space-y-6">
+          <div className="space-y-6">
+            <div className="max-w-5xl space-y-6">
               <div className="h-9 w-40 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800/80" />
               <div className="space-y-3">
                 <div className="h-14 w-full max-w-2xl animate-pulse rounded-[28px] bg-slate-200/70 dark:bg-slate-800/80" />
                 <div className="h-5 w-full max-w-2xl animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
-                <div className="h-5 w-4/5 max-w-xl animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
+                <div className="h-5 w-3/5 max-w-xl animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
               </div>
               <div className="flex flex-wrap gap-3">
                 <div className="h-11 w-44 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800/80" />
-                <div className="h-11 w-40 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
+                <div className="h-11 w-36 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-3">
                 {stats.map((_, index) => (
                   <div
                     key={`stat-${index}`}
@@ -34,19 +34,19 @@ export default function TopicsLoading() {
               </div>
             </div>
 
-            <div className="rounded-[30px] border border-black/[0.08] bg-white/80 p-6 dark:border-white/10 dark:bg-slate-950/80">
+            <div className="max-w-4xl rounded-[30px] border border-black/[0.08] bg-white/80 p-6 dark:border-white/10 dark:bg-slate-950/80">
               <div className="h-4 w-24 animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
               <div className="mt-4 h-10 w-3/4 animate-pulse rounded-[24px] bg-slate-200/70 dark:bg-slate-800/80" />
               <div className="mt-4 h-4 w-full animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
-              <div className="mt-2 h-4 w-5/6 animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="h-28 animate-pulse rounded-[22px] bg-slate-200/60 dark:bg-slate-800/70" />
-                <div className="h-28 animate-pulse rounded-[22px] bg-slate-200/60 dark:bg-slate-800/70" />
+              <div className="mt-2 h-4 w-2/3 animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-800/70" />
+              <div className="mt-6 flex flex-wrap gap-2">
+                <div className="h-8 w-28 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
+                <div className="h-8 w-24 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
+                <div className="h-8 w-32 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
               </div>
               <div className="mt-6 h-3 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800/80" />
               <div className="mt-6 flex gap-3">
                 <div className="h-10 w-40 animate-pulse rounded-full bg-slate-200/70 dark:bg-slate-800/80" />
-                <div className="h-10 w-32 animate-pulse rounded-full bg-slate-200/60 dark:bg-slate-800/70" />
               </div>
             </div>
           </div>
@@ -68,11 +68,11 @@ export default function TopicsLoading() {
             </div>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid gap-6 lg:grid-cols-2">
             {skeletonCards.map((_, index) => (
               <div
                 key={`skeleton-${index}`}
-                className="h-[372px] animate-pulse rounded-[30px] border border-black/[0.08] bg-white/78 dark:border-white/10 dark:bg-slate-950/72"
+                className="h-[290px] animate-pulse rounded-[30px] border border-black/[0.08] bg-white/78 dark:border-white/10 dark:bg-slate-950/72"
               />
             ))}
           </div>

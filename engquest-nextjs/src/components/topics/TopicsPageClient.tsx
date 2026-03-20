@@ -62,19 +62,13 @@ export function TopicsPageClient({
         ) : null}
 
         <section id="topics-grid" className="scroll-mt-28 space-y-5">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                Topic catalog
-              </p>
-              <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white">
-                Chọn chủ đề theo đúng nhịp học của bạn
-              </h2>
-            </div>
-            <p className="max-w-xl text-sm leading-7 text-slate-500 dark:text-slate-400">
-              Dùng filter để quay lại đúng topic đang dở hoặc gom các chủ đề mới
-              cập nhật vào một view gọn hơn.
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
+              Topic catalog
             </p>
+            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white">
+              Danh sách chủ đề
+            </h2>
           </div>
 
           <TopicsToolbar
@@ -122,7 +116,7 @@ export function TopicsPageClient({
           ) : null}
 
           {filteredTopics.length > 0 ? (
-            <div className="grid gap-6 xl:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
               {filteredTopics.map((topic) => (
                 <TopicCard key={topic.id} topic={topic} />
               ))}

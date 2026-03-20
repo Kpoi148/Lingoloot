@@ -14,7 +14,6 @@ import { cn } from "@/lib/shared/utils";
 import type { TopicRecord } from "@/components/topics/types";
 import {
   getPrimaryTopicAction,
-  getSecondaryTopicAction,
   getTopicMilestones,
   getTopicStatus,
   getTopicStatusMeta,
@@ -43,13 +42,12 @@ export default function TopicCard({ topic }: TopicCardProps) {
   const statusMeta = getTopicStatusMeta(status);
   const milestones = getTopicMilestones(topic.progress);
   const primaryAction = getPrimaryTopicAction(topic);
-  const secondaryAction = getSecondaryTopicAction(topic);
   const isFresh = isTopicNew(topic);
 
   return (
     <article
       className={cn(
-        "group relative isolate overflow-hidden rounded-[30px] border bg-white/78 p-6 shadow-[0_36px_90px_-56px_rgba(15,23,42,0.55)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 dark:bg-slate-950/72 dark:shadow-[0_36px_90px_-56px_rgba(2,6,23,0.92)] sm:p-7",
+        "group relative isolate overflow-hidden rounded-[30px] border bg-white/78 p-5 shadow-[0_36px_90px_-56px_rgba(15,23,42,0.55)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 dark:bg-slate-950/72 dark:shadow-[0_36px_90px_-56px_rgba(2,6,23,0.92)] sm:p-6",
         theme.cardBorderClass
       )}
     >
@@ -96,6 +94,9 @@ export default function TopicCard({ topic }: TopicCardProps) {
               >
                 {topic.name}
               </Link>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                {theme.accentLabel}
+              </p>
             </div>
           </div>
 
@@ -104,55 +105,44 @@ export default function TopicCard({ topic }: TopicCardProps) {
           </span>
         </div>
 
-        <p className="mt-5 text-sm leading-7 text-slate-600 dark:text-slate-300">
-          {topic.description ?? "Chưa có mô tả cho chủ đề này."}
-        </p>
+        {topic.description ? (
+          <p
+            className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {topic.description}
+          </p>
+        ) : null}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <div
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span
             className={cn(
-              "rounded-[22px] border px-4 py-4",
+              "inline-flex rounded-full border px-3 py-1 text-xs font-semibold",
               milestones.vocabDone
                 ? theme.softPanelClass
-                : "border-black/[0.06] bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.04]"
+                : "border-black/[0.08] bg-white/72 text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200"
             )}
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-              Bước 1
-            </p>
-            <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">
-              Flashcards
-            </p>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-              {milestones.vocabDone
-                ? "Đã học xong phần từ vựng."
-                : "Ôn từ vựng trước khi làm quiz."}
-            </p>
-          </div>
-
-          <div
+            {milestones.vocabDone ? "Flashcards xong" : "Flashcards"}
+          </span>
+          <span
             className={cn(
-              "rounded-[22px] border px-4 py-4",
+              "inline-flex rounded-full border px-3 py-1 text-xs font-semibold",
               milestones.quizDone
                 ? theme.softPanelClass
-                : "border-black/[0.06] bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.04]"
+                : "border-black/[0.08] bg-white/72 text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200"
             )}
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-              Bước 2
-            </p>
-            <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">
-              Quiz
-            </p>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-              {milestones.quizDone
-                ? "Bạn đã chốt xong topic này."
-                : "Hoàn thành quiz để lên 100%."}
-            </p>
-          </div>
+            {milestones.quizDone ? "Quiz xong" : "Quiz chờ"}
+          </span>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-auto pt-6">
           <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
             <span>Tiến độ chủ đề</span>
             <span>{topic.progress}%</span>
@@ -166,28 +156,19 @@ export default function TopicCard({ topic }: TopicCardProps) {
               style={{ width: `${topic.progress}%` }}
             />
           </div>
-        </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href={primaryAction.href}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5",
-              theme.buttonClass
-            )}
-          >
-            {primaryAction.label}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href={secondaryAction.href}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5",
-              theme.subtleButtonClass
-            )}
-          >
-            {secondaryAction.label}
-          </Link>
+          <div className="mt-5">
+            <Link
+              href={primaryAction.href}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5",
+                theme.buttonClass
+              )}
+            >
+              {primaryAction.label}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </article>

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpenCheck,
   ChartNoAxesColumn,
-  Compass,
   Sparkles,
   Trophy,
 } from "lucide-react";
@@ -11,8 +9,6 @@ import { cn } from "@/lib/shared/utils";
 import type { TopicRecord, TopicSummary } from "@/components/topics/types";
 import {
   getPrimaryTopicAction,
-  getSecondaryTopicAction,
-  getTopicMilestones,
   getTopicStatus,
   getTopicStatusMeta,
   getTopicTheme,
@@ -34,29 +30,15 @@ export default function TopicHero({
   const recommendedStatus = recommendedTopic
     ? getTopicStatusMeta(getTopicStatus(recommendedTopic))
     : null;
-  const recommendedMilestones = recommendedTopic
-    ? getTopicMilestones(recommendedTopic.progress)
-    : null;
   const primaryAction = recommendedTopic
     ? getPrimaryTopicAction(recommendedTopic)
-    : null;
-  const secondaryAction = recommendedTopic
-    ? getSecondaryTopicAction(recommendedTopic)
     : null;
 
   const summaryCards = [
     {
-      label: "Tổng chủ đề",
-      value: summary.totalTopics,
-      hint: "chặng học đang mở",
-      icon: Compass,
-      iconClass:
-        "bg-sky-500/[0.12] text-sky-700 dark:bg-sky-500/[0.18] dark:text-sky-100",
-    },
-    {
-      label: "Đang tiến triển",
+      label: "Đang học",
       value: summary.activeTopics,
-      hint: "topic bạn đang làm dở",
+      hint: "ưu tiên quay lại trước",
       icon: ChartNoAxesColumn,
       iconClass:
         "bg-violet-500/[0.12] text-violet-700 dark:bg-violet-500/[0.18] dark:text-violet-100",
@@ -70,10 +52,10 @@ export default function TopicHero({
         "bg-emerald-500/[0.12] text-emerald-700 dark:bg-emerald-500/[0.18] dark:text-emerald-100",
     },
     {
-      label: "Kho từ vựng",
-      value: summary.totalWords,
-      hint: "từ đang khả dụng",
-      icon: BookOpenCheck,
+      label: "Mới cập nhật",
+      value: summary.freshTopics,
+      hint: "có nội dung vừa thêm",
+      icon: Sparkles,
       iconClass:
         "bg-amber-500/[0.12] text-amber-700 dark:bg-amber-500/[0.18] dark:text-amber-100",
     },
@@ -86,8 +68,8 @@ export default function TopicHero({
         className="absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.24),transparent_34%),radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.32),transparent)] dark:bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.16),transparent_28%),radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_34%),linear-gradient(180deg,rgba(15,23,42,0.36),transparent)]"
       />
 
-      <div className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-start">
-        <div className="space-y-6">
+      <div className="relative z-10 space-y-6">
+        <div className="max-w-5xl space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white/72 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300">
             <Sparkles className="h-3.5 w-3.5" />
             Learning map
@@ -95,12 +77,12 @@ export default function TopicHero({
 
           <div className="max-w-3xl space-y-4">
             <h1 className="text-4xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white sm:text-5xl">
-              Chọn chặng tiếp theo thay vì lướt qua một danh sách phẳng.
+              Quay lại đúng topic, rồi mới mở thêm.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
-              Theo dõi chủ đề đang dở, quay lại quiz đúng lúc, và giữ mạch học
-              liên tục bằng một bề mặt rõ trạng thái thay vì những card giống
-              hệt nhau.
+              Hiện có {summary.totalTopics} chủ đề với {summary.totalWords} từ
+              vựng. Trang này ưu tiên các topic đang học để bạn tiếp tục nhanh
+              hơn.
             </p>
           </div>
 
@@ -125,7 +107,7 @@ export default function TopicHero({
             </a>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-3">
             {summaryCards.map((card) => {
               const Icon = card.icon;
 
@@ -159,7 +141,7 @@ export default function TopicHero({
 
         <div
           className={cn(
-            "relative overflow-hidden rounded-[30px] border bg-white/80 p-6 shadow-[0_34px_90px_-48px_rgba(15,23,42,0.55)] dark:bg-slate-950/80 dark:shadow-[0_34px_90px_-48px_rgba(2,6,23,0.92)]",
+            "relative max-w-4xl overflow-hidden rounded-[30px] border bg-white/80 p-6 shadow-[0_34px_90px_-48px_rgba(15,23,42,0.55)] dark:bg-slate-950/80 dark:shadow-[0_34px_90px_-48px_rgba(2,6,23,0.92)]",
             recommendedTheme.cardBorderClass
           )}
         >
@@ -175,7 +157,7 @@ export default function TopicHero({
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-                  Nên học tiếp
+                  Học tiếp
                 </p>
                 <h2 className="text-2xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white">
                   {recommendedTopic?.name ?? "Kho chủ đề đang chờ bạn lấp đầy"}
@@ -194,14 +176,26 @@ export default function TopicHero({
               ) : null}
             </div>
 
-            <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
-              {recommendedTopic?.description ??
-                "Khi dữ liệu chủ đề xuất hiện, khu vực này sẽ gợi ý chặng phù hợp nhất để bạn quay lại đúng flow học tập."}
+            <p
+              className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {recommendedTopic?.description
+                ? recommendedTopic.description
+                : "Khi dữ liệu chủ đề xuất hiện, khu vực này sẽ gợi ý chặng phù hợp nhất để bạn quay lại đúng flow học tập."}
             </p>
 
             {recommendedTopic ? (
               <>
                 <div className="mt-5 flex flex-wrap gap-2">
+                  <span className="inline-flex rounded-full border border-black/[0.08] bg-white/72 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200">
+                    {recommendedTheme.accentLabel}
+                  </span>
                   <span className="inline-flex rounded-full border border-black/[0.08] bg-white/72 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200">
                     {recommendedTopic.count} từ vựng
                   </span>
@@ -213,50 +207,6 @@ export default function TopicHero({
                       Mới cập nhật
                     </span>
                   ) : null}
-                </div>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <div
-                    className={cn(
-                      "rounded-[22px] border px-4 py-4",
-                      recommendedMilestones?.vocabDone
-                        ? recommendedTheme.softPanelClass
-                        : "border-black/[0.06] bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.04]"
-                    )}
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
-                      Bước 1
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">
-                      Flashcards
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      {recommendedMilestones?.vocabDone
-                        ? "Đã hoàn thành phần ôn từ vựng."
-                        : "Ôn nhanh để mở khóa quiz chủ đề."}
-                    </p>
-                  </div>
-
-                  <div
-                    className={cn(
-                      "rounded-[22px] border px-4 py-4",
-                      recommendedMilestones?.quizDone
-                        ? recommendedTheme.softPanelClass
-                        : "border-black/[0.06] bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.04]"
-                    )}
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
-                      Bước 2
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">
-                      Quiz
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      {recommendedMilestones?.quizDone
-                        ? "Bạn đã chốt xong topic này."
-                        : "Làm quiz để khóa tiến độ 100%."}
-                    </p>
-                  </div>
                 </div>
 
                 <div className="mt-6">
@@ -275,7 +225,7 @@ export default function TopicHero({
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-6">
                   {primaryAction ? (
                     <Link
                       href={primaryAction.href}
@@ -286,17 +236,6 @@ export default function TopicHero({
                     >
                       {primaryAction.label}
                       <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  ) : null}
-                  {secondaryAction ? (
-                    <Link
-                      href={secondaryAction.href}
-                      className={cn(
-                        "inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5",
-                        recommendedTheme.subtleButtonClass
-                      )}
-                    >
-                      {secondaryAction.label}
                     </Link>
                   ) : null}
                 </div>
