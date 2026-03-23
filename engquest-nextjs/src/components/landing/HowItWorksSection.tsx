@@ -21,14 +21,8 @@ export default function HowItWorksSection() {
                     Learning flow
                 </p>
                 <h2 className="font-[var(--font-display)] text-3xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white sm:text-4xl">
-                    Một vòng học ngắn, đủ rõ để người học luôn biết bước tiếp
-                    theo là gì.
+                    Bốn bước để đi hết một lượt học.
                 </h2>
-                <p className="text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
-                    Thay vì lặp lại cùng nội dung ở nhiều section, landing nên
-                    giải thích flow một lần thật rõ: từ topic sang ghi nhớ,
-                    kiểm tra lại, rồi khóa phiên học bằng ngữ cảnh.
-                </p>
             </div>
 
             <div className="mt-8 grid gap-4 xl:grid-cols-4">
@@ -57,15 +51,6 @@ export default function HowItWorksSection() {
                         </article>
                     );
                 })}
-            </div>
-
-            <div className="mt-6 landing-subtle-panel rounded-[1.8rem] p-6">
-                <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">
-                    Mỗi bước dùng lại cùng một bộ từ để người học không cần tự
-                    quyết định lại flow sau mỗi thao tác nhỏ. Đây là phần nên
-                    được giải thích một lần thật gọn, thay vì nhắc lại ở khắp
-                    landing page.
-                </p>
             </div>
         </AnimatedSection>
     );

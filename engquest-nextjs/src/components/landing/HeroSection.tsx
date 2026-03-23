@@ -1,22 +1,13 @@
 // Hero block that explains the learner promise and routes guests into the study flow.
-import {
-    ArrowRight,
-    BookOpenText,
-    Gamepad2,
-    Gem,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
     landingActions,
     landingHeroHighlights,
-    landingHeroPillars,
 } from "@/components/landing/content";
-import TypewriterText from "@/components/landing/TypewriterText";
 
 type HeroSectionProps = {
     onNavigate: (id: string) => void;
 };
-
-const pillarIcons = [BookOpenText, Gamepad2, Gem];
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
     return (
@@ -28,30 +19,17 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
 
             <div className="space-y-5">
                 <h1 className="max-w-4xl font-[var(--font-display)] text-4xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
-                    <span className="sr-only">
-                        LingoLoot: học mê, nhớ dễ, tiến đều mỗi ngày.
+                    <span className="bg-[linear-gradient(135deg,#0f172a_0%,#2563eb_45%,#10b981_100%)] bg-clip-text text-transparent dark:bg-[linear-gradient(135deg,#f8fafc_0%,#7dd3fc_35%,#6ee7b7_100%)]">
+                        LingoLoot
                     </span>
-                    <span aria-hidden="true">
-                        <span className="bg-[linear-gradient(135deg,#0f172a_0%,#2563eb_45%,#10b981_100%)] bg-clip-text text-transparent dark:bg-[linear-gradient(135deg,#f8fafc_0%,#7dd3fc_35%,#6ee7b7_100%)]">
-                            LingoLoot
-                        </span>
-                        : học mê, nhớ dễ,
-                        <br className="hidden md:block" />
-                        <TypewriterText
-                            className="mt-2 text-balance text-slate-950 dark:text-white"
-                            phrases={[
-                                "tiến đều mỗi ngày.",
-                                "giữ streak thật đều.",
-                                "lên trình theo từng ngày.",
-                            ]}
-                        />
-                    </span>
+                    : học từ vựng theo một flow ngắn,
+                    <br className="hidden md:block" />
+                    nhớ lâu và quay lại đúng tiến độ.
                 </h1>
                 <p className="max-w-3xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
-                    LingoLoot dẫn người học qua một flow ngắn gọn: chọn đúng
-                    topic, ghi nhớ bằng flashcards, kiểm tra lại bằng quiz, rồi
-                    khóa phiên học bằng Story Cloze trước khi phần thưởng và
-                    progress được cập nhật về profile.
+                    Chọn topic, lật flashcards, làm quiz ngắn và chốt bằng
+                    Story Cloze. Mọi tiến độ, streak và phần thưởng được giữ
+                    trong cùng một learner workspace.
                 </p>
             </div>
 
@@ -71,32 +49,6 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
                 >
                     {landingActions.tertiary.label}
                 </button>
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-3">
-                {landingHeroPillars.map((pillar, index) => {
-                    const Icon = pillarIcons[index];
-
-                    return (
-                        <article
-                            key={pillar.title}
-                            className="landing-subtle-panel rounded-[1.6rem] p-5"
-                        >
-                            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white/80 text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-100">
-                                <Icon className="h-5 w-5" />
-                            </span>
-                            <p className="mt-5 text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                                {pillar.eyebrow}
-                            </p>
-                            <h2 className="mt-3 text-lg font-semibold tracking-tight text-slate-950 dark:text-white">
-                                {pillar.title}
-                            </h2>
-                            <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                                {pillar.description}
-                            </p>
-                        </article>
-                    );
-                })}
             </div>
 
             <div className="flex flex-wrap gap-6 border-t border-black/10 pt-6 text-sm dark:border-white/10">

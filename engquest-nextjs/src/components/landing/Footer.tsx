@@ -45,9 +45,8 @@ export default function Footer({ onNavigate }: FooterProps) {
                             </div>
                         </div>
                         <p className="max-w-sm text-sm leading-6 text-slate-300">
-                            Landing tập trung hoàn toàn vào hành trình của
-                            learner: flow học rõ ràng, phần thưởng nhìn thấy
-                            được và một điểm bắt đầu đủ gọn.
+                            Từ topic đến rewards trong một learner workspace
+                            gọn và rõ ràng.
                         </p>
                     </div>
 

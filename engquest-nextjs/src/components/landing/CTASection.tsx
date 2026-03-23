@@ -29,13 +29,11 @@ export default function CTASection({ onNavigate }: CTASectionProps) {
                             Ready to start
                         </p>
                         <h2 className="max-w-3xl font-[var(--font-display)] text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-                            Đặt streak đầu tiên cho hôm nay và để learner flow
-                            dẫn bạn đi nốt phần còn lại.
+                            Bắt đầu lượt học đầu tiên hôm nay.
                         </h2>
                         <p className="max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
-                            Tạo tài khoản để bắt đầu phiên học đầu tiên, hoặc
-                            đăng nhập để quay lại đúng progress và streak đang
-                            có.
+                            Tạo tài khoản để vào workspace, hoặc đăng nhập để
+                            tiếp tục progress đang có.
                         </p>
                     </div>
 

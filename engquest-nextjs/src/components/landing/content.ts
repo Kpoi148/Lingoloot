@@ -13,61 +13,39 @@ export const landingActions = {
 };
 
 export const landingQuickAccessBullets = [
-  "Bắt đầu learner workspace trong một bước.",
-  "Tiếp tục streak, XP và tiến độ đang có.",
-  "Vào lại đúng flow học thay vì mở từ đầu.",
-] as const;
-
-export const landingHeroPillars = [
-  {
-    eyebrow: "Study loop",
-    title: "Đi từ topic sang luyện tập mà không bị đứt mạch",
-    description:
-      "Một bộ từ được tái sử dụng xuyên suốt thay vì tách thành nhiều bề mặt rời rạc.",
-  },
-  {
-    eyebrow: "Context recall",
-    title: "Story Cloze giữ phần luyện nhớ không dừng ở flashcard",
-    description:
-      "Từ được kéo vào ngữ cảnh để chuyển từ nhận diện sang ghi nhớ chủ động.",
-  },
-  {
-    eyebrow: "Visible momentum",
-    title: "Streak, XP và profile rewards làm tiến bộ trở nên nhìn thấy được",
-    description:
-      "Mỗi phiên học để lại dấu vết rõ ràng thay vì cảm giác học xong rồi biến mất.",
-  },
+  "Tiếp tục đúng topic đang học.",
+  "Giữ lại streak, XP và rewards.",
 ] as const;
 
 export const landingHeroHighlights = [
-  { label: "Nhịp học", value: "10-15 phút mỗi lượt" },
-  { label: "Progress", value: "Lưu theo topic đang học" },
+  { label: "Nhịp học", value: "10-15 phút" },
+  { label: "Flow", value: "1 topic, 3 bước luyện" },
   { label: "Rewards", value: "XP, Gems, profile items" },
 ] as const;
 
 export const landingFlowSteps = [
   {
     step: "01",
-    title: "Chọn topic phù hợp với mục tiêu hiện tại",
+    title: "Chọn topic",
     description:
-      "Bắt đầu từ một bộ từ có chủ đích thay vì nhảy thẳng vào danh sách rời rạc.",
+      "Vào đúng bộ từ bạn muốn tập trung ngay lúc này.",
   },
   {
     step: "02",
-    title: "Lật flashcards để tạo nền nhớ ban đầu",
+    title: "Lật flashcards",
     description:
-      "Nghĩa, phát âm và ví dụ xuất hiện trong cùng một nhịp học ngắn gọn.",
+      "Nắm nghĩa, phát âm và ví dụ trong một lượt ngắn.",
   },
   {
     step: "03",
-    title: "Kiểm tra lại bằng quiz ngắn trên chính bộ từ đó",
+    title: "Làm quiz ngắn",
     description:
-      "Recall được kiểm chứng ngay trước khi kiến thức còn kịp trôi đi.",
+      "Kiểm tra lại trên chính bộ từ vừa học.",
   },
   {
     step: "04",
-    title: "Khóa phiên học bằng Story Cloze và lưu lại progress",
+    title: "Chốt bằng Story Cloze",
     description:
-      "Từ vựng được gắn vào ngữ cảnh trước khi bạn rời khỏi phiên học.",
+      "Khóa lại ngữ cảnh trước khi progress được lưu.",
   },
 ] as const;

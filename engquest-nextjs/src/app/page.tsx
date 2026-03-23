@@ -114,22 +114,22 @@ export default function HomePage() {
                   Quick access
                 </p>
                 <h2 className="font-[var(--font-display)] text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  Vào learner workspace mà không phải đọc lại toàn bộ landing.
+                  Bắt đầu hoặc quay lại learner workspace.
                 </h2>
                 <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  Nếu bạn mới bắt đầu, hãy tạo tài khoản. Nếu bạn đã có tiến
-                  độ, chỉ cần đăng nhập để quay lại đúng nhịp học hiện tại.
+                  Tạo tài khoản để vào lượt học đầu tiên, hoặc đăng nhập để tiếp
+                  tục đúng topic và tiến độ đang có.
                 </p>
               </div>
 
-              <div className="mb-5 space-y-2">
+              <div className="mb-5 flex flex-wrap gap-2">
                 {landingQuickAccessBullets.map((item) => (
-                  <div
+                  <span
                     key={item}
-                    className="rounded-2xl border border-black/10 bg-white/65 px-4 py-3 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300"
+                    className="rounded-full border border-black/10 bg-white/70 px-3 py-1.5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300"
                   >
                     {item}
-                  </div>
+                  </span>
                 ))}
               </div>
 
