@@ -8,6 +8,7 @@ import { useVocabularyGeneratorController } from "@/components/admin/ai-hub/voca
 export default function VocabularyGenerator() {
   const {
     categories,
+    categoriesError,
     categoryId,
     handleGenerate,
     handleSave,
@@ -30,6 +31,7 @@ export default function VocabularyGenerator() {
       <div className="grid gap-6 lg:grid-cols-12">
         <InputPanel
           categories={categories}
+          categoriesError={categoriesError}
           categoryId={categoryId}
           isLoading={isLoading}
           level={level}

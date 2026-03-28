@@ -9,20 +9,61 @@ import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import type { ShopCatalogItem, ShopItemRarity, ShopItemType } from "@/types/shop-item";
 
+export type ShopItemsLoadResult = {
+    items: ShopCatalogItem[];
+    error: string | null;
+};
+
+type ShopCatalogSourceItem = {
+    _id: unknown;
+    name: string;
+    type: string;
+    imageUrl: string;
+    price: number;
+    rarity: string;
+    renderKey?: string;
+};
+
+const mapShopCatalogItems = (items: ShopCatalogSourceItem[]) =>
+    items.map((item) => ({
+        _id: String(item._id),
+        name: item.name,
+        type: item.type as ShopItemType,
+        imageUrl: item.imageUrl,
+        price: item.price,
+        rarity: item.rarity as ShopItemRarity,
+        renderKey: item.renderKey,
+    }));
+
+const fetchActiveShopItems = async (): Promise<ShopCatalogItem[]> => {
+    await connectToDatabase();
+    const items = await ShopItem.find({ isActive: true }).lean();
+
+    return mapShopCatalogItems(items);
+};
+
+// This function returns shop items together with a user-facing load error for page-level UX states.
+export async function loadShopItems(): Promise<ShopItemsLoadResult> {
+    try {
+        return {
+            items: await fetchActiveShopItems(),
+            error: null,
+        };
+    } catch (error) {
+        console.error("Failed to fetch shop items:", error);
+        return {
+            items: [],
+            error: "Không thể tải cửa hàng lúc này. Vui lòng thử lại.",
+        };
+    }
+}
+
 // This function returns only active shop items and narrows them to the learner UI contract.
 export async function getShopItems(): Promise<ShopCatalogItem[]> {
     await connectToDatabase();
     try {
         const items = await ShopItem.find({ isActive: true }).lean();
-        return items.map((item) => ({
-            _id: String(item._id),
-            name: item.name,
-            type: item.type as ShopItemType,
-            imageUrl: item.imageUrl,
-            price: item.price,
-            rarity: item.rarity as ShopItemRarity,
-            renderKey: item.renderKey,
-        }));
+        return mapShopCatalogItems(items);
     } catch (error) {
         console.error("Failed to fetch shop items:", error);
         return [];

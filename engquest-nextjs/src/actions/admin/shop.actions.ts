@@ -18,25 +18,66 @@ export type ShopItemFormData = {
     isActive: boolean;
 };
 
+export type AdminShopItemsLoadResult = {
+    items: AdminShopItem[];
+    error: string | null;
+};
+
+type AdminShopSourceItem = {
+    _id: unknown;
+    name: string;
+    type: string;
+    imageUrl: string;
+    price: number;
+    rarity: string;
+    renderKey?: string;
+    isActive?: boolean;
+};
+
 async function ensureAdminAndConnect() {
     await ensureAdminSession();
     await connectToDatabase();
+}
+
+const mapAdminShopItems = (items: AdminShopSourceItem[]) =>
+    items.map((item) => ({
+        _id: String(item._id),
+        name: item.name,
+        type: item.type as ShopItemType,
+        imageUrl: item.imageUrl,
+        price: item.price,
+        rarity: item.rarity as ShopItemRarity,
+        renderKey: item.renderKey,
+        isActive: Boolean(item.isActive),
+    }));
+
+const fetchAdminShopItems = async (): Promise<AdminShopItem[]> => {
+    await ensureAdminAndConnect();
+    const items = await ShopItem.find({}).sort({ createdAt: -1 }).lean();
+
+    return mapAdminShopItems(items);
+};
+
+export async function loadAdminShopItems(): Promise<AdminShopItemsLoadResult> {
+    try {
+        return {
+            items: await fetchAdminShopItems(),
+            error: null,
+        };
+    } catch (error) {
+        console.error("Failed to fetch admin shop items:", error);
+        return {
+            items: [],
+            error: "Không thể tải danh sách vật phẩm. Vui lòng thử lại.",
+        };
+    }
 }
 
 export async function getAdminShopItems(): Promise<AdminShopItem[]> {
     await ensureAdminAndConnect();
     try {
         const items = await ShopItem.find({}).sort({ createdAt: -1 }).lean();
-        return items.map((item) => ({
-            _id: String(item._id),
-            name: item.name,
-            type: item.type as ShopItemType,
-            imageUrl: item.imageUrl,
-            price: item.price,
-            rarity: item.rarity as ShopItemRarity,
-            renderKey: item.renderKey,
-            isActive: Boolean(item.isActive),
-        }));
+        return mapAdminShopItems(items);
     } catch (error) {
         console.error("Failed to fetch admin shop items:", error);
         return [];

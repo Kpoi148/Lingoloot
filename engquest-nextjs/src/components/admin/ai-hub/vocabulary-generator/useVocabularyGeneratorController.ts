@@ -29,12 +29,14 @@ export function useVocabularyGeneratorController() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
     let active = true;
 
     const loadCategories = async () => {
+      setCategoriesError(null);
       try {
         const items = await loadVocabularyCategories();
         if (!active) return;
@@ -43,9 +45,15 @@ export function useVocabularyGeneratorController() {
         if (items.length === 1) {
           setCategoryId(items[0]._id);
         }
-      } catch {
+      } catch (error) {
         if (active) {
           setCategories([]);
+          setCategoryId("");
+          setCategoriesError(
+            error instanceof Error
+              ? error.message
+              : "Không thể tải danh sách chủ đề."
+          );
         }
       }
     };
@@ -127,6 +135,7 @@ export function useVocabularyGeneratorController() {
 
   return {
     categories,
+    categoriesError,
     categoryId,
     handleGenerate,
     handleSave,

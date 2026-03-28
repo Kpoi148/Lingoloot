@@ -1,5 +1,5 @@
 // Input form for prompt, level, and destination category selection.
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import {
   type CategoryOption,
   vocabularyLevels,
@@ -7,6 +7,7 @@ import {
 
 type InputPanelProps = {
   categories: CategoryOption[];
+  categoriesError?: string | null;
   categoryId: string;
   isLoading: boolean;
   level: (typeof vocabularyLevels)[number];
@@ -19,6 +20,7 @@ type InputPanelProps = {
 
 export default function InputPanel({
   categories,
+  categoriesError = null,
   categoryId,
   isLoading,
   level,
@@ -75,9 +77,19 @@ export default function InputPanel({
         <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
           Chủ đề lưu (bắt buộc khi lưu)
         </label>
+        {categoriesError ? (
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div>
+              <p className="font-semibold">Không thể tải danh sách chủ đề.</p>
+              <p className="mt-1">{categoriesError}</p>
+            </div>
+          </div>
+        ) : null}
         <select
           value={categoryId}
           onChange={(event) => onCategoryChange(event.target.value)}
+          disabled={Boolean(categoriesError) && categories.length === 0}
           className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm focus:border-slate-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-slate-600"
         >
           <option value="">Chọn chủ đề</option>

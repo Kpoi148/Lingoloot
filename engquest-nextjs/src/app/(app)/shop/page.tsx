@@ -1,16 +1,17 @@
 // Learner shop page for spending Gems on profile cosmetics and rewards.
-import { getShopItems } from "@/actions/user/shop.actions";
+import { loadShopItems } from "@/actions/user/shop.actions";
 import { getUserProfile } from "@/actions/user/profile.actions";
 import ShopClient from "@/components/shop/ShopClient";
 import { ShoppingBag } from "lucide-react";
 
 export default async function ShopPage() {
     // Fetch data in parallel
-    const [items, profile] = await Promise.all([
-        getShopItems(),
+    const [shopResult, profile] = await Promise.all([
+        loadShopItems(),
         getUserProfile(),
     ]);
 
+    const items = shopResult.items;
     const inventory = profile?.gamification.inventory || [];
     const currency = profile?.gamification.currency || 0;
 
@@ -33,7 +34,12 @@ export default async function ShopPage() {
 
                 </div>
 
-                <ShopClient items={items} inventory={inventory} currency={currency} />
+                <ShopClient
+                    items={items}
+                    inventory={inventory}
+                    currency={currency}
+                    loadError={shopResult.error}
+                />
             </div>
         </main>
     );

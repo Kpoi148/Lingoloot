@@ -1,13 +1,15 @@
 // Admin page for browsing and maintaining shop inventory.
-import { getAdminShopItems, toggleShopItemStatus } from "@/actions/admin/shop.actions";
+import { loadAdminShopItems, toggleShopItemStatus } from "@/actions/admin/shop.actions";
 import Link from "next/link";
-import { Plus, Pencil, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Plus, Pencil, Eye, EyeOff } from "lucide-react";
 import DeleteShopItemButton from "@/components/admin/shop/DeleteShopItemButton";
 import RestoreDefaultsButton from "@/components/admin/shop/RestoreDefaultsButton";
 import ShopItemPreview from "@/components/admin/shop/ShopItemPreview";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminShopPage() {
-    const items = await getAdminShopItems();
+    const { items, error } = await loadAdminShopItems();
 
     return (
         <div className="space-y-6">
@@ -28,6 +30,16 @@ export default async function AdminShopPage() {
                 </div>
             </div>
 
+            {error ? (
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                    <div>
+                        <p className="font-semibold">Không thể tải danh sách vật phẩm.</p>
+                        <p className="mt-1">{error}</p>
+                    </div>
+                </div>
+            ) : null}
+
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20">
                 <table className="w-full text-left text-sm text-slate-600 dark:text-slate-400">
                     <thead className="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
@@ -42,10 +54,16 @@ export default async function AdminShopPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                        {items.length === 0 ? (
+                        {items.length === 0 && !error ? (
                             <tr>
                                 <td colSpan={7} className="px-6 py-8 text-center text-slate-400 dark:text-slate-500">
                                     Chưa có vật phẩm nào.
+                                </td>
+                            </tr>
+                        ) : items.length === 0 ? (
+                            <tr>
+                                <td colSpan={7} className="px-6 py-8 text-center text-slate-400 dark:text-slate-500">
+                                    Dữ liệu hiện chưa khả dụng.
                                 </td>
                             </tr>
                         ) : (

@@ -4,16 +4,22 @@
 import { useEffect, useState } from "react";
 import ShopItemCard from "./ShopItemCard";
 import { cn } from "@/lib/shared/utils";
-import { LayoutGrid, User } from "lucide-react";
+import { AlertCircle, LayoutGrid, User } from "lucide-react";
 import type { ShopCatalogItem } from "@/types/shop-item";
 
 interface ShopClientProps {
     items: ShopCatalogItem[];
     inventory: string[];
     currency: number;
+    loadError?: string | null;
 }
 
-export default function ShopClient({ items, inventory, currency }: ShopClientProps) {
+export default function ShopClient({
+    items,
+    inventory,
+    currency,
+    loadError = null,
+}: ShopClientProps) {
     const [activeTab, setActiveTab] = useState<"frame" | "avatar">("frame");
     const [ownedItemIds, setOwnedItemIds] = useState<string[]>(inventory);
     const [currentCurrency, setCurrentCurrency] = useState(currency);
@@ -68,6 +74,16 @@ export default function ShopClient({ items, inventory, currency }: ShopClientPro
                 </button>
             </div>
 
+            {loadError ? (
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                    <div>
+                        <p className="font-semibold">Không thể tải danh sách vật phẩm.</p>
+                        <p className="mt-1">{loadError}</p>
+                    </div>
+                </div>
+            ) : null}
+
             {/* Grid */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {filteredItems.length > 0 ? (
@@ -80,14 +96,14 @@ export default function ShopClient({ items, inventory, currency }: ShopClientPro
                             onPurchaseSuccess={handlePurchaseSuccess}
                         />
                     ))
-                ) : (
+                ) : !loadError ? (
                     <div className="col-span-full py-16 text-center">
                         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
                             {activeTab === "frame" ? <LayoutGrid className="h-8 w-8 text-slate-400" /> : <User className="h-8 w-8 text-slate-400" />}
                         </div>
                         <p className="text-slate-500">Chưa có vật phẩm nào trong mục này.</p>
                     </div>
-                )}
+                ) : null}
             </div>
         </div>
     );
