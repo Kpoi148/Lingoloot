@@ -1,5 +1,8 @@
 // Admin dashboard landing page with overview metrics and quick actions.
-import { getCachedOverviewCounts } from "@/lib/db/cached-queries";
+import {
+  getCachedDashboardAnalytics,
+  getCachedOverviewCounts,
+} from "@/lib/db/cached-queries";
 import AdminDashboardClient from "@/components/admin/dashboard/AdminDashboardClient";
 
 export const dynamic = "force-dynamic";
@@ -8,10 +11,14 @@ export default async function AdminDashboardPage() {
   // Removed profile and shop items fetching for dashboard
 
   let overviewData = null;
+  let analyticsData = null;
   let error = null;
 
   try {
-    overviewData = await getCachedOverviewCounts();
+    [overviewData, analyticsData] = await Promise.all([
+      getCachedOverviewCounts(),
+      getCachedDashboardAnalytics(),
+    ]);
   } catch {
     error = "Không thể tải dữ liệu thống kê.";
   }
@@ -19,6 +26,7 @@ export default async function AdminDashboardPage() {
   return (
     <AdminDashboardClient
       overviewData={overviewData}
+      analyticsData={analyticsData}
       error={error}
     />
   );

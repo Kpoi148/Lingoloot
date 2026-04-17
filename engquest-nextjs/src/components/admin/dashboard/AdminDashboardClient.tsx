@@ -1,5 +1,6 @@
 "use client";
 // Admin dashboard client that renders overview cards, charts, and shortcut actions.
+import AdminDashboardInsights from "@/components/admin/dashboard/AdminDashboardInsights";
 
 type OverviewData = {
     vocabularyCount: number;
@@ -8,15 +9,41 @@ type OverviewData = {
     userCount: number;
 };
 
+type DashboardAnalytics = {
+    trends: Array<{
+        label: string;
+        monthKey: string;
+        vocabularyCount: number;
+        quizCount: number;
+        userCount: number;
+    }>;
+    categoryDistribution: Array<{
+        id: string;
+        name: string;
+        vocabularyCount: number;
+        share: number;
+    }>;
+    progress: {
+        trackedTopics: number;
+        vocabCompleted: number;
+        quizCompleted: number;
+        fullyCompleted: number;
+        activeLearnerCount: number;
+        learnerCount: number;
+    };
+};
+
 type AdminDashboardClientProps = {
     // profile: UserProfile | null; // Removed profile prop
     overviewData: OverviewData | null;
+    analyticsData: DashboardAnalytics | null;
     // shopItems removed
     error?: string | null;
 };
 
 export default function AdminDashboardClient({
     overviewData,
+    analyticsData,
     error,
 }: AdminDashboardClientProps) {
     const stats = [
@@ -46,7 +73,7 @@ export default function AdminDashboardClient({
                     {stats.map((item) => (
                         <div
                             key={item.label}
-                            className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20"
+                            className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/20"
                         >
                             <div className="relative z-10">
                                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
@@ -62,6 +89,11 @@ export default function AdminDashboardClient({
                     ))}
                 </div>
             </section>
+
+            <AdminDashboardInsights
+                overviewData={overviewData}
+                analyticsData={analyticsData}
+            />
         </div>
     );
 }
