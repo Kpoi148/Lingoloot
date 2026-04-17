@@ -10,9 +10,8 @@ type OverviewData = {
 };
 
 type DashboardAnalytics = {
-    trends: Array<{
-        label: string;
-        monthKey: string;
+    timeline: Array<{
+        dateKey: string;
         vocabularyCount: number;
         quizCount: number;
         userCount: number;

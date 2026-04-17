@@ -2,6 +2,36 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme inline {
+  --color-background: var(--shad-background);
+  --color-foreground: var(--shad-foreground);
+  --color-card: var(--shad-card);
+  --color-card-foreground: var(--shad-foreground);
+  --color-popover: var(--shad-popover);
+  --color-popover-foreground: var(--shad-foreground);
+  --color-primary: var(--shad-primary);
+  --color-primary-foreground: var(--shad-primary-foreground);
+  --color-secondary: var(--shad-secondary);
+  --color-secondary-foreground: var(--shad-foreground);
+  --color-muted: var(--shad-muted);
+  --color-muted-foreground: var(--shad-muted-foreground);
+  --color-accent: var(--shad-accent);
+  --color-accent-foreground: var(--shad-foreground);
+  --color-border: var(--shad-border);
+  --color-input: var(--shad-input);
+  --color-ring: var(--shad-ring);
+  --color-destructive: var(--shad-destructive);
+  --color-destructive-foreground: var(--shad-destructive-foreground);
+  --color-chart-1: var(--chart-cyan);
+  --color-chart-2: var(--chart-orange);
+  --color-chart-3: var(--chart-emerald);
+  --color-chart-4: var(--chart-violet);
+  --color-chart-5: var(--chart-slate);
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+}
+
 /* ============================================
    THEME SYSTEM - CSS VARIABLES
    Thay đổi colors tại đây sẽ áp dụng toàn app
@@ -28,6 +58,28 @@
 
   /* Progress bar track */
   --progress-track: theme('colors.slate.100');
+
+  /* shadcn compatibility */
+  --shad-background: var(--bg-page);
+  --shad-card: rgba(255, 255, 255, 0.94);
+  --shad-popover: rgba(255, 255, 255, 0.96);
+  --shad-foreground: var(--text-primary);
+  --shad-primary: theme('colors.slate.900');
+  --shad-primary-foreground: white;
+  --shad-secondary: rgba(241, 245, 249, 0.92);
+  --shad-muted: rgba(248, 250, 252, 0.92);
+  --shad-muted-foreground: var(--text-muted);
+  --shad-accent: rgba(241, 245, 249, 0.92);
+  --shad-border: rgba(15, 23, 42, 0.12);
+  --shad-input: rgba(15, 23, 42, 0.12);
+  --shad-ring: rgba(56, 189, 248, 0.35);
+  --shad-destructive: theme('colors.red.600');
+  --shad-destructive-foreground: white;
+  --chart-cyan: #38bdf8;
+  --chart-orange: #fb923c;
+  --chart-emerald: #34d399;
+  --chart-violet: #a78bfa;
+  --chart-slate: #475569;
 }
 
 .dark {
@@ -51,6 +103,23 @@
 
   /* Progress bar track */
   --progress-track: theme('colors.slate.700');
+
+  /* shadcn compatibility */
+  --shad-background: var(--bg-page);
+  --shad-card: rgba(15, 23, 42, 0.86);
+  --shad-popover: rgba(2, 6, 23, 0.94);
+  --shad-foreground: var(--text-primary);
+  --shad-primary: theme('colors.slate.100');
+  --shad-primary-foreground: theme('colors.slate.900');
+  --shad-secondary: rgba(30, 41, 59, 0.78);
+  --shad-muted: rgba(30, 41, 59, 0.72);
+  --shad-muted-foreground: var(--text-muted);
+  --shad-accent: rgba(30, 41, 59, 0.78);
+  --shad-border: rgba(255, 255, 255, 0.12);
+  --shad-input: rgba(255, 255, 255, 0.12);
+  --shad-ring: rgba(56, 189, 248, 0.35);
+  --shad-destructive: theme('colors.red.500');
+  --shad-destructive-foreground: white;
 }
 
 /* ============================================ */

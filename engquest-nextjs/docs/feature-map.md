@@ -14,7 +14,7 @@ Use this map before editing code. Identify impacted features first, then execute
 | Gamification (XP, level, streak, rewards) | profile/navbar surfaces across app | `actions/user/gamification.actions.ts` | `components/gamification/*`, `lib/gamification/gamification.ts`, `lib/gamification/gamification-config.ts` | `User` |
 | Shop and inventory | `/shop`, `/profile` (equip flow), `/admin/shop-management` | `actions/user/shop.actions.ts`, `actions/admin/shop.actions.ts`, `actions/admin/ai-shop.actions.ts` | `components/shop/*`, `components/profile/*`, `components/admin/shop/*`, `app/(app)/admin/shop-management/*` | `ShopItem`, `User` |
 | Profile management | `/profile` | `actions/user/profile.actions.ts`, `/api/cloudinary/signature` | `app/(app)/profile/ProfileClient.tsx`, `components/profile/*`, `components/shop/InventoryModal.tsx`, `lib/auth/api-auth.ts`, `lib/security/request-ip.ts`, `lib/security/rate-limit.ts` | `User`, `ShopItem` |
-| Admin dashboard and user management | `/admin`, `/admin/user-management`, `/admin/profile` | `/api/admin/overview`, `actions/admin/user.actions.ts` | `components/admin/dashboard/*`, `components/admin/users/*`, `lib/db/cached-queries.ts` | `User`, aggregate reads from multiple models |
+| Admin dashboard and user management | `/admin`, `/admin/user-management`, `/admin/profile` | `/api/admin/overview`, `actions/admin/user.actions.ts` | `components/admin/dashboard/*`, `components/admin/users/*`, `components/ui/chart.tsx`, `lib/db/cached-queries.ts` | `User`, aggregate reads from multiple models |
 | Admin content management (categories, vocabulary, quizzes, games) | `/admin/category-management`, `/admin/vocabulary-management`, `/admin/quiz-management` | `/api/admin/categories/*`, `/api/admin/vocabularies/*`, `/api/admin/quizzes/*`, `/api/admin/games` | admin management pages + forms in `components/admin/*` | `Category`, `Vocabulary`, `Quiz`, `Game` |
 | AI Hub generation (frames/quizzes/games/vocabulary) | `/admin/ai-hub/*` | `/api/ai/generate`, `/api/admin/games/generate`, `actions/admin/ai-shop.actions.ts` | `components/admin/ai-hub/*`, `lib/ai/ai-prompts.ts`, `lib/auth/api-auth.ts`, `lib/security/rate-limit.ts`, `lib/security/request-ip.ts` | generated content persists to `Game`, `Quiz`, `ShopItem`, `Vocabulary` |
 | API security and error boundaries | (cross-cutting) | protected APIs, especially `/api/admin/*`, `/api/ai/generate`, `/api/cloudinary/signature` | `lib/auth/api-auth.ts`, `lib/security/api-error.ts`, `lib/security/rate-limit.ts`, `lib/security/request-ip.ts` | n/a |
@@ -28,6 +28,8 @@ Use this map before editing code. Identify impacted features first, then execute
   - `lib/db/mongodb.ts`
 - Shared utility behavior:
   - `lib/shared/utils.ts`, `lib/validations/*`, `lib/security/api-error.ts`
+- shadcn-compatible UI infrastructure:
+  - `components.json`, `src/components/ui/*`, `src/lib/utils.ts`, theme bridge in `src/app/globals.css`
 
 ## Impact analysis template (fill before coding)
 
@@ -48,6 +50,7 @@ Copy and fill this block in task notes/PR description:
 - Prefer smallest possible change set for requested behavior.
 - Changes to `src/app/page.tsx`, `components/landing/*`, or the landing-facing behavior of `components/auth/AuthTabs.tsx` impact both guest landing and authentication entry; run regression for both surfaces.
 - If touching shared modules (`lib/*`, layout/nav, auth), assume multi-feature impact and run broader regression.
+- If touching `components.json`, `src/components/ui/*`, or the shadcn compatibility aliases in `src/lib/utils.ts`, verify existing UI imports and theme tokens still resolve correctly across both light and dark themes.
 - For shop currency/inventory flows, preserve atomic purchase invariants in `actions/user/shop.actions.ts` (single conditional write for balance + ownership).
 - Any schema or contract change requires:
   - migration/backward-compatibility note

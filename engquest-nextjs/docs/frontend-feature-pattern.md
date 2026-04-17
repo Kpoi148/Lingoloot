@@ -84,6 +84,15 @@ Refactor into this pattern when any of the following are true:
 - Shared reusable logic belongs in `lib/*` only when it is cross-feature, not just because a file feels large.
 - Do not move page-specific JSX into `lib/*`.
 
+## UI infrastructure rules
+- Reusable UI primitives and registry-style components belong in `src/components/ui/*`.
+- Keep shadcn-compatible aliases stable:
+  - `components.json`
+  - `src/lib/utils.ts`
+  - `src/app/globals.css`
+- If a feature needs community/chart primitives, prefer adapting them into the local theme system instead of letting a generator overwrite global styles blindly.
+- Treat `src/components/ui/chart.tsx` as the shared wrapper for Recharts-based dashboards and admin analytics rather than re-creating chart helpers per feature.
+
 ## Landing and marketing surfaces
 - Public landing sections may stay as presentational components under `src/components/landing/*`; they do not need controller hooks unless they become stateful workflows.
 - Shared landing copy, CTA labels, nav items, and learner-flow bullets should live in a single `content.ts` module instead of being duplicated across hero, navbar, CTA, footer, or preview sections.

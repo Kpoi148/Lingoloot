@@ -74,6 +74,9 @@ If any command fails or is skipped, record:
 
 ### G. Admin portal
 - Admin dashboard stats load.
+- Admin dashboard trend chart renders with real data and does not crash when switching `30D / 90D / 6M / 12M`.
+- Admin dashboard metric selector updates the active chart state correctly for vocabulary, quiz, and users.
+- Admin dashboard trend tooltip and summary cards display consistent values for the selected period.
 - User management: list, role toggle, ban/unban, edit modal save.
 - Category management CRUD works.
 - Vocabulary management CRUD works.

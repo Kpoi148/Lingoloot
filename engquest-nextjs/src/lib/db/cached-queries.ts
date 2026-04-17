@@ -8,17 +8,13 @@ import User from "@/models/User";
 import Vocabulary from "@/models/Vocabulary";
 import { connectToDatabase } from "@/lib/db/mongodb";
 
-type DashboardMonthBucket = {
+type DashboardDayBucket = {
   date: Date;
-  label: string;
-  monthKey: string;
+  dateKey: string;
 };
 
-type MonthlyCountAggregation = {
-  _id: {
-    year: number;
-    month: number;
-  };
+type DailyCountAggregation = {
+  _id: string;
   count: number;
 };
 
@@ -29,44 +25,32 @@ type ProgressAggregation = {
   fullyCompleted: number;
 };
 
-const DASHBOARD_TREND_MONTHS = 6;
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+const DASHBOARD_TREND_LOOKBACK_DAYS = 760;
 
-function createDashboardMonthBuckets(
-  size = DASHBOARD_TREND_MONTHS
-): DashboardMonthBucket[] {
-  const currentMonth = new Date();
-  currentMonth.setUTCDate(1);
-  currentMonth.setUTCHours(0, 0, 0, 0);
+function toUtcDateKey(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function createDashboardDayBuckets(
+  size = DASHBOARD_TREND_LOOKBACK_DAYS
+): DashboardDayBucket[] {
+  const currentDay = new Date();
+  currentDay.setUTCHours(0, 0, 0, 0);
 
   return Array.from({ length: size }, (_, index) => {
     const offset = size - index - 1;
-    const date = new Date(
-      Date.UTC(
-        currentMonth.getUTCFullYear(),
-        currentMonth.getUTCMonth() - offset,
-        1
-      )
-    );
+    const date = new Date(currentDay.getTime() - offset * DAY_IN_MS);
 
     return {
       date,
-      label: date
-        .toLocaleString("vi-VN", { month: "short", timeZone: "UTC" })
-        .replace(".", ""),
-      monthKey: `${date.getUTCFullYear()}-${String(
-        date.getUTCMonth() + 1
-      ).padStart(2, "0")}`,
+      dateKey: toUtcDateKey(date),
     };
   });
 }
 
-function createMonthlyCountMap(rows: MonthlyCountAggregation[]) {
-  return new Map(
-    rows.map((row) => [
-      `${row._id.year}-${String(row._id.month).padStart(2, "0")}`,
-      row.count,
-    ])
-  );
+function createDailyCountMap(rows: DailyCountAggregation[]) {
+  return new Map(rows.map((row) => [row._id, row.count]));
 }
 
 export const getCachedCategories = unstable_cache(
@@ -172,8 +156,8 @@ export const getCachedDashboardAnalytics = unstable_cache(
   async () => {
     await connectToDatabase();
 
-    const monthBuckets = createDashboardMonthBuckets();
-    const trendStartDate = monthBuckets[0]?.date ?? new Date();
+    const dayBuckets = createDashboardDayBuckets();
+    const trendStartDate = dayBuckets[0]?.date ?? new Date();
     const activeLearnerWindowStart = new Date(
       Date.now() - 30 * 24 * 60 * 60 * 1000
     );
@@ -186,44 +170,53 @@ export const getCachedDashboardAnalytics = unstable_cache(
       activeLearnerCount,
       learnerCount,
     ] = await Promise.all([
-      Vocabulary.aggregate<MonthlyCountAggregation>([
+      Vocabulary.aggregate<DailyCountAggregation>([
         { $match: { created_at: { $gte: trendStartDate } } },
         {
           $group: {
             _id: {
-              year: { $year: "$created_at" },
-              month: { $month: "$created_at" },
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$created_at",
+                timezone: "UTC",
+              },
             },
             count: { $sum: 1 },
           },
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } },
+        { $sort: { _id: 1 } },
       ]),
-      Quiz.aggregate<MonthlyCountAggregation>([
+      Quiz.aggregate<DailyCountAggregation>([
         { $match: { createdAt: { $gte: trendStartDate } } },
         {
           $group: {
             _id: {
-              year: { $year: "$createdAt" },
-              month: { $month: "$createdAt" },
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$createdAt",
+                timezone: "UTC",
+              },
             },
             count: { $sum: 1 },
           },
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } },
+        { $sort: { _id: 1 } },
       ]),
-      User.aggregate<MonthlyCountAggregation>([
+      User.aggregate<DailyCountAggregation>([
         { $match: { createdAt: { $gte: trendStartDate }, role: "user" } },
         {
           $group: {
             _id: {
-              year: { $year: "$createdAt" },
-              month: { $month: "$createdAt" },
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$createdAt",
+                timezone: "UTC",
+              },
             },
             count: { $sum: 1 },
           },
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } },
+        { $sort: { _id: 1 } },
       ]),
       TopicProgress.aggregate<ProgressAggregation>([
         {
@@ -261,16 +254,15 @@ export const getCachedDashboardAnalytics = unstable_cache(
       User.countDocuments({ role: "user", isBanned: { $ne: true } }),
     ]);
 
-    const vocabularyTrendMap = createMonthlyCountMap(vocabularyTrendRows);
-    const quizTrendMap = createMonthlyCountMap(quizTrendRows);
-    const userTrendMap = createMonthlyCountMap(userTrendRows);
+    const vocabularyTrendMap = createDailyCountMap(vocabularyTrendRows);
+    const quizTrendMap = createDailyCountMap(quizTrendRows);
+    const userTrendMap = createDailyCountMap(userTrendRows);
 
-    const trends = monthBuckets.map((bucket) => ({
-      label: bucket.label,
-      monthKey: bucket.monthKey,
-      vocabularyCount: vocabularyTrendMap.get(bucket.monthKey) ?? 0,
-      quizCount: quizTrendMap.get(bucket.monthKey) ?? 0,
-      userCount: userTrendMap.get(bucket.monthKey) ?? 0,
+    const timeline = dayBuckets.map((bucket) => ({
+      dateKey: bucket.dateKey,
+      vocabularyCount: vocabularyTrendMap.get(bucket.dateKey) ?? 0,
+      quizCount: quizTrendMap.get(bucket.dateKey) ?? 0,
+      userCount: userTrendMap.get(bucket.dateKey) ?? 0,
     }));
 
     const progressSnapshot = progressRows[0] ?? {
@@ -281,7 +273,7 @@ export const getCachedDashboardAnalytics = unstable_cache(
     };
 
     return {
-      trends,
+      timeline,
       progress: {
         ...progressSnapshot,
         activeLearnerCount,
