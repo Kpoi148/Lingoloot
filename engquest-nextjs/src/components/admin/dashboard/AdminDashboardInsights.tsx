@@ -3,7 +3,6 @@ import {
   BarChart3,
   BookOpen,
   FileQuestion,
-  Layers3,
   type LucideIcon,
   Users,
 } from "lucide-react";
@@ -24,13 +23,6 @@ type DashboardTrendPoint = {
   userCount: number;
 };
 
-type DashboardCategoryDistribution = {
-  id: string;
-  name: string;
-  vocabularyCount: number;
-  share: number;
-};
-
 type DashboardProgress = {
   trackedTopics: number;
   vocabCompleted: number;
@@ -42,7 +34,6 @@ type DashboardProgress = {
 
 type DashboardAnalytics = {
   trends: DashboardTrendPoint[];
-  categoryDistribution: DashboardCategoryDistribution[];
   progress: DashboardProgress;
 };
 
@@ -71,15 +62,6 @@ type ProgressMetric = {
 };
 
 const numberFormatter = new Intl.NumberFormat("vi-VN");
-
-const barTones = [
-  "from-cyan-400 via-sky-500 to-indigo-500",
-  "from-violet-400 via-fuchsia-500 to-pink-500",
-  "from-emerald-400 via-teal-500 to-cyan-500",
-  "from-amber-400 via-orange-500 to-rose-500",
-  "from-indigo-400 via-blue-500 to-cyan-500",
-  "from-fuchsia-400 via-rose-500 to-orange-500",
-];
 
 function formatNumber(value: number | null | undefined) {
   if (typeof value !== "number" || Number.isNaN(value)) {
@@ -252,34 +234,40 @@ function TrendPanel({
         </div>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 grid gap-4 xl:grid-cols-3">
         {metrics.map((metric) => {
           const Icon = metric.icon;
 
           return (
             <article
               key={metric.label}
-              className="grid gap-4 rounded-[24px] bg-white/65 p-4 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:ring-white/5 lg:grid-cols-[220px_minmax(0,1fr)]"
+              className="rounded-[24px] bg-white/65 p-5 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:ring-white/5"
             >
-              <div className="flex items-start gap-3">
-                <div className="rounded-2xl bg-slate-900/90 p-3 text-white shadow-lg shadow-slate-900/10 dark:bg-white/10">
-                  <Icon className="h-5 w-5" />
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-2xl bg-slate-900/90 p-3 text-white shadow-lg shadow-slate-900/10 dark:bg-white/10">
+                    <Icon className="h-5 w-5" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
+                      {metric.label}
+                    </p>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900 dark:text-slate-100">
+                      {formatNumber(metric.currentMonth)}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      Tháng hiện tại
+                    </p>
+                  </div>
                 </div>
 
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
-                    {metric.label}
-                  </p>
-                  <p className="mt-2 text-3xl font-semibold text-slate-900 dark:text-slate-100">
-                    {formatNumber(metric.currentMonth)}
-                  </p>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                    Tháng hiện tại
-                  </p>
-                </div>
+                <p className="rounded-full bg-slate-900/5 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-white/5 dark:text-slate-300">
+                  {formatNumber(metric.total)} tổng
+                </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="mt-5 space-y-2">
                 <Sparkline
                   values={metric.series}
                   lineColor={metric.lineColor}
@@ -288,12 +276,9 @@ function TrendPanel({
                   gradientId={createGradientId(metric.label)}
                 />
 
-                <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500 dark:text-slate-400">
-                  <p>{metric.helper}</p>
-                  <p className="rounded-full bg-slate-900/5 px-3 py-1 font-medium text-slate-600 dark:bg-white/5 dark:text-slate-300">
-                    {formatNumber(metric.total)} tổng
-                  </p>
-                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {metric.helper}
+                </p>
               </div>
             </article>
           );
@@ -310,96 +295,16 @@ function TrendPanel({
   );
 }
 
-function CategoryDistributionPanel({
-  categories,
-  totalVocabulary,
-}: {
-  categories: DashboardCategoryDistribution[];
-  totalVocabulary: number;
-}) {
-  return (
-    <section className="landing-panel animate-reveal rounded-[28px] p-6 sm:p-7">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
-            Phân bổ nội dung
-          </p>
-          <h3 className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">
-            Từ vựng theo chủ đề
-          </h3>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Nhìn nhanh chủ đề nào đang chiếm phần lớn kho nội dung để cân bằng lại độ phủ.
-          </p>
-        </div>
-
-        <div className="hidden rounded-2xl bg-white/65 p-3 text-slate-500 shadow-sm dark:bg-slate-950/45 dark:text-slate-300 sm:flex">
-          <Layers3 className="h-5 w-5" />
-        </div>
-      </div>
-
-      <div className="mt-6 space-y-3">
-        {categories.length ? (
-          categories.map((category, index) => {
-            const share = Math.round(category.share * 100);
-
-            return (
-              <article
-                key={category.id}
-                className="rounded-[24px] bg-white/65 p-4 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:ring-white/5"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
-                      {category.name}
-                    </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
-                      {share}% tổng kho từ vựng
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                      {formatNumber(category.vocabularyCount)}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">từ vựng</p>
-                  </div>
-                </div>
-
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200/70 dark:bg-slate-800/70">
-                  <div
-                    className={cn(
-                      "h-full rounded-full bg-gradient-to-r transition-[width] duration-500",
-                      barTones[index % barTones.length]
-                    )}
-                    style={{ width: `${Math.max(share, category.vocabularyCount > 0 ? 10 : 0)}%` }}
-                  />
-                </div>
-              </article>
-            );
-          })
-        ) : (
-          <div className="rounded-[24px] bg-white/65 p-5 text-sm text-slate-500 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:text-slate-400 dark:ring-white/5">
-            Chưa có đủ dữ liệu chủ đề để hiển thị phân bổ nội dung.
-          </div>
-        )}
-      </div>
-
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/50 pt-4 text-sm text-slate-500 dark:border-white/5 dark:text-slate-400">
-        <span>Tổng từ vựng đang theo dõi</span>
-        <span className="font-semibold text-slate-700 dark:text-slate-200">
-          {formatNumber(totalVocabulary)}
-        </span>
-      </div>
-    </section>
-  );
-}
-
 function ProgressPanel({ progress }: { progress: DashboardProgress }) {
   const activeRatio = formatRatio(
     progress.activeLearnerCount,
     progress.learnerCount
   );
   const trackedTopics = progress.trackedTopics;
+  const inactiveLearnerCount = Math.max(
+    progress.learnerCount - progress.activeLearnerCount,
+    0
+  );
 
   const progressMetrics: ProgressMetric[] = [
     {
@@ -422,6 +327,24 @@ function ProgressPanel({ progress }: { progress: DashboardProgress }) {
     },
   ];
 
+  const summaryStats = [
+    {
+      label: "Chủ đề đang được theo dõi",
+      value: formatNumber(trackedTopics),
+      note: "bản ghi tiến độ",
+    },
+    {
+      label: "Người học đang hoạt động",
+      value: formatNumber(progress.activeLearnerCount),
+      note: "30 ngày gần nhất",
+    },
+    {
+      label: "Người học chưa quay lại",
+      value: formatNumber(inactiveLearnerCount),
+      note: "cần kích hoạt lại",
+    },
+  ];
+
   return (
     <section className="landing-panel animate-reveal rounded-[28px] p-6 sm:p-7">
       <div className="flex items-start justify-between gap-4">
@@ -433,7 +356,7 @@ function ProgressPanel({ progress }: { progress: DashboardProgress }) {
             Tiến độ và độ hoạt động
           </h3>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Đo số người học còn quay lại và tỷ lệ hoàn thành từng mốc trong hành trình học.
+            Tập trung vào tỷ lệ quay lại và các mốc hoàn tất quan trọng để biết phần nào của hành trình học đang giữ chân người dùng tốt.
           </p>
         </div>
 
@@ -442,58 +365,86 @@ function ProgressPanel({ progress }: { progress: DashboardProgress }) {
         </div>
       </div>
 
-      <div className="mt-6 rounded-[28px] bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-900/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-              Người học hoạt động 30 ngày
-            </p>
-            <p className="mt-3 text-4xl font-semibold">{activeRatio}%</p>
-            <p className="mt-2 text-sm text-slate-300">
-              {formatNumber(progress.activeLearnerCount)} / {formatNumber(progress.learnerCount)} tài khoản học tập có đăng nhập gần đây.
-            </p>
+      <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <div className="rounded-[28px] bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-900/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                Người học hoạt động 30 ngày
+              </p>
+              <p className="mt-3 text-4xl font-semibold">{activeRatio}%</p>
+              <p className="mt-2 text-sm text-slate-300">
+                {formatNumber(progress.activeLearnerCount)} / {formatNumber(progress.learnerCount)} tài khoản học tập có đăng nhập gần đây.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white/10 p-3 text-slate-100">
+              <Users className="h-5 w-5" />
+            </div>
           </div>
 
-          <div className="rounded-2xl bg-white/10 p-3 text-slate-100">
-            <Users className="h-5 w-5" />
+          <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-sky-500"
+              style={{ width: `${activeRatio}%` }}
+            />
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {summaryStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-[22px] bg-white/8 p-4 ring-1 ring-white/10"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                  {stat.label}
+                </p>
+                <p className="mt-3 text-2xl font-semibold text-white">
+                  {stat.value}
+                </p>
+                <p className="mt-1 text-sm text-slate-300">{stat.note}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 space-y-4">
-        {progressMetrics.map((metric) => (
-          <article
-            key={metric.label}
-            className="rounded-[24px] bg-white/65 p-4 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:ring-white/5"
-          >
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {metric.label}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
-                  {trackedTopics > 0
-                    ? `${metric.ratio}% trên ${formatNumber(trackedTopics)} lượt theo dõi`
-                    : "Chưa có dữ liệu tiến độ"}
-                </p>
+        <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
+          {progressMetrics.map((metric) => (
+            <article
+              key={metric.label}
+              className="rounded-[24px] bg-white/65 p-4 shadow-sm ring-1 ring-white/60 backdrop-blur dark:bg-slate-950/40 dark:ring-white/5"
+            >
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {metric.label}
+                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                    {trackedTopics > 0
+                      ? `${metric.ratio}% trên ${formatNumber(trackedTopics)} lượt theo dõi`
+                      : "Chưa có dữ liệu tiến độ"}
+                  </p>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                    {formatNumber(metric.value)}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    lượt hoàn tất
+                  </p>
+                </div>
               </div>
 
-              <div className="text-right">
-                <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  {formatNumber(metric.value)}
-                </p>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">lượt hoàn tất</p>
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200/70 dark:bg-slate-800/70">
+                <div
+                  className={cn("h-full rounded-full bg-gradient-to-r", metric.tone)}
+                  style={{ width: `${metric.ratio}%` }}
+                />
               </div>
-            </div>
-
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200/70 dark:bg-slate-800/70">
-              <div
-                className={cn("h-full rounded-full bg-gradient-to-r", metric.tone)}
-                style={{ width: `${metric.ratio}%` }}
-              />
-            </div>
-          </article>
-        ))}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -504,7 +455,6 @@ export default function AdminDashboardInsights({
   analyticsData,
 }: AdminDashboardInsightsProps) {
   const trends = analyticsData?.trends ?? [];
-  const categories = analyticsData?.categoryDistribution ?? [];
   const progress = analyticsData?.progress ?? {
     trackedTopics: 0,
     vocabCompleted: 0,
@@ -513,10 +463,6 @@ export default function AdminDashboardInsights({
     activeLearnerCount: 0,
     learnerCount: 0,
   };
-  const totalVocabulary = categories.reduce(
-    (sum, category) => sum + category.vocabularyCount,
-    0
-  );
 
   return (
     <section className="space-y-6">
@@ -525,21 +471,12 @@ export default function AdminDashboardInsights({
           Phân tích vận hành
         </h3>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Bổ sung thêm góc nhìn về xu hướng, độ phủ nội dung và mức sử dụng thực tế.
+          Bổ sung thêm góc nhìn về xu hướng tăng trưởng và mức sử dụng thực tế của hệ thống.
         </p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.95fr)]">
-        <TrendPanel overviewData={overviewData} trends={trends} />
-
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-1">
-          <CategoryDistributionPanel
-            categories={categories}
-            totalVocabulary={overviewData?.vocabularyCount ?? totalVocabulary}
-          />
-          <ProgressPanel progress={progress} />
-        </div>
-      </div>
+      <TrendPanel overviewData={overviewData} trends={trends} />
+      <ProgressPanel progress={progress} />
     </section>
   );
 }

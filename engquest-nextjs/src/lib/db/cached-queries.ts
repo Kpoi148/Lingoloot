@@ -22,17 +22,6 @@ type MonthlyCountAggregation = {
   count: number;
 };
 
-type CategorySummary = {
-  _id: mongoose.Types.ObjectId;
-  name: string;
-  order: number;
-};
-
-type VocabularyCountByCategory = {
-  _id: mongoose.Types.ObjectId | string;
-  count: number;
-};
-
 type ProgressAggregation = {
   trackedTopics: number;
   vocabCompleted: number;
@@ -193,8 +182,6 @@ export const getCachedDashboardAnalytics = unstable_cache(
       vocabularyTrendRows,
       quizTrendRows,
       userTrendRows,
-      categoryDocs,
-      vocabularyCountRows,
       progressRows,
       activeLearnerCount,
       learnerCount,
@@ -237,10 +224,6 @@ export const getCachedDashboardAnalytics = unstable_cache(
           },
         },
         { $sort: { "_id.year": 1, "_id.month": 1 } },
-      ]),
-      Category.find().sort({ order: 1 }).select("name order").lean<CategorySummary[]>(),
-      Vocabulary.aggregate<VocabularyCountByCategory>([
-        { $group: { _id: "$category_id", count: { $sum: 1 } } },
       ]),
       TopicProgress.aggregate<ProgressAggregation>([
         {
@@ -290,40 +273,6 @@ export const getCachedDashboardAnalytics = unstable_cache(
       userCount: userTrendMap.get(bucket.monthKey) ?? 0,
     }));
 
-    const vocabularyCountMap = new Map(
-      vocabularyCountRows.map((item) => [String(item._id), item.count])
-    );
-    const totalVocabulary = Array.from(vocabularyCountMap.values()).reduce(
-      (sum, count) => sum + count,
-      0
-    );
-
-    const categoryDistribution = categoryDocs
-      .map((category) => {
-        const vocabularyCount = vocabularyCountMap.get(String(category._id)) ?? 0;
-
-        return {
-          id: String(category._id),
-          name: category.name,
-          order: category.order,
-          vocabularyCount,
-          share:
-            totalVocabulary > 0 ? vocabularyCount / totalVocabulary : 0,
-        };
-      })
-      .sort(
-        (left, right) =>
-          right.vocabularyCount - left.vocabularyCount ||
-          left.order - right.order
-      )
-      .slice(0, 6)
-      .map((category) => ({
-        id: category.id,
-        name: category.name,
-        vocabularyCount: category.vocabularyCount,
-        share: category.share,
-      }));
-
     const progressSnapshot = progressRows[0] ?? {
       trackedTopics: 0,
       vocabCompleted: 0,
@@ -333,7 +282,6 @@ export const getCachedDashboardAnalytics = unstable_cache(
 
     return {
       trends,
-      categoryDistribution,
       progress: {
         ...progressSnapshot,
         activeLearnerCount,

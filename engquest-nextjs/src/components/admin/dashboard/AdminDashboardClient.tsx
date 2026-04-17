@@ -17,12 +17,6 @@ type DashboardAnalytics = {
         quizCount: number;
         userCount: number;
     }>;
-    categoryDistribution: Array<{
-        id: string;
-        name: string;
-        vocabularyCount: number;
-        share: number;
-    }>;
     progress: {
         trackedTopics: number;
         vocabCompleted: number;
