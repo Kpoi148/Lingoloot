@@ -1,10 +1,10 @@
 // Authenticated API that mints a proof token before progress can be written.
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth/auth-options";
+import { requireUserApiSession } from "@/lib/auth/api-auth";
 import Category from "@/models/Category";
 import { connectToDatabase } from "@/lib/db/mongodb";
+import { createApiErrorResponse } from "@/lib/security/api-error";
 import {
   createProgressProof,
   type ProgressProofKind,
@@ -18,10 +18,12 @@ type ProofRequestBody = {
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
-    if (!userId) {
-      return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
+    const auth = await requireUserApiSession();
+    if (!auth.ok) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
 
     const body = (await req.json()) as ProofRequestBody;
@@ -78,7 +80,7 @@ export async function POST(req: Request) {
     }
 
     const proof = await createProgressProof({
-      userId,
+      userId: auth.session.user.id,
       categoryId: resolvedCategoryId,
       kind: type,
     });
@@ -98,10 +100,10 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unable to generate progress proof.";
-    return NextResponse.json({ message }, { status: 500 });
+    return createApiErrorResponse({
+      error,
+      scope: "api/progress/proof",
+      publicMessage: "Unable to generate progress proof.",
+    });
   }
 }

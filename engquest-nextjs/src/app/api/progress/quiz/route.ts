@@ -1,9 +1,8 @@
 // Authenticated API for marking quiz completion progress.
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import { requireUserApiSession } from "@/lib/auth/api-auth";
 import { createApiErrorResponse } from "@/lib/security/api-error";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth/auth-options";
 import Category from "../../../../models/Category";
 import TopicProgress from "../../../../models/TopicProgress";
 import { connectToDatabase } from "@/lib/db/mongodb";
@@ -11,11 +10,12 @@ import { verifyProgressProof } from "@/lib/security/progress-proof";
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
-
-    if (!userId) {
-      return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
+    const auth = await requireUserApiSession();
+    if (!auth.ok) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
 
     const body = await req.json();
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
     const verified = await verifyProgressProof({
       token: proof,
-      userId,
+      userId: auth.session.user.id,
       categoryId: resolvedCategoryId,
       kind: "quiz",
     });
@@ -87,7 +87,7 @@ export async function POST(req: Request) {
     }
 
     const progress = await TopicProgress.findOneAndUpdate(
-      { user_id: userId, category_id: resolvedCategoryId },
+      { user_id: auth.session.user.id, category_id: resolvedCategoryId },
       { $set: { quiz_completed: true, updated_at: new Date() } },
       { new: true, upsert: true }
     )
