@@ -64,20 +64,20 @@ export default function GamificationSection() {
                             <Gift className="h-5 w-5 text-emerald-300 dark:text-emerald-600" />
                         </div>
 
-                        <div className="mt-5 grid grid-cols-7 gap-2">
+                        <div className="mt-5 grid grid-cols-7 gap-1 sm:gap-2">
                             {streakDays.map((day) => (
                                 <div
                                     key={day.label}
-                                    className={`rounded-2xl border px-3 py-3 text-center ${
+                                    className={`rounded-xl sm:rounded-2xl border px-1 py-2 sm:px-3 sm:py-3 text-center min-w-0 overflow-hidden ${
                                         day.active
                                             ? "border-emerald-300/40 bg-emerald-400/20 text-white dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-slate-950"
                                             : "border-white/10 bg-white/5 text-white/60 dark:border-slate-300/20 dark:bg-slate-950/5 dark:text-slate-500"
                                     }`}
                                 >
-                                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em]">
+                                    <p className="text-[0.6rem] sm:text-[0.68rem] font-semibold uppercase tracking-tight sm:tracking-[0.2em] truncate">
                                         {day.label}
                                     </p>
-                                    <p className="mt-2 text-sm font-semibold">
+                                    <p className="mt-1 sm:mt-2 text-[10px] sm:text-xs md:text-sm font-semibold truncate leading-tight">
                                         {day.active ? "Claimed" : "Next"}
                                     </p>
                                 </div>
