@@ -153,8 +153,8 @@ export default function AdminUsersTable({
   );
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-left text-sm">
+    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <table className="w-full min-w-[700px] border-collapse text-left text-sm">
         <thead className="sticky top-0 z-10 bg-white text-xs uppercase tracking-[0.25em] text-slate-400 shadow-sm dark:bg-slate-900 dark:text-slate-500">
           <tr>
             <th className="py-4 px-4 font-semibold">User</th>
