@@ -1,12 +1,10 @@
 "use client";
 // Reusable theme switcher used across public and authenticated surfaces.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
-const themeCycle = ["light", "dark", "system"] as const;
 
 type ThemeToggleProps = {
   className?: string;
@@ -20,14 +18,11 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
     setMounted(true);
   }, []);
 
-  const currentTheme = (theme ?? "system") as (typeof themeCycle)[number];
+  const currentTheme = theme ?? "system";
   const displayTheme =
     currentTheme === "system" ? resolvedTheme : currentTheme;
   const isDark = displayTheme === "dark";
-  const nextTheme = useMemo(() => {
-    const currentIndex = themeCycle.indexOf(currentTheme);
-    return themeCycle[(currentIndex + 1) % themeCycle.length];
-  }, [currentTheme]);
+  const nextTheme = isDark ? "light" : "dark";
 
   if (!mounted) {
     return (
