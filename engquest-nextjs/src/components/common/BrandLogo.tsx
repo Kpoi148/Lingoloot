@@ -7,6 +7,7 @@ type BrandLogoProps = {
   alt?: string;
   fallback?: string;
   size?: number;
+  priority?: boolean;
 };
 
 const DEFAULT_LOGO_SRC = "/logo.png";
@@ -17,6 +18,7 @@ export default function BrandLogo({
   alt = "LingoLoot",
   fallback = "LL",
   size = 40,
+  priority = false,
 }: BrandLogoProps) {
   const hasLogo = Boolean(logoSrc);
 
@@ -29,6 +31,7 @@ export default function BrandLogo({
           width={size}
           height={size}
           sizes={`${size}px`}
+          priority={priority}
           className="h-full w-full rounded-xl object-contain"
         />
       ) : (

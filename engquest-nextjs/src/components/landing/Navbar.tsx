@@ -43,42 +43,40 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
     <div className="sticky top-0 z-40 w-full">
       <div className="mx-auto w-full max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         <div
-          className={`animate-fade-in-down flex items-center justify-between rounded-full border px-3 py-2.5 transition-all duration-300 sm:px-5 ${
-            isScrolled
-              ? "border-slate-200/80 bg-white/85 shadow-lg shadow-slate-900/5 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85 dark:shadow-black/50"
-              : "border-slate-200/50 bg-white/60 backdrop-blur-md dark:border-white/5 dark:bg-slate-950/60"
-          }`}
+          data-scrolled={isScrolled}
+          className="landing-nav-surface animate-fade-in-down flex items-center justify-between px-3 py-2.5 transition-all duration-300 sm:px-5"
         >
           {/* Brand Logo */}
           <button
             type="button"
             onClick={() => handleNavClick("hero")}
-            className="flex items-center gap-3 text-left"
+            className="flex items-center gap-3 rounded-lg text-left"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
+            <span className="landing-product-panel--quiet flex h-10 w-10 items-center justify-center">
               <BrandLogo
-                className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl"
+                className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg"
                 size={32}
+                priority
               />
             </span>
             <span>
-              <span className="block font-[var(--font-display)] text-base font-extrabold tracking-tight text-slate-950 dark:text-white">
+              <span className="landing-title block font-[var(--font-display)] text-lg font-extrabold leading-none tracking-tight">
                 LingoLoot
               </span>
-              <span className="block text-[0.65rem] font-bold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
+              <span className="landing-accent-text landing-brand-kicker mt-1 block">
                 Quest & Loot
               </span>
             </span>
           </button>
 
           {/* Desktop Nav Links */}
-          <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 dark:text-slate-300 lg:flex">
+          <div className="landing-copy hidden items-center gap-7 text-sm font-semibold lg:flex">
             {landingNavItems.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => handleNavClick(item.id)}
-                className="transition hover:text-slate-950 dark:hover:text-white"
+                className="landing-nav-link rounded-md"
               >
                 {item.label}
               </button>
@@ -87,13 +85,13 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            <ThemeToggle className="landing-theme-toggle" />
 
             {/* Login Text Link */}
             <button
               type="button"
               onClick={() => handleNavClick("login")}
-              className="hidden sm:inline-flex text-xs font-bold text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white px-2 py-1"
+              className="landing-nav-link hidden rounded-md px-2 py-1 text-xs font-bold sm:inline-flex"
             >
               Đăng nhập
             </button>
@@ -102,7 +100,7 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
             <button
               type="button"
               onClick={() => handleNavClick(landingActions.primary.id)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-slate-800 active:scale-95 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              className="landing-nav-action"
             >
               <span>{landingActions.primary.label}</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -112,7 +110,7 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/80 text-slate-600 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 lg:hidden"
+              className="landing-product-panel--quiet landing-nav-link flex h-9 w-9 items-center justify-center lg:hidden"
               aria-label={isMobileMenuOpen ? "Đóng menu" : "Mở menu"}
             >
               {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -122,30 +120,30 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
 
         {/* Mobile Dropdown */}
         {isMobileMenuOpen && (
-          <div className="animate-fade-in-down mt-2 overflow-hidden rounded-3xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/95 lg:hidden">
+          <div className="landing-nav-surface animate-fade-in-down mt-2 overflow-hidden p-4 lg:hidden">
             <div className="flex flex-col gap-1.5">
               {landingNavItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => handleNavClick(item.id)}
-                  className="rounded-xl px-4 py-2.5 text-left text-sm font-bold text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5"
+                  className="landing-nav-menu-item rounded-lg px-4 py-2.5 text-left text-sm font-bold"
                 >
                   {item.label}
                 </button>
               ))}
-              <div className="my-2 h-px bg-slate-100 dark:bg-slate-800" />
+              <div className="landing-divider my-2 h-px" />
               <button
                 type="button"
                 onClick={() => handleNavClick("login")}
-                className="rounded-xl px-4 py-2 text-left text-sm font-bold text-slate-700 dark:text-slate-200"
+                className="landing-copy rounded-lg px-4 py-2 text-left text-sm font-bold"
               >
                 Đăng nhập
               </button>
               <button
                 type="button"
                 onClick={() => handleNavClick(landingActions.primary.id)}
-                className="mt-1 rounded-xl bg-slate-900 py-3 text-center text-sm font-bold text-white shadow-md dark:bg-white dark:text-slate-900"
+                className="landing-button-primary mt-1 w-full"
               >
                 {landingActions.primary.label}
               </button>

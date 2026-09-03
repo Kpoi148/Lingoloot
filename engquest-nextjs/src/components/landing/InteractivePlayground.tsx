@@ -2,7 +2,7 @@
 // Living interactive demo component featuring a 3D-tilt Flashcard and a playable Story Cloze puzzle.
 
 import { useState } from "react";
-import { Volume2, RotateCw, CheckCircle2, Trophy, Flame, Play, Image as ImageIcon } from "lucide-react";
+import { Volume2, RotateCw, CheckCircle2, Trophy, Flame, Play, Image as ImageIcon, Lightbulb } from "lucide-react";
 import confetti from "canvas-confetti";
 
 type VocabCard = {
@@ -110,19 +110,19 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
   };
 
   return (
-    <section id="interactive-demo" className="scroll-mt-24 py-10">
+    <section id="interactive-demo" className="landing-section landing-section--raised scroll-mt-24 py-16 sm:py-20">
       <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="mb-10 flex flex-col items-center justify-between gap-4 md:flex-row md:items-end">
           <div className="max-w-2xl text-center md:text-left space-y-2">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
+            <p className="landing-label landing-kicker">
               CHƯƠNG 02 &mdash; TRẢI NGHIỆM TƯƠNG TÁC
             </p>
-            <h2 className="font-[var(--font-display)] text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+            <h2 className="landing-title font-[var(--font-display)] text-4xl font-bold tracking-tight sm:text-5xl">
               Học thử ngay mà không cần tạo tài khoản.
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+            <p className="landing-copy text-sm sm:text-base">
               Nhấp vào thẻ để lật mặt, nghe phát âm giọng Mỹ và thử sức với câu đố Story Cloze bên dưới.
             </p>
           </div>
@@ -131,16 +131,16 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
           <button
             type="button"
             onClick={() => setShowMediaPlaceholder(!showMediaPlaceholder)}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700"
+            className="landing-compact-action"
           >
             {showMediaPlaceholder ? (
               <>
-                <Play className="h-3.5 w-3.5 text-amber-500" />
+                <Play className="landing-accent-text h-3.5 w-3.5" />
                 <span>Xem bản tương tác Live</span>
               </>
             ) : (
               <>
-                <ImageIcon className="h-3.5 w-3.5 text-sky-500" />
+                <ImageIcon className="landing-accent-text h-3.5 w-3.5" />
                 <span>Khung gắn Video/Ảnh Demo</span>
               </>
             )}
@@ -150,21 +150,21 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
         {/* Conditional Rendering: Media Placeholder OR Interactive Demo */}
         {showMediaPlaceholder ? (
           /* Placeholder Box sẵn sàng cho Video / Screenshot sau này của User */
-          <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-slate-100/70 p-8 text-center dark:border-slate-800 dark:bg-slate-900/50 sm:p-14">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500">
+          <div className="landing-media-placeholder relative overflow-hidden p-8 text-center sm:p-14">
+            <div className="landing-accent-text mx-auto flex h-16 w-16 items-center justify-center">
               <Play className="h-8 w-8" />
             </div>
-            <h3 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">
+            <h3 className="landing-title mt-4 font-[var(--font-display)] text-2xl font-bold">
               Khu vực hiển thị Video / Gameplay Screenshot
             </h3>
-            <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
+            <p className="landing-copy mx-auto mt-2 max-w-md text-sm">
               Bạn có thể dễ dàng nhúng video MP4/WebM hoặc file ảnh chụp màn hình ứng dụng tại đây bất cứ lúc nào khi đã chuẩn bị xong.
             </p>
             <div className="mt-6">
               <button
                 type="button"
                 onClick={() => setShowMediaPlaceholder(false)}
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900"
+                className="landing-button-primary"
               >
                 Quay lại Demo Tương tác Sống
               </button>
@@ -175,12 +175,12 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
           <div className="grid gap-6 lg:grid-cols-12 lg:items-stretch">
             
             {/* Left Box: 3D Flippable Flashcard (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-slate-900/80 dark:shadow-slate-950/50">
+            <div className="landing-product-panel lg:col-span-5 flex flex-col justify-between p-6">
               <div className="flex items-center justify-between">
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-300">
+                <span className="landing-product-panel--quiet landing-copy px-3 py-1 text-xs font-semibold">
                   Topic: {currentWord.topic}
                 </span>
-                <span className="text-xs font-medium text-slate-400">
+                <span className="landing-label text-xs font-medium tabular-nums">
                   Từ {currentWordIndex + 1} / {SAMPLE_WORDS.length}
                 </span>
               </div>
@@ -194,7 +194,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                   className={`relative h-full w-full rounded-2xl border transition-transform duration-500 transform-style-3d ${
                     isFlipped
                       ? "rotate-y-180 border-amber-500/40 bg-amber-50/40 dark:border-amber-400/20 dark:bg-amber-500/5"
-                      : "border-slate-200 bg-slate-50/70 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-slate-700"
+                      : "landing-product-panel--quiet"
                   }`}
                 >
                   {/* Front Face: English word & Pronunciation */}
@@ -205,21 +205,21 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                       <span className="font-mono text-emerald-600 dark:text-emerald-400">{currentWord.ipa}</span>
                     </div>
 
-                    <h3 className="font-[var(--font-display)] text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                    <h3 className="landing-title font-[var(--font-display)] text-5xl font-bold italic tracking-tight">
                       {currentWord.word}
                     </h3>
 
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    <p className="landing-label mt-4 text-xs font-semibold uppercase tracking-wider">
                       Bấm vào thẻ để xem nghĩa & ví dụ
                     </p>
                   </div>
 
                   {/* Back Face: Vietnamese meaning & Example */}
                   <div className="backface-hidden rotate-y-180 absolute inset-0 flex flex-col justify-center p-6 text-left">
-                    <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                    <p className="landing-accent-text text-xs font-bold uppercase tracking-wider">
                       Giải nghĩa
                     </p>
-                    <p className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                    <p className="landing-title mt-1 text-base font-semibold">
                       {currentWord.meaning}
                     </p>
 
@@ -237,14 +237,14 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
               </div>
 
               {/* Card Controls */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between border-t border-black/10 pt-3 dark:border-white/10">
                 <button
                   type="button"
                   onClick={handlePronounce}
                   className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                   aria-label="Phát âm từ vựng"
                 >
-                  <Volume2 className="h-4 w-4 text-emerald-500" />
+                  <Volume2 className="landing-accent-text h-4 w-4" />
                   <span>Phát âm</span>
                 </button>
 
@@ -270,34 +270,34 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
             </div>
 
             {/* Right Box: Mini Story Cloze Game (7 cols) */}
-            <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-6 shadow-xl shadow-slate-200/50 dark:border-white/10 dark:from-slate-900/90 dark:to-slate-950/80 dark:shadow-slate-950/50">
+            <div className="landing-product-panel lg:col-span-7 flex flex-col justify-between p-6">
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-500">
+                    <span className="landing-accent-text flex h-7 w-7 items-center justify-center">
                       <Trophy className="h-4 w-4" />
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    <span className="landing-copy text-xs font-bold uppercase tracking-wider">
                       Minigame Độc Quyền: Story Cloze
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
-                      <Flame className="h-3.5 w-3.5 fill-amber-500" /> +50 XP
+                    <span className="landing-accent-text inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold">
+                      <Flame className="h-3.5 w-3.5" /> +50 XP
                     </span>
                   </div>
                 </div>
 
-                <h4 className="font-[var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
+                <h4 className="landing-title font-[var(--font-display)] text-2xl font-bold">
                   Chọn từ chính xác để hoàn tất câu chuyện:
                 </h4>
 
                 {/* Sentence with Gap */}
-                <div className="my-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80">
-                  <p className="text-base sm:text-lg leading-relaxed text-slate-800 dark:text-slate-200">
+                <div className="landing-product-panel--quiet my-6 p-5">
+                  <p className="landing-title text-base leading-relaxed sm:text-lg">
                     &ldquo;Last summer, our team embarked on a thrilling{" "}
                     <span
-                      className={`inline-block min-w-[120px] rounded-lg border-2 px-3 py-1 text-center font-bold transition-all duration-300 ${
+                      className={`landing-cloze-gap inline-block rounded-lg border-2 px-3 py-1 text-center font-bold transition-all duration-300 ${
                         clozeSolved
                           ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-400 dark:bg-emerald-500/20 dark:text-emerald-300"
                           : selectedAnswer && !clozeSolved
@@ -344,7 +344,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
               </div>
 
               {/* Bottom Result & Auth Teaser */}
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="mt-6 border-t border-black/10 pt-4 dark:border-white/10">
                 {clozeSolved ? (
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl bg-emerald-50 p-4 dark:bg-emerald-500/10">
                     <div className="flex items-center gap-2.5">
@@ -353,7 +353,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                         <p className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
                           Chính xác! Bạn nhận được +50 XP & 10 Gems.
                         </p>
-                        <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
+                        <p className="landing-micro text-emerald-700 dark:text-emerald-400">
                           Tạo tài khoản để ghi nhận kết quả này vào hồ sơ cá nhân.
                         </p>
                       </div>
@@ -367,8 +367,11 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                    <span>💡 Gợi ý: Từ vựng vừa xuất hiện trên thẻ Flashcard bên trái.</span>
+                  <div className="landing-copy flex items-center justify-between gap-3 text-xs">
+                    <span className="flex items-center gap-2">
+                      <Lightbulb className="landing-accent-text h-4 w-4 shrink-0" />
+                      Gợi ý: Từ vựng vừa xuất hiện trên thẻ Flashcard bên trái.
+                    </span>
                     <button
                       type="button"
                       onClick={() => {

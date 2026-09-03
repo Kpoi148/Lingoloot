@@ -2,7 +2,7 @@
 // Public landing page that introduces the learner flow and provides interactive, anti-AI-slop experience.
 
 import { useCallback, useEffect, useState } from "react";
-import { Manrope, Space_Grotesk } from "next/font/google";
+import { Manrope, Newsreader } from "next/font/google";
 import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import InteractivePlayground from "@/components/landing/InteractivePlayground";
@@ -16,15 +16,15 @@ import type { AuthTab } from "@/components/auth/AuthTabs";
 
 // Font configurations
 const manrope = Manrope({
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const newsreader = Newsreader({
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
@@ -81,23 +81,13 @@ export default function HomePage() {
 
   return (
     <main
-      className={`${manrope.variable} ${spaceGrotesk.variable} relative min-h-screen [overflow-x:clip] bg-[#FAF8F5] font-[var(--font-body)] text-slate-900 transition-colors duration-300 dark:bg-[#07090E] dark:text-slate-100`}
+      className={`${manrope.variable} ${newsreader.variable} landing-shell min-h-screen [overflow-x:clip] font-[var(--font-body)] antialiased`}
     >
-      {/* Subtle, elegant ambient lighting (No harsh AI blur-3xl blobs) */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="absolute left-1/2 top-[-10rem] h-[30rem] w-[50rem] -translate-x-1/2 rounded-full bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent blur-2xl dark:from-amber-400/10 dark:via-purple-500/5" />
-      </div>
-
       {/* Sticky Navigation */}
       <Navbar onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
 
-      {/* Hero Section Container (Wide & Uncluttered) */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <HeroSection onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
-      </div>
+      {/* Full-bleed editorial hero */}
+      <HeroSection onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
 
       {/* Interactive Living Demo (3D Flashcard & Playable Story Cloze) */}
       <InteractivePlayground onOpenAuth={() => handleOpenAuth("register")} />

@@ -13,42 +13,42 @@ export default function Footer({ onNavigate }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <AnimatedSection className="relative mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#07090E] px-8 py-10 text-slate-100 shadow-xl sm:px-12 sm:py-12">
+    <AnimatedSection className="landing-section landing-section--ink landing-reveal pb-10 pt-4 sm:pb-12">
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="relative grid gap-8 md:grid-cols-[minmax(0,1.2fr)_repeat(2,minmax(0,0.8fr))]">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5">
                 <BrandLogo
                   className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl"
                   size={36}
                 />
               </span>
               <div>
-                <p className="font-[var(--font-display)] text-2xl font-extrabold tracking-tight">
+                <p className="landing-inverted-title font-[var(--font-display)] text-3xl font-extrabold tracking-tight">
                   LingoLoot
                 </p>
-                <p className="text-[11px] uppercase tracking-[0.25em] text-amber-500 font-bold">
+                <p className="landing-accent-text landing-brand-kicker">
                   Quest & Loot English
                 </p>
               </div>
             </div>
-            <p className="max-w-sm text-xs leading-relaxed text-slate-400">
+            <p className="landing-inverted-copy max-w-sm text-xs leading-relaxed">
               Nền tảng học tiếng Anh tương tác kết hợp cơ chế trò chơi hóa: từ vựng, flashcard 3D, quiz, story cloze và phần thưởng profile SVG độc quyền.
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
+            <p className="landing-inverted-label landing-kicker">
               Khám phá
             </p>
-            <div className="mt-4 flex flex-col gap-2.5 text-xs text-slate-300">
+            <div className="landing-inverted-copy mt-4 flex flex-col gap-2.5 text-xs">
               {landingNavItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => onNavigate(item.id)}
-                  className="text-left transition hover:text-white"
+                  className="landing-footer-link text-left"
                 >
                   {item.label}
                 </button>
@@ -57,15 +57,15 @@ export default function Footer({ onNavigate }: FooterProps) {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
+            <p className="landing-inverted-label landing-kicker">
               Cộng đồng & Mã nguồn
             </p>
-            <div className="mt-4 flex flex-col gap-2.5 text-xs text-slate-300">
+            <div className="landing-inverted-copy mt-4 flex flex-col gap-2.5 text-xs">
               <a
                 href="https://github.com/Kpoi148"
                 target="_blank"
                 rel="noreferrer"
-                className="transition hover:text-white"
+                className="landing-footer-link"
               >
                 GitHub Repository
               </a>
@@ -73,7 +73,7 @@ export default function Footer({ onNavigate }: FooterProps) {
           </div>
         </div>
 
-        <div className="relative mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <div className="landing-inverted-copy relative mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs sm:flex-row sm:items-center sm:justify-between">
           <span>© {currentYear} LingoLoot. Mọi quyền được bảo lưu.</span>
           <span>Được xây dựng với niềm đam mê học ngoại ngữ và gaming.</span>
         </div>

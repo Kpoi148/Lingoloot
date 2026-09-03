@@ -47,14 +47,18 @@ export function AnimatedSection({
         <div
             ref={ref}
             id={id}
-            className={`transition-all duration-700 ease-out ${className}`}
-            style={{
-                opacity: isInView ? 1 : 0,
-                transform: isInView ? "translateY(0)" : "translateY(40px)",
-                transitionDelay: `${delay}ms`,
-            }}
+            className={className}
         >
-            {children}
+            <div
+                className="landing-reveal transition-[opacity,transform] duration-500 ease-out"
+                style={{
+                    opacity: isInView ? 1 : 0,
+                    transform: isInView ? "translateY(0)" : "translateY(24px)",
+                    transitionDelay: `${delay}ms`,
+                }}
+            >
+                {children}
+            </div>
         </div>
     );
 }
