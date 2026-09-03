@@ -1,17 +1,18 @@
 "use client";
-// Public landing page that introduces the learner flow and provides auth entry points.
+// Public landing page that introduces the learner flow and provides interactive, anti-AI-slop experience.
 
 import { useCallback, useEffect, useState } from "react";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
-import FlashcardMockup from "@/components/landing/FlashcardMockup";
-import AuthTabs, { type AuthTab } from "@/components/auth/AuthTabs";
+import InteractivePlayground from "@/components/landing/InteractivePlayground";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
+import LootShowcase from "@/components/landing/LootShowcase";
 import GamificationSection from "@/components/landing/GamificationSection";
 import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
-import { landingQuickAccessBullets } from "@/components/landing/content";
+import AuthModal from "@/components/landing/AuthModal";
+import type { AuthTab } from "@/components/auth/AuthTabs";
 
 // Font configurations
 const manrope = Manrope({
@@ -30,6 +31,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export default function HomePage() {
   const [authTab, setAuthTab] = useState<AuthTab>("login");
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     let isEmbeddedPreview = false;
@@ -53,15 +55,18 @@ export default function HomePage() {
     };
   }, []);
 
-  const handleNavigate = useCallback((id: string) => {
-    let targetId = id;
+  const handleOpenAuth = useCallback((tab: AuthTab = "login") => {
+    setAuthTab(tab);
+    setIsAuthModalOpen(true);
+  }, []);
 
+  const handleNavigate = useCallback((id: string) => {
     if (id === "login" || id === "register") {
-      setAuthTab(id);
-      targetId = "auth-section";
+      handleOpenAuth(id);
+      return;
     }
 
-    const target = document.getElementById(targetId);
+    const target = document.getElementById(id);
     if (!target) return;
 
     const prefersReducedMotion =
@@ -72,77 +77,52 @@ export default function HomePage() {
       behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start",
     });
-  }, []);
+  }, [handleOpenAuth]);
 
   return (
     <main
-      className={`${manrope.variable} ${spaceGrotesk.variable} relative min-h-screen [overflow-x:clip] bg-[#f5f7fb] font-[var(--font-body)] text-slate-950 dark:bg-[#020617] dark:text-slate-100`}
+      className={`${manrope.variable} ${spaceGrotesk.variable} relative min-h-screen [overflow-x:clip] bg-[#FAF8F5] font-[var(--font-body)] text-slate-900 transition-colors duration-300 dark:bg-[#07090E] dark:text-slate-100`}
     >
+      {/* Subtle, elegant ambient lighting (No harsh AI blur-3xl blobs) */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="landing-grid absolute inset-0 opacity-60" />
-        <div className="absolute left-1/2 top-[-8rem] h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.16),transparent_68%)] dark:bg-[radial-gradient(circle,rgba(52,211,153,0.14),transparent_70%)]" />
-        <div
-          className="animate-drift absolute -left-20 top-[28rem] h-80 w-80 rounded-full bg-emerald-200/40 blur-3xl dark:bg-emerald-500/10"
-          style={{ animationDelay: "-5s" }}
-        />
-        <div
-          className="animate-drift absolute -right-20 top-24 h-72 w-72 rounded-full bg-sky-200/50 blur-3xl dark:bg-sky-500/10"
-          style={{ animationDelay: "-2s" }}
-        />
+        <div className="absolute left-1/2 top-[-10rem] h-[30rem] w-[50rem] -translate-x-1/2 rounded-full bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent blur-2xl dark:from-amber-400/10 dark:via-purple-500/5" />
       </div>
 
-      <Navbar onNavigate={handleNavigate} />
+      {/* Sticky Navigation */}
+      <Navbar onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_400px] xl:items-start">
-          <div className="space-y-6 lg:space-y-8">
-            <HeroSection onNavigate={handleNavigate} />
-            <FlashcardMockup />
-          </div>
-
-          <section className="landing-panel relative rounded-[2rem] p-5 sm:p-6 xl:sticky xl:top-28">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.22),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_60%)]"
-            />
-            <div className="relative">
-              <div className="mb-6 space-y-3">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-slate-500 dark:text-slate-400">
-                  Quick access
-                </p>
-                <h2 className="font-[var(--font-display)] text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  Bắt đầu hoặc quay lại learner workspace.
-                </h2>
-                <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  Tạo tài khoản để vào lượt học đầu tiên, hoặc đăng nhập để tiếp
-                  tục đúng topic và tiến độ đang có.
-                </p>
-              </div>
-
-              <div className="mb-5 flex flex-wrap gap-2">
-                {landingQuickAccessBullets.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-black/10 bg-white/70 px-3 py-1.5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-
-              <AuthTabs activeTab={authTab} />
-            </div>
-          </section>
-        </div>
+      {/* Hero Section Container (Wide & Uncluttered) */}
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <HeroSection onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
       </div>
 
+      {/* Interactive Living Demo (3D Flashcard & Playable Story Cloze) */}
+      <InteractivePlayground onOpenAuth={() => handleOpenAuth("register")} />
+
+      {/* 4-Stage Learning Journey with Video/Screenshot Slot */}
       <HowItWorksSection />
-      <GamificationSection />
-      <CTASection onNavigate={handleNavigate} />
+
+      {/* Loot Vault: AI Animated SVG Frames Showcase */}
+      <LootShowcase onOpenAuth={() => handleOpenAuth("register")} />
+
+      {/* Gamification, Streak Fire & Adventurer Pass */}
+      <GamificationSection onOpenAuth={() => handleOpenAuth("register")} />
+
+      {/* Closing CTA */}
+      <CTASection onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
+
+      {/* Footer */}
       <Footer onNavigate={handleNavigate} />
+
+      {/* Accessible Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialTab={authTab}
+      />
     </main>
   );
 }

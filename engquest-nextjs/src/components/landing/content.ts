@@ -1,51 +1,53 @@
 // Shared copy and navigation data for the public learner landing page.
 
 export const landingNavItems = [
-  { label: "Sản phẩm", id: "product" },
-  { label: "Lộ trình", id: "flow" },
-  { label: "Phần thưởng", id: "rewards" },
+  { label: "Chơi thử", id: "interactive-demo" },
+  { label: "Lộ trình", id: "journey" },
+  { label: "Kho báu Loot", id: "vault" },
+  { label: "Chuỗi Streak", id: "streak" },
 ] as const;
 
 export const landingActions = {
-  primary: { label: "Tạo tài khoản miễn phí", id: "register" as const },
+  primary: { label: "Bắt đầu chuyến đi", id: "register" as const },
   secondary: { label: "Đăng nhập", id: "login" as const },
-  tertiary: { label: "Xem cách hoạt động", id: "flow" as const },
+  tertiary: { label: "Trải nghiệm thử", id: "interactive-demo" as const },
 };
 
 export const landingQuickAccessBullets = [
-  "Tiếp tục đúng topic đang học.",
-  "Giữ lại streak, XP và rewards.",
+  "Khôi phục đúng tiến độ bài học dang dở.",
+  "Bảo toàn chuỗi ngày học và kho báu Gems.",
 ] as const;
 
 export const landingHeroHighlights = [
-  { label: "Nhịp học", value: "10-15 phút" },
-  { label: "Flow", value: "1 topic, 3 bước luyện" },
-  { label: "Rewards", value: "XP, Gems, profile items" },
+  { label: "Nhịp độ học", value: "10-15 phút / ngày" },
+  { label: "Công thức nhớ sâu", value: "Flashcard + Story Cloze" },
+  { label: "Phần thưởng", value: "Khung Avatar SVG & Gems" },
 ] as const;
 
 export const landingFlowSteps = [
   {
     step: "01",
-    title: "Chọn topic",
+    title: "Chọn Chủ Đề Khởi Hành",
     description:
-      "Vào đúng bộ từ bạn muốn tập trung ngay lúc này.",
+      "Tập trung đúng nhánh từ vựng bạn cần: Du lịch, Công nghệ, Đời sống hay Học thuật chuyên sâu.",
   },
   {
     step: "02",
-    title: "Lật flashcards",
+    title: "Đúc Kết Từ Vựng 3D",
     description:
-      "Nắm nghĩa, phát âm và ví dụ trong một lượt ngắn.",
+      "Nắm trọn phát âm IPA bản xứ, ngữ nghĩa tinh gọn và ví dụ bối cảnh qua thẻ Flashcard tương tác.",
   },
   {
     step: "03",
-    title: "Làm quiz ngắn",
+    title: "Đấu Trí Phản Xạ Quiz",
     description:
-      "Kiểm tra lại trên chính bộ từ vừa học.",
+      "Thử thách tốc độ nhận diện từ vựng dưới áp lực đồng hồ đếm ngược với đáp án minh bạch.",
   },
   {
     step: "04",
-    title: "Chốt bằng Story Cloze",
+    title: "Khóa Ngữ Cảnh Story Cloze",
     description:
-      "Khóa lại ngữ cảnh trước khi progress được lưu.",
+      "Kéo thả từ vựng vào câu chuyện AI đục lỗ để khắc sâu phản xạ đọc hiểu vào trí nhớ dài hạn.",
   },
 ] as const;
+

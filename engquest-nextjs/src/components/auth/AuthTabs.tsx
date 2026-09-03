@@ -31,15 +31,15 @@ export default function AuthTabs({
     ];
 
     return (
-        <div id="auth-section" className="mx-auto w-full max-w-md scroll-mt-32">
+        <div id="auth-section" className="w-full scroll-mt-32">
             {/* Tab Buttons */}
-            <div className="mb-4 flex rounded-[1.35rem] border border-black/10 bg-black/[0.03] p-1.5 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="mb-4 flex rounded-xl border border-slate-200/80 bg-slate-100/70 p-1 backdrop-blur dark:border-white/10 dark:bg-white/5">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative flex-1 rounded-[1rem] px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
+                        className={`relative flex-1 rounded-lg py-2 text-xs sm:text-sm font-bold transition-colors duration-200 ${
                             activeTab === tab.id
                                 ? "text-slate-950 dark:text-white"
                                 : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
@@ -48,7 +48,7 @@ export default function AuthTabs({
                         {activeTab === tab.id && (
                             <motion.div
                                 layoutId="activeTab"
-                                className="absolute inset-0 rounded-[1rem] bg-white shadow-[0_18px_35px_-24px_rgba(15,23,42,0.45)] dark:bg-slate-900 dark:shadow-[0_18px_35px_-24px_rgba(2,6,23,0.9)]"
+                                className="absolute inset-0 rounded-lg bg-white shadow-sm dark:bg-slate-800"
                                 transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
                             />
                         )}

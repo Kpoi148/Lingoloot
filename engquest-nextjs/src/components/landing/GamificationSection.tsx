@@ -1,161 +1,191 @@
-// Landing section that surfaces streaks, XP, Gems, and profile rewards.
-import type { ReactNode } from "react";
-import { Flame, Gem, Gift, Trophy } from "lucide-react";
+"use client";
+// Landing section that showcases streaks, XP leveling, and learner profile rewards.
+
+import { Flame, Gem, Gift, Trophy, Sparkles, Check, ArrowRight } from "lucide-react";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
 
 const streakDays = [
-    { label: "Mon", active: true },
-    { label: "Tue", active: true },
-    { label: "Wed", active: true },
-    { label: "Thu", active: true },
-    { label: "Fri", active: true },
-    { label: "Sat", active: true },
-    { label: "Sun", active: false },
+  { label: "T2", active: true, xp: 50 },
+  { label: "T3", active: true, xp: 60 },
+  { label: "T4", active: true, xp: 70 },
+  { label: "T5", active: true, xp: 80 },
+  { label: "T6", active: true, xp: 90 },
+  { label: "T7", active: true, xp: 100 },
+  { label: "CN", active: false, xp: 150, isChest: true },
 ];
 
-export default function GamificationSection() {
-    return (
-        <AnimatedSection
-            id="rewards"
-            className="relative mx-auto w-full max-w-7xl scroll-mt-32 px-4 pb-24 sm:px-6 lg:px-8"
-        >
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(0,0.97fr)]">
-                <article className="landing-panel overflow-hidden rounded-[2rem] p-6">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-slate-500 dark:text-slate-400">
-                        Motivation layer
-                    </p>
-                    <h2 className="mt-3 max-w-xl font-[var(--font-display)] text-3xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white sm:text-4xl">
-                        Reward loop đủ rõ để người học muốn quay lại.
-                    </h2>
-                    <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
-                        Giữ streak, nhận XP và Gems, rồi thấy ngay thay đổi ở
-                        profile.
-                    </p>
+export default function GamificationSection({ onOpenAuth }: { onOpenAuth?: () => void }) {
+  return (
+    <AnimatedSection
+      id="streak"
+      className="relative mx-auto w-full max-w-7xl scroll-mt-28 px-4 pb-20 pt-8 sm:px-6 lg:px-8"
+    >
+      {/* Section Header */}
+      <div className="mb-12 max-w-2xl space-y-3 text-center sm:text-left">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
+          CHƯƠNG 05 &mdash; CHUỖI LỬA CHUYÊN CẦN & VINH DANH
+        </p>
+        <h2 className="font-[var(--font-display)] text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+          Chuỗi ngày học & Bảng vàng vinh danh.
+        </h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+          Không còn cảm giác học một mình hay nản chí. Mỗi lượt hoàn thành duy trì ngọn lửa Streak và tích lũy phần thưởng tăng dần mỗi ngày.
+        </p>
+      </div>
 
-                    <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                        <StatCard
-                            icon={<Flame className="h-4 w-4 text-amber-500" />}
-                            label="Daily streak"
-                            value="07 days"
-                        />
-                        <StatCard
-                            icon={<Trophy className="h-4 w-4 text-sky-500" />}
-                            label="Level progress"
-                            value="Lv. 4 Explorer"
-                        />
-                        <StatCard
-                            icon={<Gem className="h-4 w-4 text-emerald-500" />}
-                            label="Gem balance"
-                            value="125 gems"
-                        />
-                    </div>
-
-                    <div className="mt-6 rounded-[1.7rem] border border-black/10 bg-slate-950 px-5 py-5 text-white shadow-[0_28px_60px_-36px_rgba(15,23,42,0.78)] dark:border-white/10 dark:bg-white dark:text-slate-950 dark:shadow-[0_28px_60px_-36px_rgba(255,255,255,0.3)]">
-                        <div className="flex items-center justify-between gap-4">
-                            <div>
-                                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-white/60 dark:text-slate-500">
-                                    Daily reward board
-                                </p>
-                                <p className="mt-2 text-xl font-semibold">
-                                    Chuỗi ngày học hiện rõ ngay trên navbar và
-                                    profile.
-                                </p>
-                            </div>
-                            <Gift className="h-5 w-5 text-emerald-300 dark:text-emerald-600" />
-                        </div>
-
-                        <div className="mt-5 grid grid-cols-7 gap-1 sm:gap-2">
-                            {streakDays.map((day) => (
-                                <div
-                                    key={day.label}
-                                    className={`rounded-xl sm:rounded-2xl border px-1 py-2 sm:px-3 sm:py-3 text-center min-w-0 overflow-hidden ${
-                                        day.active
-                                            ? "border-emerald-300/40 bg-emerald-400/20 text-white dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-slate-950"
-                                            : "border-white/10 bg-white/5 text-white/60 dark:border-slate-300/20 dark:bg-slate-950/5 dark:text-slate-500"
-                                    }`}
-                                >
-                                    <p className="text-[0.6rem] sm:text-[0.68rem] font-semibold uppercase tracking-tight sm:tracking-[0.2em] truncate">
-                                        {day.label}
-                                    </p>
-                                    <p className="mt-1 sm:mt-2 text-[10px] sm:text-xs md:text-sm font-semibold truncate leading-tight">
-                                        {day.active ? "Claimed" : "Next"}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </article>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                    <article className="landing-subtle-panel rounded-[1.7rem] p-5">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                            XP to level
-                        </p>
-                        <p className="mt-3 text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                            Mỗi bài học đẩy level lên thêm một đoạn.
-                        </p>
-                        <div className="mt-5 rounded-2xl border border-black/10 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-                            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
-                                <span>Lv. 4</span>
-                                <span>320 / 400 XP</span>
-                            </div>
-                            <div className="mt-3 h-2.5 rounded-full bg-black/5 dark:bg-white/10">
-                                <div className="h-2.5 w-4/5 rounded-full bg-[linear-gradient(90deg,#0f172a_0%,#2563eb_55%,#10b981_100%)] dark:bg-[linear-gradient(90deg,#f8fafc_0%,#7dd3fc_50%,#6ee7b7_100%)]" />
-                            </div>
-                            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                                Một lượt học, một khoảng tiến bộ được nhìn
-                                thấy.
-                            </p>
-                        </div>
-                    </article>
-
-                    <article className="landing-subtle-panel rounded-[1.7rem] p-5">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-                            Cosmetics
-                        </p>
-                        <p className="mt-3 text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                            Gems đổi thành avatar và frame.
-                        </p>
-                        <div className="mt-5 flex flex-wrap gap-2">
-                            {["Avatar", "Frame", "Inventory", "Equip"].map(
-                                (item) => (
-                                    <span
-                                        key={item}
-                                        className="rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200"
-                                    >
-                                        {item}
-                                    </span>
-                                )
-                            )}
-                        </div>
-                        <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                            Reward được thấy lại mỗi ngày trong profile.
-                        </p>
-                    </article>
+      {/* Main Grid: Adventurer Card (Left) + Level & Gems Progress (Right) */}
+      <div className="grid gap-6 lg:grid-cols-12 lg:items-stretch">
+        
+        {/* Left Column: 7-Day Flame Streak Board (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-slate-900/80 dark:shadow-slate-950/50">
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500">
+                  <Flame className="h-7 w-7 fill-current animate-pulse" />
+                </span>
+                <div>
+                  <h3 className="font-[var(--font-display)] text-xl font-bold text-slate-900 dark:text-white">
+                    Chuỗi chuyên cần 7 ngày
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Duy trì 6 ngày liên tiếp • Nhận thưởng Rương Chủ Nhật
+                  </p>
                 </div>
-            </div>
-        </AnimatedSection>
-    );
-}
+              </div>
 
-function StatCard({
-    icon,
-    label,
-    value,
-}: {
-    icon: ReactNode;
-    label: string;
-    value: string;
-}) {
-    return (
-        <div className="rounded-[1.5rem] border border-black/10 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-                {icon}
-                <span>{label}</span>
+              <span className="rounded-full bg-orange-50 px-3.5 py-1 text-sm font-extrabold text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
+                6 Ngày 🔥
+              </span>
             </div>
-            <p className="mt-3 text-lg font-semibold tracking-tight text-slate-950 dark:text-white">
-                {value}
+
+            {/* Streak 7 Days Row */}
+            <div className="mt-8 grid grid-cols-7 gap-2 sm:gap-3">
+              {streakDays.map((day) => (
+                <div
+                  key={day.label}
+                  className={`flex flex-col items-center justify-between rounded-2xl border py-3 px-1 text-center transition-all ${
+                    day.active
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300"
+                      : day.isChest
+                      ? "border-amber-400 bg-amber-50/80 text-amber-800 shadow-lg shadow-amber-500/10 animate-bounce dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300"
+                      : "border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-800 dark:bg-slate-950/40"
+                  }`}
+                >
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    {day.label}
+                  </span>
+
+                  <div className="my-2 flex h-8 w-8 items-center justify-center">
+                    {day.active ? (
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
+                        <Check className="h-3.5 w-3.5 stroke-[3]" />
+                      </div>
+                    ) : day.isChest ? (
+                      <Gift className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                    ) : (
+                      <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700" />
+                    )}
+                  </div>
+
+                  <span className="text-[10px] font-bold">
+                    +{day.xp} XP
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+            <p className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-200">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              <span>Cơ chế bảo toàn ngọn lửa:</span>
             </p>
+            <p className="mt-1 leading-relaxed">
+              Mỗi ngày bạn chỉ cần hoàn thành tối thiểu 1 chủ đề (khoảng 5-10 phút) để ngọn lửa không bị dập tắt và mở khóa rương quà tuần.
+            </p>
+          </div>
         </div>
-    );
+
+        {/* Right Column: Adventurer Pass & Rank Tier (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-6 shadow-xl shadow-slate-200/50 dark:border-white/10 dark:from-slate-900/90 dark:to-slate-950/80 dark:shadow-slate-950/50">
+          <div>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Hồ sơ Người Học
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                Đang hoạt động
+              </span>
+            </div>
+
+            {/* Level Rank Badge */}
+            <div className="mt-6 flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-lg shadow-amber-500/30">
+                <Trophy className="h-8 w-8" />
+              </div>
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Danh hiệu bậc 2
+                </span>
+                <h4 className="font-[var(--font-display)] text-2xl font-bold text-slate-900 dark:text-white">
+                  Lv. 4 • Học Giả
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Cần thêm 80 XP để chạm mốc Chuyên Gia
+                </p>
+              </div>
+            </div>
+
+            {/* Level XP Progress Bar */}
+            <div className="mt-6 space-y-2">
+              <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                <span>Tiến độ Level</span>
+                <span>320 / 400 XP (80%)</span>
+              </div>
+              <div className="h-3 w-full rounded-full bg-slate-200/70 p-0.5 dark:bg-slate-800">
+                <div className="h-full w-4/5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-500" />
+              </div>
+            </div>
+
+            {/* Gems Currency Counter */}
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                  <Gem className="h-4 w-4 text-emerald-500" />
+                  <span>Kho đá quý</span>
+                </div>
+                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white">
+                  125 <span className="text-xs font-normal text-slate-400">Gems</span>
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                  <Sparkles className="h-4 w-4 text-purple-500" />
+                  <span>Vật phẩm sở hữu</span>
+                </div>
+                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white">
+                  03 <span className="text-xs font-normal text-slate-400">Khung</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Link to auth */}
+          <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={onOpenAuth}
+              className="group flex w-full items-center justify-between rounded-xl bg-slate-900 px-4 py-3 text-xs font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+            >
+              <span>Gia nhập ngay để bắt đầu tích lũy XP</span>
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </AnimatedSection>
+  );
 }

@@ -1,60 +1,74 @@
-// Landing closeout section that pushes guests into login or registration.
+"use client";
+// Landing closeout section that invites learners to create an account or log in.
+
+import { ArrowRight } from "lucide-react";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
 import { landingActions } from "@/components/landing/content";
 
 type CTASectionProps = {
-    onNavigate: (id: string) => void;
+  onNavigate: (id: string) => void;
+  onOpenAuth?: (tab: "login" | "register") => void;
 };
 
-export default function CTASection({ onNavigate }: CTASectionProps) {
-    return (
-        <AnimatedSection className="relative mx-auto w-full max-w-7xl px-4 pb-28 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#050816] px-6 py-12 text-white shadow-[0_32px_90px_-44px_rgba(2,6,23,0.9)] sm:px-10 sm:py-14">
-                <div
-                    aria-hidden="true"
-                    className="landing-grid absolute inset-0 opacity-20"
-                />
-                <div
-                    aria-hidden="true"
-                    className="absolute -left-12 top-6 h-40 w-40 rounded-full bg-emerald-500/20 blur-3xl"
-                />
-                <div
-                    aria-hidden="true"
-                    className="absolute -right-8 bottom-0 h-48 w-48 rounded-full bg-sky-500/20 blur-3xl"
-                />
+export default function CTASection({ onNavigate, onOpenAuth }: CTASectionProps) {
+  const handlePrimary = () => {
+    if (onOpenAuth) {
+      onOpenAuth("register");
+    } else {
+      onNavigate(landingActions.primary.id);
+    }
+  };
 
-                <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                    <div className="space-y-4">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-white/60">
-                            Ready to start
-                        </p>
-                        <h2 className="max-w-3xl font-[var(--font-display)] text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-                            Bắt đầu lượt học đầu tiên hôm nay.
-                        </h2>
-                        <p className="max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
-                            Tạo tài khoản để vào workspace, hoặc đăng nhập để
-                            tiếp tục progress đang có.
-                        </p>
-                    </div>
+  const handleSecondary = () => {
+    if (onOpenAuth) {
+      onOpenAuth("login");
+    } else {
+      onNavigate(landingActions.secondary.id);
+    }
+  };
 
-                    <div className="flex flex-col gap-3 sm:flex-row">
-                        <button
-                            type="button"
-                            onClick={() => onNavigate(landingActions.primary.id)}
-                            className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-base font-semibold text-slate-950 shadow-[0_18px_45px_-28px_rgba(255,255,255,0.45)] transition duration-300 hover:-translate-y-0.5 hover:bg-slate-100 sm:px-8 sm:py-4"
-                        >
-                            {landingActions.primary.label}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => onNavigate(landingActions.secondary.id)}
-                            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-6 py-3 text-base font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/[0.08] sm:px-8 sm:py-4"
-                        >
-                            {landingActions.secondary.label}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </AnimatedSection>
-    );
+  return (
+    <AnimatedSection className="relative mx-auto w-full max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#090A0F] px-8 py-14 text-white shadow-2xl shadow-slate-950/80 sm:px-14 sm:py-16">
+        
+        {/* Subtle radial glow from bottom */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-amber-500/15 blur-3xl"
+        />
+
+        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3 max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-400/90 font-mono">
+              BƯỚC TIẾP THEO &mdash; SẴN SÀNG KHỞI HÀNH
+            </p>
+            <h2 className="font-[var(--font-display)] text-3xl font-extrabold tracking-tight sm:text-5xl sm:leading-tight">
+              Khởi đầu lượt học đầu tiên ngay hôm nay.
+            </h2>
+            <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
+              Tạo tài khoản miễn phí để lưu lại toàn bộ tiến độ, ngọn lửa Streak và những khung bảo vật độc quyền bạn kiếm được.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={handlePrimary}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-bold text-slate-950 shadow-lg shadow-white/20 transition hover:bg-slate-100 active:scale-95 sm:px-8 sm:py-4"
+            >
+              <span>{landingActions.primary.label}</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleSecondary}
+              className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-bold text-white transition hover:bg-white/10 active:scale-95 sm:px-8 sm:py-4"
+            >
+              {landingActions.secondary.label}
+            </button>
+          </div>
+        </div>
+      </div>
+    </AnimatedSection>
+  );
 }
