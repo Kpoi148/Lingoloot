@@ -43,13 +43,16 @@ export default function AuthModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 overflow-y-auto">
+        <motion.div
+          key="auth-modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 overflow-y-auto"
+        >
           {/* Backdrop overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+          <div
             onClick={onClose}
             className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
             aria-hidden="true"
@@ -94,7 +97,7 @@ export default function AuthModal({
             {/* AuthTabs form */}
             <AuthTabs activeTab={initialTab} defaultTab={initialTab} />
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

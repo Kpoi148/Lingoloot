@@ -2,7 +2,6 @@
 // Auth card switcher that keeps login and registration in one landing surface.
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
@@ -46,10 +45,8 @@ export default function AuthTabs({
                         }`}
                     >
                         {activeTab === tab.id && (
-                            <motion.div
-                                layoutId="activeTab"
+                            <div
                                 className="absolute inset-0 rounded-lg bg-white shadow-sm dark:bg-slate-800"
-                                transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
                             />
                         )}
                         <span className="relative z-10">{tab.label}</span>
@@ -59,21 +56,11 @@ export default function AuthTabs({
 
             {/* Tab Content */}
             <div className="scroll-mt-32">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeTab}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                    >
-                        {activeTab === "login" ? (
-                            <LoginForm />
-                        ) : (
-                            <RegisterForm />
-                        )}
-                    </motion.div>
-                </AnimatePresence>
+                {activeTab === "login" ? (
+                    <LoginForm />
+                ) : (
+                    <RegisterForm />
+                )}
             </div>
         </div>
     );
