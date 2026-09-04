@@ -29,17 +29,6 @@ export type TopicFilterOption = {
   count: number;
 };
 
-export type TopicTheme = {
-  accentLabel: string;
-  glowClass: string;
-  iconClass: string;
-  softPanelClass: string;
-  cardBorderClass: string;
-  progressClass: string;
-  buttonClass: string;
-  subtleButtonClass: string;
-};
-
 export type TopicAction = {
   label: string;
   href: string;
