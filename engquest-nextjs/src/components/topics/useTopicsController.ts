@@ -69,10 +69,7 @@ export function useTopicsController(
     }
   });
 
-  const resultLabel =
-    filteredTopics.length === 1
-      ? "1 chủ đề phù hợp với lựa chọn hiện tại"
-      : `${filteredTopics.length} chủ đề phù hợp với lựa chọn hiện tại`;
+  const resultLabel = `${filteredTopics.length} chủ đề đang hiển thị`;
 
   return {
     query,

@@ -34,41 +34,33 @@ export function TopicsPageClient({
   const showEmptyFilters = filteredTopics.length === 0 && topics.length > 0;
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 pb-16 pt-8 text-content sm:px-6 lg:px-8">
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 -z-10 h-[460px] bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.18),transparent_30%),radial-gradient(circle_at_top_right,rgba(96,165,250,0.16),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.88))] dark:bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.12),transparent_24%),radial-gradient(circle_at_top_right,rgba(96,165,250,0.16),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(15,23,42,0.92))]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute left-[-6rem] top-[18rem] -z-10 h-64 w-64 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-500/10"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute right-[-4rem] top-[28rem] -z-10 h-72 w-72 rounded-full bg-sky-300/20 blur-3xl dark:bg-sky-500/10"
-      />
-
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+    <main className="topics-shell min-h-screen px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-14">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-12">
         <TopicHero summary={summary} recommendedTopic={recommendedTopic} />
 
         {error ? (
-          <div className="flex items-start gap-3 rounded-[24px] border border-red-200/80 bg-red-50/90 px-5 py-4 text-sm text-red-700 shadow-sm dark:border-red-500/20 dark:bg-red-950/50 dark:text-red-200">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+          <div className="topics-feedback topics-feedback--error" role="alert">
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <div>
               <p className="font-semibold">Không thể tải danh sách chủ đề.</p>
-              <p className="mt-1">{error}</p>
+              <p className="mt-1">
+                Vui lòng tải lại trang hoặc quay lại sau ít phút.
+              </p>
             </div>
           </div>
         ) : null}
 
-        <section id="topics-grid" className="scroll-mt-28 space-y-5">
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-              Topic catalog
+        <section id="topics-grid" className="scroll-mt-28">
+          <div className="topics-catalog-heading">
+            <div>
+              <p className="topics-eyebrow">Field index / 02</p>
+              <h2 className="topics-section-title mt-3 font-[var(--font-display)]">
+                Kho chủ đề
+              </h2>
+            </div>
+            <p className="topics-copy max-w-xl text-sm leading-6 sm:text-base sm:leading-7">
+              Lọc theo trạng thái hoặc tìm nhanh một chủ đề để bắt đầu đúng chặng.
             </p>
-            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white">
-              Danh sách chủ đề
-            </h2>
           </div>
 
           <TopicsToolbar
@@ -81,44 +73,51 @@ export function TopicsPageClient({
           />
 
           {showEmptyData ? (
-            <div className="rounded-[30px] border border-dashed border-black/[0.08] bg-white/72 px-6 py-10 text-center shadow-[0_28px_70px_-50px_rgba(15,23,42,0.45)] dark:border-white/10 dark:bg-slate-950/72 dark:shadow-[0_28px_70px_-50px_rgba(2,6,23,0.9)]">
-              <p className="text-lg font-semibold text-slate-950 dark:text-white">
-                Chưa có chủ đề nào trong hệ thống.
-              </p>
-              <p className="mt-3 text-sm leading-7 text-slate-500 dark:text-slate-400">
-                Hãy thêm dữ liệu vào collection `categories` để learner có thể
-                bắt đầu học theo topic.
-              </p>
+            <div className="topics-empty">
+              <div className="topics-empty-mark" aria-hidden="true">
+                <SearchX />
+              </div>
+              <div>
+                <p className="topics-empty-title">Kho chủ đề đang được chuẩn bị.</p>
+                <p className="topics-copy mt-2 text-sm leading-6">
+                  Những chặng học đầu tiên sẽ xuất hiện tại đây khi nội dung sẵn sàng.
+                </p>
+              </div>
             </div>
           ) : null}
 
           {showEmptyFilters ? (
-            <div className="rounded-[30px] border border-dashed border-black/[0.08] bg-white/72 px-6 py-10 text-center shadow-[0_28px_70px_-50px_rgba(15,23,42,0.45)] dark:border-white/10 dark:bg-slate-950/72 dark:shadow-[0_28px_70px_-50px_rgba(2,6,23,0.9)]">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-black/[0.04] text-slate-500 dark:bg-white/[0.06] dark:text-slate-300">
-                <SearchX className="h-6 w-6" />
+            <div className="topics-empty">
+              <div className="topics-empty-mark" aria-hidden="true">
+                <SearchX />
               </div>
-              <p className="mt-4 text-lg font-semibold text-slate-950 dark:text-white">
-                Không tìm thấy chủ đề phù hợp.
-              </p>
-              <p className="mt-2 text-sm leading-7 text-slate-500 dark:text-slate-400">
-                Thử đổi từ khóa tìm kiếm hoặc trả filter về trạng thái mặc định.
-              </p>
-              {hasActiveFilters ? (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="mt-5 inline-flex rounded-full border border-black/[0.08] bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100 dark:hover:bg-white/[0.1]"
-                >
-                  Xóa bộ lọc
-                </button>
-              ) : null}
+              <div className="flex-1">
+                <p className="topics-empty-title">Không tìm thấy chủ đề phù hợp.</p>
+                <p className="topics-copy mt-2 text-sm leading-6">
+                  Thử đổi từ khóa hoặc trở về danh sách đầy đủ.
+                </p>
+                {hasActiveFilters ? (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="topics-secondary-action mt-5"
+                  >
+                    Xóa bộ lọc
+                  </button>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
           {filteredTopics.length > 0 ? (
-            <div className="grid gap-6 lg:grid-cols-2">
-              {filteredTopics.map((topic) => (
-                <TopicCard key={topic.id} topic={topic} />
+            <div className="topics-catalog-grid">
+              {filteredTopics.map((topic, index) => (
+                <TopicCard
+                  key={topic.id}
+                  topic={topic}
+                  index={index + 1}
+                  isRecommended={topic.id === recommendedTopic?.id}
+                />
               ))}
             </div>
           ) : null}
