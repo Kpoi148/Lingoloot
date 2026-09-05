@@ -2,7 +2,9 @@
 // Landing section that showcases streaks, XP leveling, and learner profile rewards.
 
 import { Flame, Gem, Gift, Trophy, Sparkles, Check, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
+import NumberTicker from "@/components/common/NumberTicker";
 
 const streakDays = [
   { label: "T2", active: true, xp: 50 },
@@ -55,8 +57,8 @@ export default function GamificationSection({ onOpenAuth }: { onOpenAuth?: () =>
                 </div>
               </div>
 
-              <span className="landing-accent-text text-sm font-extrabold tabular-nums">
-                6 ngày
+              <span className="landing-accent-text text-sm font-extrabold tabular-nums inline-flex items-center gap-1">
+                <NumberTicker value={6} /> ngày
               </span>
             </div>
 
@@ -142,10 +144,18 @@ export default function GamificationSection({ onOpenAuth }: { onOpenAuth?: () =>
             <div className="mt-6 space-y-2">
               <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                 <span>Tiến độ Level</span>
-                <span>320 / 400 XP (80%)</span>
+                <span className="inline-flex items-center gap-0.5">
+                  <NumberTicker value={320} delay={0.1} /> / 400 XP (<NumberTicker value={80} delay={0.25} />%)
+                </span>
               </div>
-              <div className="h-3 w-full rounded-full bg-slate-200/70 p-0.5 dark:bg-slate-800">
-                <div className="landing-accent-fill h-full w-4/5 rounded-full" />
+              <div className="h-3 w-full rounded-full bg-slate-200/70 p-0.5 dark:bg-slate-800 overflow-hidden">
+                <motion.div
+                  className="landing-accent-fill h-full rounded-full"
+                  initial={{ width: "0%" }}
+                  whileInView={{ width: "80%" }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+                />
               </div>
             </div>
 
@@ -156,8 +166,8 @@ export default function GamificationSection({ onOpenAuth }: { onOpenAuth?: () =>
                   <Gem className="h-4 w-4 text-emerald-500" />
                   <span>Kho đá quý</span>
                 </div>
-                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white">
-                  125 <span className="text-xs font-normal text-slate-400">Gems</span>
+                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white flex items-baseline gap-1">
+                  <NumberTicker value={125} delay={0.2} /> <span className="text-xs font-normal text-slate-400">Gems</span>
                 </p>
               </div>
 
@@ -166,8 +176,8 @@ export default function GamificationSection({ onOpenAuth }: { onOpenAuth?: () =>
                   <Sparkles className="landing-accent-text h-4 w-4" />
                   <span>Vật phẩm sở hữu</span>
                 </div>
-                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white">
-                  03 <span className="text-xs font-normal text-slate-400">Khung</span>
+                <p className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white flex items-baseline gap-1">
+                  <NumberTicker value={3} padZero={2} delay={0.3} /> <span className="text-xs font-normal text-slate-400">Khung</span>
                 </p>
               </div>
             </div>
