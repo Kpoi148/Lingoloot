@@ -562,10 +562,9 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                           {/* Unlocked Reward Card */}
                           <div className="mt-5 flex flex-col items-center justify-center rounded-2xl border border-amber-500/30 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent p-6 text-center">
                             {/* Animated SVG Tech Frame Preview */}
-                            <div className="relative my-2 flex h-28 w-28 items-center justify-center">
-                              <TechFrame className="h-28 w-28" />
-                              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-white font-bold text-xl shadow-lg">
-                                LL
+                            <div className="my-2 flex items-center justify-center">
+                              <div className="relative h-28 w-28">
+                                <TechFrame className="h-full w-full" avatarUrl="/logo.png" />
                               </div>
                             </div>
 
