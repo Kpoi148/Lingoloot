@@ -4,7 +4,14 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Sparkles, Shield, Zap, ArrowRight, Gift } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValueEvent,
+  type MotionValue,
+} from "framer-motion";
 import TechFrame from "@/components/shop/frames/TechFrame";
 import MysticFrame from "@/components/shop/frames/MysticFrame";
 import HexFrame from "@/components/shop/frames/HexFrame";
@@ -281,11 +288,30 @@ function RenderAvatarFrame({ frameType }: { frameType: ShowcaseItem["frameType"]
   return null;
 }
 
+function ScrubProgressBadge({ progress }: { progress: MotionValue<number> }) {
+  const badgeRef = useRef<HTMLSpanElement>(null);
+
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (badgeRef.current) {
+      const pct = Math.min(Math.max(Math.round(latest * 100), 0), 100);
+      badgeRef.current.textContent = `Cuộn chuột để trượt ngang (${pct}%)`;
+    }
+  });
+
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
+      <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+      <span ref={badgeRef} className="font-mono text-[11px]">
+        Cuộn chuột để trượt ngang (0%)
+      </span>
+    </div>
+  );
+}
+
 export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void }) {
   const [activeItem, setActiveItem] = useState<string>("tech");
   const containerRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
 
   // Measure available horizontal scroll distance with ResizeObserver for responsiveness
@@ -307,24 +333,21 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
     };
   }, []);
 
-  // Track scroll position of the section strictly within its pinning duration
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const trackDistance = containerRef.current.offsetHeight - window.innerHeight;
-      if (trackDistance <= 0) return;
-      // 0 when section hits viewport top, 1 when section finishes pinning
-      const p = Math.min(Math.max(-rect.top / trackDistance, 0), 1);
-      setProgress(p);
-    };
+  // Framer Motion native scroll tracking: Zero React re-renders during scroll
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Smooth physics spring to eliminate mouse wheel stepping and create butter-smooth scrub
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 280,
+    damping: 32,
+    restDelta: 0.001,
+  });
 
-  const translateX = -progress * maxScroll;
+  // Direct GPU-accelerated transform without virtual DOM diffing
+  const x = useTransform(smoothProgress, (val) => -val * maxScroll);
 
   return (
     <section
@@ -352,14 +375,11 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
 
             {/* Gallery Scrub Visual Indicator */}
             <div className="flex items-center gap-3 self-start md:self-end shrink-0">
-              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
-                <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-                <span className="font-mono text-[11px]">Cuộn chuột để trượt ngang ({Math.round(progress * 100)}%)</span>
-              </div>
+              <ScrubProgressBadge progress={smoothProgress} />
               <div className="hidden sm:block w-36 h-1.5 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  style={{ width: `${progress * 100}%` }}
-                  className="h-full bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400 transition-[width] duration-75 ease-out"
+                <motion.div
+                  style={{ scaleX: smoothProgress, transformOrigin: "left" }}
+                  className="h-full w-full bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400 origin-left"
                 />
               </div>
             </div>
@@ -368,9 +388,8 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
           {/* Desktop & Tablet: Horizontal Gallery Scrub Strip */}
           <div ref={trackRef} className="hidden md:block relative my-auto w-full overflow-hidden py-1 sm:py-2">
             <motion.div
-              animate={{ x: translateX }}
-              transition={{ ease: "easeOut", duration: 0.1 }}
-              className="flex gap-5 lg:gap-6 items-stretch will-change-transform pr-16"
+              style={{ x }}
+              className="flex gap-5 lg:gap-6 items-stretch will-change-transform transform-gpu pr-16"
             >
               {SHOWCASE_ITEMS.map((item, idx) => {
                 const isSelected = activeItem === item.id;
@@ -380,9 +399,9 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
                     key={item.id}
                     onClick={() => setActiveItem(item.id)}
                     data-selected={isSelected}
-                    className={`landing-loot-card group relative flex w-[280px] sm:w-[310px] lg:w-[340px] shrink-0 cursor-pointer flex-col justify-between rounded-3xl border border-white/10 bg-slate-900/90 p-4 sm:p-5 shadow-2xl backdrop-blur-md transition-all duration-300 ${item.glowClass} ${
+                    className={`landing-loot-card group relative flex w-[280px] sm:w-[310px] lg:w-[340px] shrink-0 cursor-pointer flex-col justify-between rounded-3xl border border-white/10 bg-slate-900 p-4 sm:p-5 shadow-2xl transition-all duration-300 ${item.glowClass} ${
                       isSelected
-                        ? "ring-2 ring-amber-400/40 border-amber-400/40 bg-slate-900"
+                        ? "ring-2 ring-amber-400/40 border-amber-400/40"
                         : "opacity-85 hover:opacity-100"
                     }`}
                   >
