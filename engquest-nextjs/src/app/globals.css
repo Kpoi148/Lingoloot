@@ -133,6 +133,10 @@ body {
   min-height: 100%;
 }
 
+html {
+  position: relative;
+}
+
 body {
   margin: 0;
   background-color: var(--bg-page);
@@ -694,7 +698,7 @@ body.landing-embedded-preview::-webkit-scrollbar {
   border: 1px solid var(--landing-text);
   border-radius: var(--landing-radius-sm);
   background: var(--landing-text);
-  padding: 0 18px;
+  padding: 0 12px;
   color: var(--landing-bg-overlay);
   font-size: 0.75rem;
   font-weight: 700;
@@ -813,6 +817,12 @@ body.landing-embedded-preview::-webkit-scrollbar {
   background-size: 40px 40px;
 }
 
+@media (min-width: 640px) {
+  .landing-nav-action {
+    padding-inline: 18px;
+  }
+}
+
 .landing-interactive-scroll-track,
 .landing-interactive-sticky-stage,
 .landing-milestone-viewport {
@@ -826,6 +836,44 @@ body.landing-embedded-preview::-webkit-scrollbar {
 .landing-milestone-track [role="button"]:focus-visible {
   outline: 2px solid var(--landing-accent);
   outline-offset: 4px;
+}
+
+.landing-mobile-step {
+  display: flex;
+  min-width: 0;
+  min-height: 48px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--landing-border);
+  border-radius: var(--landing-radius-sm);
+  background: color-mix(in srgb, var(--landing-bg-overlay) 72%, transparent);
+  padding: 8px 10px;
+  color: var(--landing-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  transition:
+    border-color var(--landing-duration) var(--landing-ease),
+    background-color var(--landing-duration) var(--landing-ease),
+    color var(--landing-duration) var(--landing-ease);
+}
+
+.landing-mobile-step[data-active="true"] {
+  border-color: color-mix(in srgb, var(--landing-accent) 62%, transparent);
+  background: var(--landing-accent-soft);
+  color: var(--landing-text);
+}
+
+.landing-mobile-step[data-active="true"] > :first-child {
+  color: var(--landing-accent);
+}
+
+.landing-mobile-step:focus-visible {
+  outline: 2px solid var(--landing-accent);
+  outline-offset: 3px;
 }
 
 .landing-journey-rail {
@@ -887,6 +935,45 @@ body.landing-embedded-preview::-webkit-scrollbar {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--landing-accent) 68%, transparent);
   background: var(--landing-ink-overlay);
+}
+
+.landing-mobile-loot-card {
+  width: min(82vw, 18rem);
+  min-height: 22rem;
+}
+
+.landing-mobile-loot-action {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(243, 164, 74, 0.24);
+  border-radius: var(--landing-radius-sm);
+  background: rgba(243, 164, 74, 0.1);
+  color: var(--landing-accent);
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    border-color var(--landing-duration) var(--landing-ease),
+    background-color var(--landing-duration) var(--landing-ease),
+    color var(--landing-duration) var(--landing-ease);
+}
+
+.landing-mobile-loot-action:hover {
+  border-color: rgba(243, 164, 74, 0.44);
+  background: rgba(243, 164, 74, 0.16);
+}
+
+.landing-mobile-loot-action:focus-visible {
+  outline: 2px solid var(--landing-accent);
+  outline-offset: 3px;
+}
+
+.landing-frame-motion[data-animated="false"] *,
+.landing-frame-motion[data-animated="false"] *::before,
+.landing-frame-motion[data-animated="false"] *::after {
+  animation-play-state: paused !important;
 }
 
 .landing-inverted-label {

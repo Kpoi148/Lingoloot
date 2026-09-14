@@ -17,6 +17,11 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import TechFrame from "@/components/shop/frames/TechFrame";
+import {
+  LANDING_DESKTOP_QUERY,
+  LANDING_REDUCED_MOTION_QUERY,
+  useLandingMediaQuery,
+} from "@/components/landing/useLandingMedia";
 
 type VocabCard = {
   word: string;
@@ -61,6 +66,7 @@ const SAMPLE_WORDS: VocabCard[] = [
 const MILESTONES = [
   {
     step: "01",
+    mobileLabel: "Flashcard",
     label: "Tiếp Nhận Từ Vựng",
     title: "Nạp từ trực quan & Phát âm bản xứ",
     icon: BookOpenText,
@@ -69,6 +75,7 @@ const MILESTONES = [
   },
   {
     step: "02",
+    mobileLabel: "Story Cloze",
     label: "Luyện Phản Xạ Ngữ Cảnh",
     title: "Khóa phản xạ qua Minigame Story Cloze",
     icon: BrainCircuit,
@@ -77,6 +84,7 @@ const MILESTONES = [
   },
   {
     step: "03",
+    mobileLabel: "Nhận Loot",
     label: "Chiến Lợi Phẩm & Vinh Danh",
     title: "Tích lũy Gems & Mở khóa Khung Avatar AI",
     icon: Trophy,
@@ -85,8 +93,6 @@ const MILESTONES = [
   },
 ];
 
-const DESKTOP_SCROLL_QUERY = "(min-width: 1024px)";
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const LEFT_PHASE_END = 0.5;
 const STICKY_TOP_PX = 96;
 
@@ -99,7 +105,8 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
   const [leftActiveStep, setLeftActiveStep] = useState<number>(0);
   const [rightActiveStep, setRightActiveStep] = useState<number>(0);
   const [activePhase, setActivePhase] = useState<"left" | "right">("left");
-  const [isSequentialScrollEnabled, setIsSequentialScrollEnabled] = useState(false);
+  const isDesktopViewport = useLandingMediaQuery(LANDING_DESKTOP_QUERY);
+  const prefersReducedMotion = useLandingMediaQuery(LANDING_REDUCED_MOTION_QUERY);
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -110,39 +117,26 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
   const scrollTrackRef = useRef<HTMLDivElement | null>(null);
   const milestoneViewportRef = useRef<HTMLDivElement | null>(null);
   const milestoneTrackRef = useRef<HTMLDivElement | null>(null);
-  const milestoneRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const currentWord = SAMPLE_WORDS[currentWordIndex];
+  const isSequentialScrollEnabled =
+    isDesktopViewport && !prefersReducedMotion && !showMediaPlaceholder;
+  const stageMotion = isSequentialScrollEnabled
+    ? {
+        initial: { opacity: 0, y: 14 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -14 },
+      }
+    : {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+      };
 
   // Desktop choreography divides one pinned scroll track into two halves:
   // the live console completes first, then the milestone rail starts moving.
   useEffect(() => {
-    const desktopQuery = window.matchMedia(DESKTOP_SCROLL_QUERY);
-    const reducedMotionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
     let frameId: number | null = null;
-    let sequentialScrollEnabled = false;
-
-    const updateNaturalMilestone = () => {
-      const centerY = window.innerHeight / 2;
-      let closestIndex = 0;
-      let minDistance = Infinity;
-
-      milestoneRefs.current.forEach((el, index) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const elementCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(elementCenter - centerY);
-
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      setActivePhase("right");
-      setLeftActiveStep(closestIndex);
-      setRightActiveStep(closestIndex);
-    };
 
     const updateSequentialProgress = () => {
       const scrollTrack = scrollTrackRef.current;
@@ -189,15 +183,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
 
     const updateScrollState = () => {
       frameId = null;
-
-      if (sequentialScrollEnabled) {
-        updateSequentialProgress();
-      } else {
-        if (milestoneTrackRef.current) {
-          milestoneTrackRef.current.style.transform = "";
-        }
-        updateNaturalMilestone();
-      }
+      updateSequentialProgress();
     };
 
     const requestScrollUpdate = () => {
@@ -205,27 +191,23 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
       frameId = window.requestAnimationFrame(updateScrollState);
     };
 
-    const updateMode = () => {
-      sequentialScrollEnabled =
-        desktopQuery.matches && !reducedMotionQuery.matches && !showMediaPlaceholder;
-      setIsSequentialScrollEnabled(sequentialScrollEnabled);
-      requestScrollUpdate();
-    };
+    if (!isSequentialScrollEnabled) {
+      if (milestoneTrackRef.current) {
+        milestoneTrackRef.current.style.transform = "";
+      }
+      return;
+    }
 
-    desktopQuery.addEventListener("change", updateMode);
-    reducedMotionQuery.addEventListener("change", updateMode);
     window.addEventListener("scroll", requestScrollUpdate, { passive: true });
     window.addEventListener("resize", requestScrollUpdate);
-    updateMode();
+    requestScrollUpdate();
 
     return () => {
-      desktopQuery.removeEventListener("change", updateMode);
-      reducedMotionQuery.removeEventListener("change", updateMode);
       window.removeEventListener("scroll", requestScrollUpdate);
       window.removeEventListener("resize", requestScrollUpdate);
       if (frameId !== null) window.cancelAnimationFrame(frameId);
     };
-  }, [showMediaPlaceholder]);
+  }, [isSequentialScrollEnabled]);
 
   // Web Speech API for pronunciation
   const handlePronounce = (e: React.MouseEvent) => {
@@ -268,11 +250,14 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
     if (ans === "adventure") {
       setClozeSolved(true);
       playRewardChime();
-      confetti({
-        particleCount: 55,
-        spread: 65,
-        origin: { y: 0.7 },
-      });
+      if (!prefersReducedMotion) {
+        confetti({
+          particleCount: isDesktopViewport ? 55 : 24,
+          spread: isDesktopViewport ? 65 : 48,
+          origin: { y: 0.7 },
+          disableForReducedMotion: true,
+        });
+      }
     }
   };
 
@@ -311,10 +296,12 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
     setActivePhase("right");
     setLeftActiveStep(index);
     setRightActiveStep(index);
-    const target = milestoneRefs.current[index];
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+  };
+
+  const selectMobileStep = (index: number) => {
+    setActivePhase("left");
+    setLeftActiveStep(index);
+    setRightActiveStep(index);
   };
 
   return (
@@ -334,7 +321,12 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
               Học thử ngay mà không cần tạo tài khoản.
             </h2>
             <p className="landing-copy text-sm sm:text-base">
-              Cuộn hết bảng tương tác bên trái; sau đó lộ trình bên phải mới bắt đầu chuyển động.
+              <span className="lg:hidden">
+                Chạm từng chặng để thử Flashcard, Story Cloze và nhận Loot ngay trên màn hình.
+              </span>
+              <span className="hidden lg:inline">
+                Cuộn hết bảng tương tác bên trái; sau đó lộ trình bên phải mới bắt đầu chuyển động.
+              </span>
             </p>
           </div>
 
@@ -389,12 +381,38 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
             {/* CỘT TRÁI (GHIM CỐ ĐỊNH & CHẠY HIỆU ỨNG TRƯỚC): Live Device Console (7 cols) */}
             {/* ========================================================================= */}
             <motion.div
-              initial={{ opacity: 0, y: 36 }}
+              initial={isSequentialScrollEnabled ? { opacity: 0, y: 36 } : false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="z-20 lg:col-span-7"
             >
+              <div
+                className="landing-mobile-stepper mb-4 grid grid-cols-3 gap-2 lg:hidden"
+                role="tablist"
+                aria-label="Chọn chặng trải nghiệm"
+              >
+                {MILESTONES.map((milestone, index) => {
+                  const isSelected = leftActiveStep === index;
+
+                  return (
+                    <button
+                      key={milestone.step}
+                      type="button"
+                      role="tab"
+                      aria-selected={isSelected}
+                      aria-controls="landing-interactive-stage"
+                      onClick={() => selectMobileStep(index)}
+                      className="landing-mobile-step"
+                      data-active={isSelected}
+                    >
+                      <span className="font-mono text-[10px]">{milestone.step}</span>
+                      <span>{milestone.mobileLabel}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
               <div className="landing-product-panel overflow-hidden border border-slate-200/80 bg-white/95 shadow-xl dark:border-slate-800 dark:bg-slate-900/90 rounded-3xl">
                 
                 {/* Console Top Header Bar */}
@@ -419,16 +437,19 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                 </div>
 
                 {/* Console Body: Dynamic Morphing Stage (BÊN TRÁI CHẠY TRƯỚC) */}
-                <div className="p-6 sm:p-8 min-h-[420px] flex flex-col justify-between">
-                  <AnimatePresence mode="wait">
+                <div
+                  id="landing-interactive-stage"
+                  className="flex min-h-[500px] flex-col justify-between p-5 sm:min-h-[520px] sm:p-8 lg:min-h-[420px]"
+                >
+                  <AnimatePresence initial={false} mode="wait">
                     
                     {/* STATE 0: 3D Flashcard & Native Audio */}
                     {leftActiveStep === 0 && (
                       <motion.div
                         key="step-0-flashcard"
-                        initial={{ opacity: 0, y: 14 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -14 }}
+                        initial={stageMotion.initial}
+                        animate={stageMotion.animate}
+                        exit={stageMotion.exit}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="flex flex-col justify-between h-full"
                       >
@@ -536,9 +557,9 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                     {leftActiveStep === 1 && (
                       <motion.div
                         key="step-1-cloze"
-                        initial={{ opacity: 0, y: 14 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -14 }}
+                        initial={stageMotion.initial}
+                        animate={stageMotion.animate}
+                        exit={stageMotion.exit}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="flex flex-col justify-between h-full space-y-6"
                       >
@@ -650,9 +671,9 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                     {leftActiveStep === 2 && (
                       <motion.div
                         key="step-2-loot"
-                        initial={{ opacity: 0, y: 14 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -14 }}
+                        initial={stageMotion.initial}
+                        animate={stageMotion.animate}
+                        exit={stageMotion.exit}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="flex flex-col justify-between h-full space-y-6"
                       >
@@ -668,15 +689,15 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                           </div>
 
                           {/* Unlocked Reward Card */}
-                          <div className="mt-5 flex flex-col items-center justify-center rounded-2xl border border-amber-500/30 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent p-6 text-center">
+                          <div className="mt-4 flex flex-col items-center justify-center rounded-2xl border border-amber-500/30 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent p-4 text-center sm:mt-5 sm:p-6">
                             {/* Animated SVG Tech Frame Preview */}
                             <div className="my-2 flex items-center justify-center">
-                              <div className="relative h-28 w-28">
+                              <div className="relative h-24 w-24 sm:h-28 sm:w-28">
                                 <TechFrame className="h-full w-full" avatarUrl="/logo.png" />
                               </div>
                             </div>
 
-                            <h4 className="landing-title mt-3 font-[var(--font-display)] text-xl font-bold">
+                            <h4 className="landing-title mt-2 font-[var(--font-display)] text-lg font-bold sm:mt-3 sm:text-xl">
                               Khung Cyber Pulse Nexus (Rare)
                             </h4>
                             <p className="landing-copy mt-1 max-w-xs text-xs">
@@ -685,7 +706,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                           </div>
 
                           {/* 3 Metric Pills Earned */}
-                          <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                          <div className="mt-3 grid grid-cols-3 gap-2 text-center sm:mt-4 sm:gap-3">
                             <div className="landing-product-panel--quiet rounded-xl p-2.5">
                               <span className="text-xs text-slate-400">XP</span>
                               <p className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400">
@@ -736,7 +757,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
             >
               <div
                 ref={milestoneTrackRef}
-                className="landing-milestone-track space-y-16 py-4 sm:space-y-24 lg:py-8"
+                className="landing-milestone-track space-y-4 py-4 sm:space-y-6 lg:space-y-24 lg:py-8"
               >
                 {MILESTONES.map((m, idx) => {
                   const Icon = m.icon;
@@ -747,9 +768,6 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                   return (
                   <div
                     key={m.step}
-                    ref={(el) => {
-                      milestoneRefs.current[idx] = el;
-                    }}
                     onClick={() => scrollToMilestone(idx)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
@@ -760,10 +778,10 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                     role="button"
                     tabIndex={0}
                     aria-current={isActive ? "step" : undefined}
-                    className={`group relative cursor-pointer rounded-3xl border p-6 sm:p-8 transition-all duration-500 ${
+                    className={`group relative cursor-pointer rounded-3xl border p-5 transition-all duration-300 sm:p-6 lg:p-8 ${
                       isActive
                         ? "border-amber-500/80 bg-white/95 shadow-lg shadow-amber-500/10 ring-2 ring-amber-500/20 dark:border-amber-400/80 dark:bg-slate-900/90"
-                        : "border-slate-200/80 bg-white/50 opacity-50 hover:opacity-85 dark:border-slate-800 dark:bg-slate-900/40"
+                        : "border-slate-200/80 bg-white/50 opacity-70 hover:opacity-90 dark:border-slate-800 dark:bg-slate-900/40 lg:opacity-50 lg:hover:opacity-85"
                     }`}
                   >
                     {/* Step Header */}
