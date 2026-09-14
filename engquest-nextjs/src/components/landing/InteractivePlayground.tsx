@@ -1,5 +1,5 @@
 "use client";
-// Sticky Split-Screen with Sequenced Trigger: Left side runs entrance & morphing effect first, followed by Right side.
+// Pinned split-screen story: the live console completes before the milestone rail advances.
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -85,10 +85,21 @@ const MILESTONES = [
   },
 ];
 
+const DESKTOP_SCROLL_QUERY = "(min-width: 1024px)";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const LEFT_PHASE_END = 0.5;
+const STICKY_TOP_PX = 96;
+
+const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
+
+const getStepFromProgress = (progress: number) =>
+  Math.min(MILESTONES.length - 1, Math.floor(progress * MILESTONES.length));
+
 export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () => void }) {
-  // Sequenced state: Left console morphs first, Right milestone highlights second
   const [leftActiveStep, setLeftActiveStep] = useState<number>(0);
   const [rightActiveStep, setRightActiveStep] = useState<number>(0);
+  const [activePhase, setActivePhase] = useState<"left" | "right">("left");
+  const [isSequentialScrollEnabled, setIsSequentialScrollEnabled] = useState(false);
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -96,30 +107,22 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
   const [clozeSolved, setClozeSolved] = useState(false);
   const [showMediaPlaceholder, setShowMediaPlaceholder] = useState(false);
 
+  const scrollTrackRef = useRef<HTMLDivElement | null>(null);
+  const milestoneViewportRef = useRef<HTMLDivElement | null>(null);
+  const milestoneTrackRef = useRef<HTMLDivElement | null>(null);
   const milestoneRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const pendingStepRef = useRef<number>(0);
-  const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentWord = SAMPLE_WORDS[currentWordIndex];
 
-  // Sequenced transition: Left side runs its effect FIRST, then Right side runs after 420ms
-  const triggerStepTransition = (newStep: number) => {
-    if (newStep === pendingStepRef.current) return;
-    pendingStepRef.current = newStep;
-
-    // Nhịp 1: Bên trái (Console) đổi trạng thái và chạy animation biến đổi trước
-    setLeftActiveStep(newStep);
-
-    // Nhịp 2: Sau 420ms (khi bên trái đã hoàn tất 100% cả exit lẫn enter animation), bên phải mới kích hoạt hiệu ứng
-    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    transitionTimerRef.current = setTimeout(() => {
-      setRightActiveStep(newStep);
-    }, 420);
-  };
-
-  // Scroll Trigger Observer: Detects milestone in center viewport and triggers left-then-right sequence
+  // Desktop choreography divides one pinned scroll track into two halves:
+  // the live console completes first, then the milestone rail starts moving.
   useEffect(() => {
-    const handleScroll = () => {
+    const desktopQuery = window.matchMedia(DESKTOP_SCROLL_QUERY);
+    const reducedMotionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+    let frameId: number | null = null;
+    let sequentialScrollEnabled = false;
+
+    const updateNaturalMilestone = () => {
       const centerY = window.innerHeight / 2;
       let closestIndex = 0;
       let minDistance = Infinity;
@@ -136,15 +139,93 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
         }
       });
 
-      triggerStepTransition(closestIndex);
+      setActivePhase("right");
+      setLeftActiveStep(closestIndex);
+      setRightActiveStep(closestIndex);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    const updateSequentialProgress = () => {
+      const scrollTrack = scrollTrackRef.current;
+      if (!scrollTrack) return;
+
+      const rect = scrollTrack.getBoundingClientRect();
+      const scrollRange = Math.max(
+        scrollTrack.offsetHeight - window.innerHeight + STICKY_TOP_PX,
+        1
+      );
+      const progress = clampProgress((STICKY_TOP_PX - rect.top) / scrollRange);
+
+      if (progress < LEFT_PHASE_END) {
+        setActivePhase("left");
+        setLeftActiveStep(getStepFromProgress(progress / LEFT_PHASE_END));
+        setRightActiveStep(0);
+
+        if (milestoneTrackRef.current) {
+          milestoneTrackRef.current.style.transform = "translate3d(0, 0, 0)";
+        }
+        return;
+      }
+
+      const rightProgress = clampProgress(
+        (progress - LEFT_PHASE_END) / (1 - LEFT_PHASE_END)
+      );
+      const viewport = milestoneViewportRef.current;
+      const milestoneTrack = milestoneTrackRef.current;
+      const maxTrackOffset =
+        viewport && milestoneTrack
+          ? Math.max(0, milestoneTrack.scrollHeight - viewport.clientHeight)
+          : 0;
+
+      setActivePhase("right");
+      setLeftActiveStep(MILESTONES.length - 1);
+      setRightActiveStep(getStepFromProgress(rightProgress));
+
+      if (milestoneTrack) {
+        milestoneTrack.style.transform = `translate3d(0, ${-
+          rightProgress * maxTrackOffset
+        }px, 0)`;
+      }
     };
-  }, []);
+
+    const updateScrollState = () => {
+      frameId = null;
+
+      if (sequentialScrollEnabled) {
+        updateSequentialProgress();
+      } else {
+        if (milestoneTrackRef.current) {
+          milestoneTrackRef.current.style.transform = "";
+        }
+        updateNaturalMilestone();
+      }
+    };
+
+    const requestScrollUpdate = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(updateScrollState);
+    };
+
+    const updateMode = () => {
+      sequentialScrollEnabled =
+        desktopQuery.matches && !reducedMotionQuery.matches && !showMediaPlaceholder;
+      setIsSequentialScrollEnabled(sequentialScrollEnabled);
+      requestScrollUpdate();
+    };
+
+    desktopQuery.addEventListener("change", updateMode);
+    reducedMotionQuery.addEventListener("change", updateMode);
+    window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+    window.addEventListener("resize", requestScrollUpdate);
+    updateMode();
+
+    return () => {
+      desktopQuery.removeEventListener("change", updateMode);
+      reducedMotionQuery.removeEventListener("change", updateMode);
+      window.removeEventListener("scroll", requestScrollUpdate);
+      window.removeEventListener("resize", requestScrollUpdate);
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+    };
+  }, [showMediaPlaceholder]);
 
   // Web Speech API for pronunciation
   const handlePronounce = (e: React.MouseEvent) => {
@@ -204,7 +285,32 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
   };
 
   const scrollToMilestone = (index: number) => {
-    triggerStepTransition(index);
+    const scrollTrack = scrollTrackRef.current;
+
+    if (isSequentialScrollEnabled && scrollTrack) {
+      const rect = scrollTrack.getBoundingClientRect();
+      const scrollRange = Math.max(
+        scrollTrack.offsetHeight - window.innerHeight + STICKY_TOP_PX,
+        1
+      );
+      const rightProgress = index / Math.max(MILESTONES.length - 1, 1);
+      const targetProgress =
+        LEFT_PHASE_END + rightProgress * (1 - LEFT_PHASE_END);
+      const scrollTrackTop = window.scrollY + rect.top;
+
+      setActivePhase("right");
+      setLeftActiveStep(MILESTONES.length - 1);
+      setRightActiveStep(index);
+      window.scrollTo({
+        top: scrollTrackTop - STICKY_TOP_PX + targetProgress * scrollRange,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    setActivePhase("right");
+    setLeftActiveStep(index);
+    setRightActiveStep(index);
     const target = milestoneRefs.current[index];
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -228,7 +334,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
               Học thử ngay mà không cần tạo tài khoản.
             </h2>
             <p className="landing-copy text-sm sm:text-base">
-              Cuộn trang để theo dõi màn hình biến đổi tương ứng qua từng chặng, hoặc trực tiếp thao tác thử bên dưới.
+              Cuộn hết bảng tương tác bên trái; sau đó lộ trình bên phải mới bắt đầu chuyển động.
             </p>
           </div>
 
@@ -252,7 +358,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
           </button>
         </div>
 
-        {/* Sticky Split-Screen Grid: Left Console (Sticky) + Right Milestones (Scrolls) */}
+        {/* Desktop: one pinned viewport, with left and right driven in separate scroll phases. */}
         {showMediaPlaceholder ? (
           <div className="landing-media-placeholder relative overflow-hidden p-8 text-center sm:p-14 rounded-3xl">
             <div className="landing-accent-text mx-auto flex h-16 w-16 items-center justify-center">
@@ -275,7 +381,9 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
             </div>
           </div>
         ) : (
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+          <div ref={scrollTrackRef} className="landing-interactive-scroll-track">
+            <div className="landing-interactive-sticky-stage">
+              <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             
             {/* ========================================================================= */}
             {/* CỘT TRÁI (GHIM CỐ ĐỊNH & CHẠY HIỆU ỨNG TRƯỚC): Live Device Console (7 cols) */}
@@ -285,7 +393,7 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="lg:col-span-7 lg:sticky lg:top-24 z-20"
+              className="z-20 lg:col-span-7"
             >
               <div className="landing-product-panel overflow-hidden border border-slate-200/80 bg-white/95 shadow-xl dark:border-slate-800 dark:bg-slate-900/90 rounded-3xl">
                 
@@ -622,24 +730,36 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
             {/* ========================================================================= */}
             {/* CỘT PHẢI (CHẠY HIỆU ỨNG SAU BÊN TRÁI): 3 Thẻ Dẫn Dắt Milestones (5 cols)   */}
             {/* ========================================================================= */}
-            <motion.div
-              initial={{ opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
-              className="space-y-16 sm:space-y-24 lg:col-span-5 py-4 lg:py-8"
+            <div
+              ref={milestoneViewportRef}
+              className="landing-milestone-viewport lg:col-span-5"
             >
-              {MILESTONES.map((m, idx) => {
-                const Icon = m.icon;
-                const isActive = rightActiveStep === idx;
+              <div
+                ref={milestoneTrackRef}
+                className="landing-milestone-track space-y-16 py-4 sm:space-y-24 lg:py-8"
+              >
+                {MILESTONES.map((m, idx) => {
+                  const Icon = m.icon;
+                  const isActive = isSequentialScrollEnabled
+                    ? activePhase === "right" && rightActiveStep === idx
+                    : rightActiveStep === idx;
 
-                return (
+                  return (
                   <div
                     key={m.step}
                     ref={(el) => {
                       milestoneRefs.current[idx] = el;
                     }}
                     onClick={() => scrollToMilestone(idx)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        scrollToMilestone(idx);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-current={isActive ? "step" : undefined}
                     className={`group relative cursor-pointer rounded-3xl border p-6 sm:p-8 transition-all duration-500 ${
                       isActive
                         ? "border-amber-500/80 bg-white/95 shadow-lg shadow-amber-500/10 ring-2 ring-amber-500/20 dark:border-amber-400/80 dark:bg-slate-900/90"
@@ -698,10 +818,13 @@ export default function InteractivePlayground({ onOpenAuth }: { onOpenAuth: () =
                       />
                     </div>
                   </div>
-                );
-              })}
-            </motion.div>
+                  );
+                })}
+              </div>
+            </div>
 
+              </div>
+            </div>
           </div>
         )}
 

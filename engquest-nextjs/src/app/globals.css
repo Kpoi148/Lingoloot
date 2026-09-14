@@ -813,6 +813,21 @@ body.landing-embedded-preview::-webkit-scrollbar {
   background-size: 40px 40px;
 }
 
+.landing-interactive-scroll-track,
+.landing-interactive-sticky-stage,
+.landing-milestone-viewport {
+  position: relative;
+}
+
+.landing-milestone-track {
+  will-change: transform;
+}
+
+.landing-milestone-track [role="button"]:focus-visible {
+  outline: 2px solid var(--landing-accent);
+  outline-offset: 4px;
+}
+
 .landing-journey-rail {
   position: relative;
 }
@@ -947,6 +962,35 @@ body.landing-embedded-preview::-webkit-scrollbar {
   }
 }
 
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .landing-interactive-scroll-track {
+    height: 430vh;
+  }
+
+  .landing-interactive-sticky-stage {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    height: calc(100svh - 96px);
+    min-height: 34rem;
+    align-items: center;
+    overflow: clip;
+  }
+
+  .landing-interactive-sticky-stage > .grid {
+    width: 100%;
+  }
+
+  .landing-milestone-viewport {
+    height: min(34rem, calc(100svh - 8rem));
+    overflow: hidden;
+  }
+
+  .landing-milestone-track {
+    transition: transform 80ms linear;
+  }
+}
+
 @media (min-width: 1024px) {
   .landing-route-divider {
     width: calc(100% + 2rem);
@@ -970,6 +1014,27 @@ body.landing-embedded-preview::-webkit-scrollbar {
 
   .landing-reveal {
     opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .landing-interactive-scroll-track {
+    height: auto !important;
+  }
+
+  .landing-interactive-sticky-stage {
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .landing-milestone-viewport {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .landing-milestone-track {
     transform: none !important;
   }
 }
