@@ -15,6 +15,11 @@ import {
 import TechFrame from "@/components/shop/frames/TechFrame";
 import MysticFrame from "@/components/shop/frames/MysticFrame";
 import HexFrame from "@/components/shop/frames/HexFrame";
+import {
+  LANDING_DESKTOP_QUERY,
+  LANDING_REDUCED_MOTION_QUERY,
+  useLandingMediaQuery,
+} from "@/components/landing/useLandingMedia";
 
 type ShowcaseItem = {
   id: string;
@@ -303,7 +308,7 @@ function ScrubProgressBar({ progress }: { progress: MotionValue<number> }) {
   });
 
   return (
-    <div className="hidden items-center gap-3 sm:flex">
+    <div className="flex items-center gap-3">
       <div
         ref={progressRef}
         role="progressbar"
@@ -329,8 +334,9 @@ function ScrubProgressBar({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void }) {
-  const [activeItem, setActiveItem] = useState<string>("tech");
+function DesktopLootShowcase({ onOpenAuth }: { onOpenAuth: () => void }) {
+  const [activeItem, setActiveItem] = useState<string>(SHOWCASE_ITEMS[0].id);
+  const activeIndexRef = useRef(0);
   const containerRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxScroll, setMaxScroll] = useState(0);
@@ -370,11 +376,23 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
   // Direct GPU-accelerated transform without virtual DOM diffing
   const x = useTransform(smoothProgress, (val) => -val * maxScroll);
 
+  useMotionValueEvent(smoothProgress, "change", (latest) => {
+    const nextIndex = Math.min(
+      SHOWCASE_ITEMS.length - 1,
+      Math.max(0, Math.round(latest * (SHOWCASE_ITEMS.length - 1)))
+    );
+
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex;
+      setActiveItem(SHOWCASE_ITEMS[nextIndex].id);
+    }
+  });
+
   return (
     <section
       ref={containerRef}
       id="vault"
-      className="relative min-h-[500vh] sm:min-h-[580vh] bg-slate-950 text-white scroll-mt-12"
+      className="relative min-h-[580vh] bg-slate-950 text-white scroll-mt-12"
     >
       {/* Sticky Viewport: Pins when scrolling through this section, cleared under sticky navbar */}
       <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden pt-28 pb-3 sm:pt-32 sm:pb-5">
@@ -400,8 +418,8 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
             </div>
           </div>
 
-          {/* Desktop & Tablet: Horizontal Gallery Scrub Strip */}
-          <div ref={trackRef} className="hidden md:block relative my-auto w-full overflow-hidden py-1 sm:py-2">
+          {/* Desktop: vertical scroll scrubs the horizontal gallery. */}
+          <div ref={trackRef} className="relative my-auto w-full overflow-hidden py-2">
             <motion.div
               style={{ x }}
               className="flex gap-5 lg:gap-6 items-stretch will-change-transform transform-gpu pr-16"
@@ -438,7 +456,10 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
 
                     {/* Animated Avatar Center Display */}
                     <div className="my-2 sm:my-3 flex items-center justify-center">
-                      <div className="relative h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 transition duration-300 group-hover:scale-105">
+                      <div
+                        data-animated={isSelected}
+                        className="landing-frame-motion relative h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 transition duration-300 group-hover:scale-105"
+                      >
                         <RenderAvatarFrame frameType={item.frameType} />
                       </div>
                     </div>
@@ -471,40 +492,6 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
                 );
               })}
             </motion.div>
-          </div>
-
-          {/* Mobile Fallback: Smooth horizontal swipe with snap */}
-          <div className="block md:hidden my-auto w-full overflow-x-auto pb-4 snap-x snap-mandatory flex gap-4 scrollbar-none">
-            {SHOWCASE_ITEMS.map((item, idx) => (
-              <div
-                key={item.id}
-                onClick={() => setActiveItem(item.id)}
-                className="landing-loot-card flex w-[280px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-white/10 bg-slate-900 p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-slate-500">0{idx + 1}</span>
-                  <span className={`rounded-full border px-2 py-0.5 text-[11px] font-bold ${item.badgeColor}`}>
-                    {item.tier}
-                  </span>
-                </div>
-                <div className="my-4 flex items-center justify-center">
-                  <div className="relative h-28 w-28">
-                    <RenderAvatarFrame frameType={item.frameType} />
-                  </div>
-                </div>
-                <div className="text-center space-y-1">
-                  <h3 className="font-bold text-base">{item.name}</h3>
-                  <p className="text-[11px] text-slate-400 line-clamp-2">{item.description}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={onOpenAuth}
-                  className="mt-4 w-full rounded-xl bg-amber-500/10 py-2 text-xs font-bold text-amber-400 hover:bg-amber-500/20"
-                >
-                  Mở khóa trong Shop →
-                </button>
-              </div>
-            ))}
           </div>
 
           {/* Feature Highlights beneath */}
@@ -551,5 +538,188 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
         </div>
       </div>
     </section>
+  );
+}
+
+function MobileLootShowcase({ onOpenAuth }: { onOpenAuth: () => void }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const activeIndexRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [progressPercent, setProgressPercent] = useState(0);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const updateProgress = () => {
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
+      const progress = Math.min(1, Math.max(0, scroller.scrollLeft / maxScroll));
+      const nextIndex = Math.min(
+        SHOWCASE_ITEMS.length - 1,
+        Math.max(0, Math.round(progress * (SHOWCASE_ITEMS.length - 1)))
+      );
+
+      setProgressPercent(Math.round(progress * 100));
+      if (nextIndex !== activeIndexRef.current) {
+        activeIndexRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+      }
+    };
+
+    const requestProgressUpdate = () => {
+      if (frameRef.current !== null) return;
+      frameRef.current = window.requestAnimationFrame(() => {
+        frameRef.current = null;
+        updateProgress();
+      });
+    };
+
+    const resizeObserver = new ResizeObserver(requestProgressUpdate);
+    resizeObserver.observe(scroller);
+    scroller.addEventListener("scroll", requestProgressUpdate, { passive: true });
+    requestProgressUpdate();
+
+    return () => {
+      resizeObserver.disconnect();
+      scroller.removeEventListener("scroll", requestProgressUpdate);
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+    };
+  }, []);
+
+  return (
+    <section id="vault" className="scroll-mt-24 bg-slate-950 py-16 text-white sm:py-20">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <div className="border-b border-white/10 pb-5">
+          <p className="landing-inverted-label landing-kicker font-mono text-[11px] font-semibold tracking-wider text-amber-400 sm:text-xs">
+            CHƯƠNG 04 &mdash; KHO BÁU & KHUNG SVG HOẠT HỌA
+          </p>
+          <h2 className="landing-inverted-title mt-2 font-[var(--font-display)] text-2xl font-bold tracking-tight sm:text-3xl">
+            Triển Lãm Chiến Lợi Phẩm & Khung Avatar AI
+          </h2>
+          <p className="landing-inverted-copy mt-2 text-sm text-slate-400">
+            Vuốt ngang để khám phá 9 khung SVG; mỗi lần chỉ một khung chuyển động để giữ trải nghiệm mượt mà.
+          </p>
+        </div>
+
+        <div
+          ref={scrollerRef}
+          className="scrollbar-none -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scroll-px-4 sm:-mx-6 sm:px-6 sm:scroll-px-6"
+          aria-label="Bộ sưu tập khung Avatar"
+        >
+          {SHOWCASE_ITEMS.map((item, index) => {
+            const isActive = index === activeIndex;
+
+            return (
+              <article
+                key={item.id}
+                data-selected={isActive}
+                className="landing-loot-card landing-mobile-loot-card flex shrink-0 snap-start flex-col justify-between p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold tabular-nums text-slate-500">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`rounded-full border px-2 py-0.5 text-[11px] font-bold ${item.badgeColor}`}>
+                      {item.tier}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400">
+                      <Sparkles className="h-3 w-3" />
+                      {item.gemCost}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="my-5 flex items-center justify-center">
+                  <div
+                    data-animated={isActive}
+                    className="landing-frame-motion relative h-28 w-28"
+                    aria-label={isActive ? "Khung đang chuyển động" : "Khung xem trước tĩnh"}
+                  >
+                    <RenderAvatarFrame frameType={item.frameType} />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-center">
+                  <h3 className="landing-inverted-title font-[var(--font-display)] text-lg font-bold">
+                    {item.name}
+                  </h3>
+                  <p className="landing-inverted-copy line-clamp-2 text-xs leading-relaxed text-slate-400">
+                    {item.description}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onOpenAuth}
+                  className="landing-mobile-loot-action mt-5 w-full"
+                >
+                  <span>Mở khóa trong Shop</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-2 flex items-center gap-3">
+          <div
+            role="progressbar"
+            aria-label="Tiến độ bộ sưu tập"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progressPercent}
+            aria-valuetext={`${activeIndex + 1} trên ${SHOWCASE_ITEMS.length}, ${progressPercent}%`}
+            className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"
+          >
+            <div
+              className="h-full w-full origin-left rounded-full bg-amber-400"
+              style={{ transform: `scaleX(${progressPercent / 100})` }}
+            />
+          </div>
+          <span className="w-14 text-right font-mono text-xs font-semibold tabular-nums text-slate-300">
+            {String(activeIndex + 1).padStart(2, "0")} / {String(SHOWCASE_ITEMS.length).padStart(2, "0")}
+          </span>
+          <span className="w-9 text-right font-mono text-xs font-semibold tabular-nums text-amber-300">
+            {progressPercent}%
+          </span>
+        </div>
+
+        <div className="mt-10 grid gap-5 border-t border-white/10 pt-6 sm:grid-cols-3">
+          {[
+            [Sparkles, "SVG sắc nét", "Không vỡ hạt trên màn hình Retina."],
+            [Zap, "Chuyển động có kiểm soát", "Chỉ khung đang xem mới chạy hiệu ứng."],
+            [Shield, "Trang bị hồ sơ", "Dùng Gems để mở khóa và tùy biến."],
+          ].map(([Icon, title, description]) => {
+            const FeatureIcon = Icon as typeof Sparkles;
+            return (
+              <div key={String(title)} className="flex items-start gap-3">
+                <span className="landing-accent-text flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5">
+                  <FeatureIcon className="h-3.5 w-3.5 text-amber-400" />
+                </span>
+                <div>
+                  <h4 className="landing-inverted-title text-xs font-bold">{String(title)}</h4>
+                  <p className="landing-inverted-copy mt-1 text-[11px] leading-relaxed text-slate-400">
+                    {String(description)}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void }) {
+  const isDesktopViewport = useLandingMediaQuery(LANDING_DESKTOP_QUERY);
+  const prefersReducedMotion = useLandingMediaQuery(LANDING_REDUCED_MOTION_QUERY);
+
+  return isDesktopViewport && !prefersReducedMotion ? (
+    <DesktopLootShowcase onOpenAuth={onOpenAuth} />
+  ) : (
+    <MobileLootShowcase onOpenAuth={onOpenAuth} />
   );
 }

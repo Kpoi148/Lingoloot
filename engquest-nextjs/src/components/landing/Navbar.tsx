@@ -50,7 +50,7 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
           <button
             type="button"
             onClick={() => handleNavClick("hero")}
-            className="flex items-center gap-3 rounded-lg text-left"
+            className="flex min-w-0 items-center gap-2 rounded-lg text-left sm:gap-3"
           >
             <span className="landing-product-panel--quiet flex h-10 w-10 items-center justify-center">
               <BrandLogo
@@ -63,7 +63,7 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
               <span className="landing-title block font-[var(--font-display)] text-lg font-extrabold leading-none tracking-tight">
                 LingoLoot
               </span>
-              <span className="landing-accent-text landing-brand-kicker mt-1 block">
+              <span className="landing-accent-text landing-brand-kicker mt-1 hidden sm:block">
                 Quest & Loot
               </span>
             </span>
@@ -84,8 +84,10 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
           </div>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-3">
-            <ThemeToggle className="landing-theme-toggle" />
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <ThemeToggle className="landing-theme-toggle" />
+            </div>
 
             {/* Login Text Link */}
             <button
@@ -102,7 +104,8 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
               onClick={() => handleNavClick(landingActions.primary.id)}
               className="landing-nav-action"
             >
-              <span>{landingActions.primary.label}</span>
+              <span className="hidden sm:inline">{landingActions.primary.label}</span>
+              <span className="sm:hidden">Bắt đầu</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
 
@@ -140,6 +143,10 @@ export default function Navbar({ onNavigate, onOpenAuth }: NavbarProps) {
               >
                 Đăng nhập
               </button>
+              <div className="landing-copy flex items-center justify-between rounded-lg px-4 py-2 text-sm font-bold sm:hidden">
+                <span>Giao diện</span>
+                <ThemeToggle className="landing-theme-toggle" />
+              </div>
               <button
                 type="button"
                 onClick={() => handleNavClick(landingActions.primary.id)}
