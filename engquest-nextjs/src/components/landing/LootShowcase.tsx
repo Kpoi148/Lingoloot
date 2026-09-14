@@ -288,21 +288,42 @@ function RenderAvatarFrame({ frameType }: { frameType: ShowcaseItem["frameType"]
   return null;
 }
 
-function ScrubProgressBadge({ progress }: { progress: MotionValue<number> }) {
-  const badgeRef = useRef<HTMLSpanElement>(null);
+function ScrubProgressBar({ progress }: { progress: MotionValue<number> }) {
+  const progressRef = useRef<HTMLDivElement>(null);
+  const progressLabelRef = useRef<HTMLSpanElement>(null);
 
   useMotionValueEvent(progress, "change", (latest) => {
-    if (badgeRef.current) {
+    if (progressRef.current) {
       const pct = Math.min(Math.max(Math.round(latest * 100), 0), 100);
-      badgeRef.current.textContent = `Cuộn chuột để trượt ngang (${pct}%)`;
+      progressRef.current.setAttribute("aria-valuenow", String(pct));
+      if (progressLabelRef.current) {
+        progressLabelRef.current.textContent = `${pct}%`;
+      }
     }
   });
 
   return (
-    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
-      <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-      <span ref={badgeRef} className="font-mono text-[11px]">
-        Cuộn chuột để trượt ngang (0%)
+    <div className="hidden items-center gap-3 sm:flex">
+      <div
+        ref={progressRef}
+        role="progressbar"
+        aria-label="Tiến độ bộ sưu tập"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={0}
+        className="h-1.5 w-36 overflow-hidden rounded-full bg-white/10"
+      >
+        <motion.div
+          style={{ scaleX: progress, transformOrigin: "left" }}
+          className="h-full w-full origin-left bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400"
+        />
+      </div>
+      <span
+        ref={progressLabelRef}
+        className="w-9 text-right font-mono text-xs font-semibold tabular-nums text-slate-300"
+        aria-hidden="true"
+      >
+        0%
       </span>
     </div>
   );
@@ -373,15 +394,9 @@ export default function LootShowcase({ onOpenAuth }: { onOpenAuth: () => void })
               </p>
             </div>
 
-            {/* Gallery Scrub Visual Indicator */}
-            <div className="flex items-center gap-3 self-start md:self-end shrink-0">
-              <ScrubProgressBadge progress={smoothProgress} />
-              <div className="hidden sm:block w-36 h-1.5 rounded-full bg-white/10 overflow-hidden">
-                <motion.div
-                  style={{ scaleX: smoothProgress, transformOrigin: "left" }}
-                  className="h-full w-full bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400 origin-left"
-                />
-              </div>
+            {/* Gallery scrub progress remains visible without an instructional badge. */}
+            <div className="shrink-0 self-start md:self-end">
+              <ScrubProgressBar progress={smoothProgress} />
             </div>
           </div>
 
