@@ -7,7 +7,6 @@ import {
   BrainCircuit,
   Gamepad2,
   Layers3,
-  Play,
   ChevronRight,
 } from "lucide-react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -167,38 +166,39 @@ export default function HowItWorksSection() {
           {/* Mobile stays static; only desktop mounts the continuous scroll animation. */}
           {shouldAnimateRail ? <AnimatedJourneyRail /> : <StaticJourneyRail />}
 
-          {/* Right Column: Visual Video / Gameplay Screenshot Placeholder Card (5 cols) */}
+          {/* Recorded gameplay uses the same StoryClozeGame component as the app. */}
           <div className="lg:col-span-5">
-            <div className="landing-media-placeholder relative overflow-hidden p-6 text-center sm:p-8">
-              
-              {/* Play Badge Icon */}
-              <div className="landing-accent-text mx-auto flex h-14 w-14 items-center justify-center">
-                <Play className="h-6 w-6 fill-current ml-0.5" />
-              </div>
-
-              <span className="landing-label landing-brand-kicker mt-4 inline-block">
-                Khung chờ Video / Ảnh thực tế
-              </span>
-
-              <h4 className="landing-title mt-3 font-[var(--font-display)] text-2xl font-bold">
-                Ghi lại khoảnh khắc kéo thả Story Cloze
-              </h4>
-
-              <p className="landing-copy mx-auto mt-2 max-w-xs text-xs leading-relaxed">
-                Vị trí này được thiết kế sẵn để bạn nhúng video MP4/GIF hoặc ảnh chụp màn hình lúc chơi minigame Story Cloze thật trong app.
-              </p>
-
-              <div className="landing-product-panel--quiet landing-copy mt-6 p-3 text-left text-xs">
-                <div className="landing-accent-text landing-micro flex items-center gap-2 font-mono">
-                  <span className="landing-accent-fill h-2 w-2 rounded-full" />
-                  <span>Format khuyến nghị:</span>
-                </div>
-                <p className="landing-micro mt-1 text-slate-500">
-                  Video MP4 / WebM ngắn (5-10s lặp loop, 1080p hoặc 720p) hoặc ảnh PNG tỷ lệ 16:9 sắc nét.
+            <figure className="landing-product-panel overflow-hidden">
+              <video
+                className="aspect-video w-full object-contain"
+                controls
+                loop
+                muted
+                playsInline
+                preload="none"
+                poster="/media/story-cloze-poster.jpg?v=2"
+                aria-label="Video minh họa kéo thả ba từ và kiểm tra đáp án Story Cloze"
+                aria-describedby="story-cloze-video-caption"
+              >
+                <source src="/media/story-cloze-demo.mp4?v=2" type="video/mp4" />
+                <source src="/media/story-cloze-demo.webm?v=2" type="video/webm" />
+                Trình duyệt của bạn không hỗ trợ video. <a href="/media/story-cloze-demo.mp4?v=2">Tải video Story Cloze</a>.
+              </video>
+              <figcaption id="story-cloze-video-caption" className="p-6">
+                <span className="landing-label landing-brand-kicker">
+                  Story Cloze · Kéo thả &amp; kiểm tra
+                </span>
+                <h3 className="landing-title mt-3 font-[var(--font-display)] text-2xl font-bold">
+                  Từ vựng tìm đúng chỗ trong câu chuyện.
+                </h3>
+                <p className="landing-copy mt-2 text-sm leading-relaxed">
+                  Kéo từ vào từng ô trống, theo dõi tiến độ và kiểm tra đáp án để hoàn thành câu chuyện.
                 </p>
-              </div>
-
-            </div>
+                <p className="landing-copy mt-3 text-xs">
+                  Bản quay từ giao diện game với câu chuyện mẫu. Bấm phát để xem, hoặc mở toàn màn hình để theo dõi rõ hơn.
+                </p>
+              </figcaption>
+            </figure>
           </div>
 
         </div>
