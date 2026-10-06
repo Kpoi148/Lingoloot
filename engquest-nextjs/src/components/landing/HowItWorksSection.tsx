@@ -8,6 +8,8 @@ import {
   Gamepad2,
   Layers3,
   ChevronRight,
+  Play,
+  Pause,
 } from "lucide-react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { AnimatedSection } from "@/components/common/AnimatedSection";
@@ -19,6 +21,7 @@ import {
 } from "@/components/landing/useLandingMedia";
 
 const stepIcons = [Layers3, BookOpenText, BrainCircuit, Gamepad2];
+const MOBILE_VIDEO_QUERY = "(max-width: 639px)";
 
 function JourneySteps({ activeStep }: { activeStep: number }) {
   return landingFlowSteps.map((item, index) => {
@@ -70,7 +73,7 @@ function JourneySteps({ activeStep }: { activeStep: number }) {
 
 function StaticJourneyRail() {
   return (
-    <div className="relative space-y-6 lg:col-span-7">
+    <div className="relative space-y-6 lg:col-span-5">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-12 left-6 top-6 w-[2px] -translate-x-1/2"
@@ -115,7 +118,7 @@ function AnimatedJourneyRail() {
   }, [smoothProgress]);
 
   return (
-    <div ref={railRef} className="relative space-y-6 lg:col-span-7">
+    <div ref={railRef} className="relative space-y-6 lg:col-span-5">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-12 left-6 top-6 w-[2px] -translate-x-1/2"
@@ -137,9 +140,69 @@ function AnimatedJourneyRail() {
 }
 
 export default function HowItWorksSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const manuallyPausedRef = useRef(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const isMobileVideo = useLandingMediaQuery(MOBILE_VIDEO_QUERY);
   const isDesktopViewport = useLandingMediaQuery(LANDING_DESKTOP_QUERY);
   const prefersReducedMotion = useLandingMediaQuery(LANDING_REDUCED_MOTION_QUERY);
   const shouldAnimateRail = isDesktopViewport && !prefersReducedMotion;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (window.matchMedia(MOBILE_VIDEO_QUERY).matches !== isMobileVideo) return;
+    if (window.matchMedia(LANDING_REDUCED_MOTION_QUERY).matches) {
+      video.pause();
+      return;
+    }
+
+    let isInView = false;
+    let disposed = false;
+    const syncPlayback = () => {
+      if (!isInView || document.hidden || manuallyPausedRef.current) {
+        video.pause();
+        return;
+      }
+
+      video.muted = true;
+      void video.play().then(() => {
+        if (disposed) return;
+        if (!isInView || document.hidden || manuallyPausedRef.current) video.pause();
+      }).catch(() => {
+        // Browser autoplay restrictions leave the custom play button available.
+      });
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      const nextInView = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+      if (nextInView === isInView) return;
+      isInView = nextInView;
+      syncPlayback();
+    }, { threshold: [0, 0.35] });
+
+    observer.observe(video);
+    document.addEventListener("visibilitychange", syncPlayback);
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncPlayback);
+      video.pause();
+    };
+  }, [prefersReducedMotion, isMobileVideo]);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    manuallyPausedRef.current = !video.paused;
+    if (!video.paused) {
+      video.pause();
+      return;
+    }
+    void video.play().catch(() => {
+      setIsPlaying(false);
+    });
+  };
 
   return (
     <AnimatedSection
@@ -167,23 +230,38 @@ export default function HowItWorksSection() {
           {shouldAnimateRail ? <AnimatedJourneyRail /> : <StaticJourneyRail />}
 
           {/* Recorded gameplay uses the same StoryClozeGame component as the app. */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-7">
             <figure className="landing-product-panel overflow-hidden">
+              <div className="group relative">
               <video
-                className="aspect-video w-full object-contain"
-                controls
+                key={isMobileVideo ? "mobile" : "desktop"}
+                ref={videoRef}
+                className="aspect-square w-full object-contain sm:aspect-video"
                 loop
                 muted
                 playsInline
+                disablePictureInPicture
                 preload="none"
-                poster="/media/story-cloze-poster.jpg?v=2"
+                poster={isMobileVideo ? "/media/story-cloze-mobile-poster.jpg?v=5" : "/media/story-cloze-poster.jpg?v=5"}
                 aria-label="Video minh họa kéo thả ba từ và kiểm tra đáp án Story Cloze"
                 aria-describedby="story-cloze-video-caption"
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
               >
-                <source src="/media/story-cloze-demo.mp4?v=2" type="video/mp4" />
-                <source src="/media/story-cloze-demo.webm?v=2" type="video/webm" />
-                Trình duyệt của bạn không hỗ trợ video. <a href="/media/story-cloze-demo.mp4?v=2">Tải video Story Cloze</a>.
+                <source src={isMobileVideo ? "/media/story-cloze-mobile.mp4?v=5" : "/media/story-cloze-demo.mp4?v=5"} type="video/mp4" />
+                <source src={isMobileVideo ? "/media/story-cloze-mobile.webm?v=5" : "/media/story-cloze-demo.webm?v=5"} type="video/webm" />
+                Trình duyệt của bạn không hỗ trợ video. <a href="/media/story-cloze-demo.mp4?v=5">Tải video Story Cloze</a>.
               </video>
+              <button
+                type="button"
+                onClick={togglePlayback}
+                aria-label={isPlaying ? "Tạm dừng video Story Cloze" : "Phát video Story Cloze"}
+                title={isPlaying ? "Tạm dừng" : "Phát video"}
+                className={`absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-slate-950/75 text-white shadow-sm transition-opacity duration-150 hover:bg-slate-950 focus-visible:opacity-100 ${isPlaying ? "sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100" : "opacity-100"}`}
+              >
+                {isPlaying ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+              </button>
+              </div>
               <figcaption id="story-cloze-video-caption" className="p-6">
                 <span className="landing-label landing-brand-kicker">
                   Story Cloze · Kéo thả &amp; kiểm tra
@@ -195,7 +273,7 @@ export default function HowItWorksSection() {
                   Kéo từ vào từng ô trống, theo dõi tiến độ và kiểm tra đáp án để hoàn thành câu chuyện.
                 </p>
                 <p className="landing-copy mt-3 text-xs">
-                  Bản quay từ giao diện game với câu chuyện mẫu. Bấm phát để xem, hoặc mở toàn màn hình để theo dõi rõ hơn.
+                  Bản quay cận từ giao diện game với câu chuyện mẫu. Video tự phát khi bạn cuộn đến đây; dùng nút ở góc video để tạm dừng hoặc xem tiếp.
                 </p>
               </figcaption>
             </figure>
